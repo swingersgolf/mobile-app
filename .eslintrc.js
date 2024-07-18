@@ -4,5 +4,6 @@ module.exports = {
   rules: {
     // prettier can be updated to error if you want to enforce formatting
     'prettier/prettier': 'warn',
+    "endOfLine": "auto"
   },
 };
