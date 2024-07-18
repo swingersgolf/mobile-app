@@ -14,4 +14,4 @@ This repository contains the mobile application for Swingers.
 ### Prerequisites
 
 - Node.js (v20.15.1)
-- Expo CLI
+- Expo CLI (SDK 51)
