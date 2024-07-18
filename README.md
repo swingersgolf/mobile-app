@@ -1,4 +1,4 @@
-﻿# Swingers Mobile App
+# Swingers Mobile App
 
 This repository contains the mobile application for Swingers.
 
@@ -9,9 +9,21 @@ This repository contains the mobile application for Swingers.
 - Jest
 - NativewindCSS (TailwindCSS for React Native)
 
-## Getting Started
-
-### Prerequisites
+## Prerequisites
 
 - Node.js (v20.15.1)
 - Expo CLI (SDK 51)
+
+## Getting Started
+
+1. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+2. Start the app
+
+   ```bash
+    npx expo start
+   ```
