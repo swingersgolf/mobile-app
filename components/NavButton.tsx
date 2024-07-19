@@ -21,20 +21,28 @@ export default NavButton;
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: 'white',
-        padding: 10,
+        backgroundColor: 'green',
+        paddingVertical: 15,
+        display: 'flex',
+        alignItems: 'center',
+        borderRadius: 9999,
     },
     outline_button: {
         color: 'white',
         backgroundColor: 'transparent',
-        padding: 10,
+        paddingVertical: 15,
         borderWidth: 1,
-        borderColor: 'white',
+        borderColor: 'green',
+        display: 'flex',
+        alignItems: 'center',
+        borderRadius: 9999,
     },
     text: {
-        color: 'green',
+        color: 'white',
+        fontSize: 20,
     },
     outline_text: {
-        color: 'white',
+        color: 'green',
+        fontSize: 20,
     }
 });
