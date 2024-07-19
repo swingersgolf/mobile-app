@@ -1,5 +1,6 @@
 import { Text, View, Pressable } from 'react-native';
 import { Link } from 'expo-router';
+import NavButton from '@/components/NavButton';
 
 export default function SignIn() {
   return (
@@ -7,16 +8,8 @@ export default function SignIn() {
       <Text className='text-lg mb-4'>
         Landing Screen
       </Text>
-      <Link href="/sign-in" asChild>
-        <Pressable className='mb-2'>
-          <Text className='text-blue-500'>Sign In</Text>
-        </Pressable>
-      </Link>
-      <Link href="/create-account" asChild>
-        <Pressable>
-          <Text className='text-blue-500'>Create Account</Text>
-        </Pressable>
-      </Link>
+      <NavButton text='Sign In' route='/sign-in'/>
+      <NavButton text='Create Account' route='/create-account' outline/>
     </View>
   );
 }
