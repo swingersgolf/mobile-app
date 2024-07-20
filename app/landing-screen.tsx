@@ -2,7 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import NavButton from '@/components/NavButton';
 import BannerLogo from '@/assets/branding/BannerLogo.svg';
 
-export default function SignIn() {
+const LandingPage = () => {
   return (
     <View style={styles.container}>
       <BannerLogo width={300} height={75} />
@@ -13,6 +13,8 @@ export default function SignIn() {
     </View>
   );  
 }
+
+export default LandingPage;
 
 const styles = StyleSheet.create({
   container: {
