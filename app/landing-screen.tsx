@@ -11,7 +11,7 @@ export default function SignIn() {
         <NavButton text='Create Account' route='/create-account' outline />
       </View>
     </View>
-  );
+  );  
 }
 
 const styles = StyleSheet.create({
