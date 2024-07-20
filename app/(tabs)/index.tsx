@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet } from 'react-native';
 import { useSession } from '../../ctx';
 
-export default function Index() {
+const Index = () => {
   const { signOut } = useSession();
   return (
     <View style={styles.container}>
@@ -15,6 +15,8 @@ export default function Index() {
     </View>
   );
 }
+
+export default Index;
 
 const styles = StyleSheet.create({
   container: {
