@@ -7,6 +7,8 @@ This repository contains the mobile application for Swingers.
 - Expo (React Native)
 - TypeScript
 - Jest
+- EAS
+- GitHub Actions
 
 ## Prerequisites
 

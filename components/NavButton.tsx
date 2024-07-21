@@ -1,6 +1,5 @@
 import { Pressable, Text, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
-import Colors from '@/constants/Colors';
 
 type NavButtonProps = {
     route: string;
@@ -22,28 +21,28 @@ export default NavButton;
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: Colors.light.accent,
+        backgroundColor: "green",
         paddingVertical: 15,
         display: 'flex',
         alignItems: 'center',
         borderRadius: 9999,
     },
     outline_button: {
-        color: Colors.light.backgroundPrimary,
+        color: "white",
         backgroundColor: 'transparent',
         paddingVertical: 15,
         borderWidth: 1,
-        borderColor: Colors.light.accent,
+        borderColor: "green",
         display: 'flex',
         alignItems: 'center',
         borderRadius: 9999,
     },
     text: {
-        color: Colors.light.backgroundPrimary,
+        color: "white",
         fontSize: 20,
     },
     outline_text: {
-        color: Colors.light.accent,
+        color: "green",
         fontSize: 20,
     }
 });
