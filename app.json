@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "mobile-app",
-    "slug": "mobile-app",
+    "slug": "swingers-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -39,8 +39,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "f28b1c73-e88c-4846-9aac-51a918d85464"
+        "projectId": "be4fc09e-310b-455d-8845-6681e920a9b3"
       }
-    }
+    },
+    "owner": "swingersgolf"
   }
 }
