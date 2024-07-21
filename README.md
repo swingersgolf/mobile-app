@@ -9,6 +9,8 @@ This repository contains the mobile application for Swingers.
 - Jest
 - EAS
 - GitHub Actions
+- ESLint
+- Prettier
 
 ## Prerequisites
 
