@@ -1,5 +1,5 @@
-describe('<LandingPage />', () => {
-  it('always passes', () => {
+describe("<LandingPage />", () => {
+  it("always passes", () => {
     expect(true).toBe(true);
   });
 });

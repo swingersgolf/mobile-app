@@ -1,7 +1,7 @@
-import { Slot } from 'expo-router';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
-import BackButton from '@/components/BackButton';
-import Icon from '@/assets/branding/Icon.svg';
+import { Slot } from "expo-router";
+import { SafeAreaView, StyleSheet, View } from "react-native";
+import BackButton from "@/components/BackButton";
+import Icon from "@/assets/branding/Icon.svg";
 
 export default function UnauthorizedLayout() {
   return (
@@ -19,18 +19,18 @@ export default function UnauthorizedLayout() {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    position: 'relative',
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    position: "relative",
   },
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     left: 16,
   },
   iconContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
