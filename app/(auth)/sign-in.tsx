@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
-import { useSession } from "../../ctx";
+import { useSession } from "../../contexts/AuthContext";
 
 export default function SignIn() {
   const { signIn } = useSession();

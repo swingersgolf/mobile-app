@@ -1,5 +1,6 @@
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Pressable, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
 import { Link } from "expo-router";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type NavButtonProps = {
   route: string;
@@ -8,45 +9,42 @@ type NavButtonProps = {
 };
 
 const NavButton = ({ route, text, outline = false }: NavButtonProps) => {
+  const { accent, backgroundPrimary } = useTheme();
+
+  const buttonStyles = StyleSheet.create({
+    base: {
+      paddingVertical: 15,
+      borderWidth: 1,
+      borderColor: accent,
+      display: "flex",
+      alignItems: "center",
+      borderRadius: 9999,
+    } as ViewStyle,
+    filled: {
+      backgroundColor: accent,
+    } as ViewStyle,
+    outlined: {
+      backgroundColor: "transparent",
+    } as ViewStyle,
+    text: {
+      color: outline ? accent : backgroundPrimary,
+    } as TextStyle,
+  });
+
   return (
     <Link
       href={route}
       asChild
-      style={outline ? styles.outline_button : styles.button}
+      style={[
+        buttonStyles.base,
+        outline ? buttonStyles.outlined : buttonStyles.filled,
+      ]}
     >
       <Pressable>
-        <Text style={outline ? styles.outline_text : styles.text}>{text}</Text>
+        <Text style={buttonStyles.text}>{text}</Text>
       </Pressable>
     </Link>
   );
 };
 
 export default NavButton;
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: "green",
-    paddingVertical: 15,
-    display: "flex",
-    alignItems: "center",
-    borderRadius: 9999,
-  },
-  outline_button: {
-    color: "white",
-    backgroundColor: "transparent",
-    paddingVertical: 15,
-    borderWidth: 1,
-    borderColor: "green",
-    display: "flex",
-    alignItems: "center",
-    borderRadius: 9999,
-  },
-  text: {
-    color: "white",
-    fontSize: 20,
-  },
-  outline_text: {
-    color: "green",
-    fontSize: 20,
-  },
-});
