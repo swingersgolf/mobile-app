@@ -1,4 +1,10 @@
-import { Pressable, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import {
+  Pressable,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 import { Link } from "expo-router";
 import { useTheme } from "@/contexts/ThemeContext";
 
