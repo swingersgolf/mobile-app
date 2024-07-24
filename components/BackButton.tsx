@@ -10,7 +10,11 @@ type BackButtonProps = {
 const BackButton = ({ style }: BackButtonProps) => {
   const theme = useTheme();
   return (
-    <Pressable style={[styles.button, style]} onPress={() => router.back()}>
+    <Pressable
+      style={[styles.button, style]}
+      onPress={() => router.back()}
+      testID="back-button"
+    >
       <FontAwesome
         size={28}
         name="chevron-left"

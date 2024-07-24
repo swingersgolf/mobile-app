@@ -2,7 +2,7 @@ import { View, StyleSheet } from "react-native";
 import NavButton from "@/components/NavButton";
 import BannerLogo from "@/assets/branding/BannerLogo.svg";
 
-const LandingPage = () => {
+const LandingScreen = () => {
   return (
     <View style={styles.container} testID="landing-page">
       <BannerLogo width={300} height={75} />
@@ -14,7 +14,7 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default LandingScreen;
 
 const styles = StyleSheet.create({
   container: {
