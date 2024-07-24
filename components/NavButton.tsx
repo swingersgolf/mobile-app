@@ -5,16 +5,15 @@ import {
   ViewStyle,
   TextStyle,
 } from "react-native";
-import { Link } from "expo-router";
 import { useTheme } from "@/contexts/ThemeContext";
 
 type NavButtonProps = {
-  route: string;
   text: string;
   outline?: boolean;
+  onPress: () => void;
 };
 
-const NavButton = ({ route, text, outline = false }: NavButtonProps) => {
+const NavButton = ({ onPress, text, outline = false }: NavButtonProps) => {
   const { accent, backgroundPrimary } = useTheme();
 
   const buttonStyles = StyleSheet.create({
@@ -38,19 +37,16 @@ const NavButton = ({ route, text, outline = false }: NavButtonProps) => {
   });
 
   return (
-    <Link
-      href={route}
-      asChild
+    <Pressable
+      onPress={onPress}
       style={[
         buttonStyles.base,
         outline ? buttonStyles.outlined : buttonStyles.filled,
       ]}
       testID="nav-button"
     >
-      <Pressable>
-        <Text style={buttonStyles.text}>{text}</Text>
-      </Pressable>
-    </Link>
+      <Text style={buttonStyles.text}>{text}</Text>
+    </Pressable>
   );
 };
 
