@@ -7,13 +7,13 @@ import {
 } from "react-native";
 import { useTheme } from "@/contexts/ThemeContext";
 
-type NavButtonProps = {
+type ButtonProps = {
   text: string;
   outline?: boolean;
   onPress: () => void;
 };
 
-const NavButton = ({ onPress, text, outline = false }: NavButtonProps) => {
+const Button = ({ onPress, text, outline = false }: ButtonProps) => {
   const { accent, backgroundPrimary } = useTheme();
 
   const buttonStyles = StyleSheet.create({
@@ -43,11 +43,11 @@ const NavButton = ({ onPress, text, outline = false }: NavButtonProps) => {
         buttonStyles.base,
         outline ? buttonStyles.outlined : buttonStyles.filled,
       ]}
-      testID="nav-button"
+      testID="button"
     >
       <Text style={buttonStyles.text}>{text}</Text>
     </Pressable>
   );
 };
 
-export default NavButton;
+export default Button;

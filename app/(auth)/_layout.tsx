@@ -1,13 +1,13 @@
 import { Slot } from "expo-router";
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import BackButton from "@/components/BackButton";
+import BackArrow from "@/components/BackArrow";
 import Icon from "@/assets/branding/Icon.svg";
 
 export default function UnauthorizedLayout() {
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <BackButton style={styles.backButton} />
+        <BackArrow style={styles.backButton} />
         <View style={styles.iconContainer}>
           <Icon height={50} width={50} />
         </View>

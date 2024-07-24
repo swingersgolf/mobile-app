@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import NavButton from "@/components/NavButton";
+import Button from "@/components/Button";
 import BannerLogo from "@/assets/branding/BannerLogo.svg";
 
 const LandingScreen = () => {
@@ -18,8 +18,8 @@ const LandingScreen = () => {
     <View style={styles.container}>
       <BannerLogo width={300} height={75} />
       <View style={styles.buttonsContainer}>
-        <NavButton text="Sign In" onPress={handleNavigateToSignIn} />
-        <NavButton
+        <Button text="Sign In" onPress={handleNavigateToSignIn} />
+        <Button
           text="Create Account"
           onPress={handleNavigateToCreateAccount}
           outline

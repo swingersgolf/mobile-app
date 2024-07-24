@@ -1,4 +1,4 @@
-import NavButton from "@/components/NavButton";
+import Button from "@/components/Button";
 import { Text, View, StyleSheet, TextInput } from "react-native";
 
 export default function SignIn() {
@@ -25,7 +25,7 @@ export default function SignIn() {
         By clicking create account you are agreeing to follow our privacy policy
         and terms and conditions.
       </Text>
-      <NavButton text="Create Account" onPress={handleCreateAccount} />
+      <Button text="Create Account" onPress={handleCreateAccount} />
     </View>
   );
 }
