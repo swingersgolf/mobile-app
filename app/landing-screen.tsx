@@ -4,7 +4,7 @@ import BannerLogo from "@/assets/branding/BannerLogo.svg";
 
 const LandingScreen = () => {
   return (
-    <View style={styles.container} testID="landing-page">
+    <View style={styles.container}>
       <BannerLogo width={300} height={75} />
       <View style={styles.buttonsContainer}>
         <NavButton text="Sign In" route="/sign-in" />

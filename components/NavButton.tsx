@@ -45,6 +45,7 @@ const NavButton = ({ route, text, outline = false }: NavButtonProps) => {
         buttonStyles.base,
         outline ? buttonStyles.outlined : buttonStyles.filled,
       ]}
+      testID="nav-button"
     >
       <Pressable>
         <Text style={buttonStyles.text}>{text}</Text>
