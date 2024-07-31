@@ -1,17 +1,21 @@
-import { Slot } from "expo-router";
+import { Slot, useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import BackArrow from "@/components/BackArrow";
 import Icon from "@/assets/branding/Icon.svg";
 import React from "react";
 
 const UnauthorizedLayout = () => {
+  const router = useRouter();
   return (
     <View id="auth-screen" style={styles.authScreen}>
-      <View id="navbar" style={styles.navbar}>
-        <BackArrow style={styles.backButton} />
-        <View style={styles.iconContainer}>
-          <Icon height={50} width={50} />
-        </View>
+      <View style={styles.backArrowContainer}>
+        <BackArrow
+          style={styles.backButton}
+          onPress={() => router.replace("/")}
+        />
+      </View>
+      <View style={styles.iconContainer}>
+        <Icon height={100} width={100} />
       </View>
       <View id="content-container" style={styles.contentContainer}>
         <Slot />
@@ -38,22 +42,17 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "white",
   },
-  navbar: {
+  backArrowContainer: {
     position: "absolute",
-    display: "flex",
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    top: 0,
+    top: 20,
+    left: 20,
   },
   backButton: {
     position: "absolute",
     left: 16,
   },
   iconContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    position: "absolute",
+    top: 100,
   },
 });

@@ -71,12 +71,12 @@ export default function Register() {
   return (
     <View id="create-account" style={styles.createAccount}>
       <Text>Create Account</Text>
-      <View id="social-media-container" style={styles.socialMediaContainer}>
+      {/* <View id="social-media-container" style={styles.socialMediaContainer}>
         <Text>Twitter</Text>
         <Text>Facebook</Text>
         <Text>Google</Text>
       </View>
-      <Text>Or create an account with</Text>
+      <Text>Or create an account with</Text> */}
       <View id="create-account-form" style={styles.form}>
         <TextInput
           placeholder="Email"
@@ -107,7 +107,7 @@ export default function Register() {
         />
       </View>
       <Text>
-        By clicking create account you are agreeing to follow our
+        By clicking create account you are agreeing to follow our&nbsp;
         <Text
           style={styles.link}
           onPress={() => handleLinkPress("https://google.com")}
@@ -124,6 +124,7 @@ export default function Register() {
 const styles = StyleSheet.create({
   createAccount: {
     padding: 20,
+    rowGap: 20,
   },
   form: {
     width: "100%",
