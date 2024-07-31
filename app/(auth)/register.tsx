@@ -6,41 +6,10 @@ import * as Linking from "expo-linking";
 import TextButton from "@/components/TextButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const validateEmail = (email: string) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-const validatePassword = (password: string) =>
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(password);
-
-const validateForm = (
-  email: string,
-  name: string,
-  password: string,
-  confirmPassword: string,
-) => {
-  if (!email || !name || !password || !confirmPassword) {
+const validateForm = (email: string, name: string, password: string) => {
+  if (!email || !name || !password) {
     console.log("All fields are required");
     Alert.alert("Error", "All fields are required");
-    return false;
-  }
-  if (!validateEmail(email)) {
-    console.log("Invalid email format");
-    Alert.alert("Error", "Invalid email format");
-    return false;
-  }
-  if (!validatePassword(password)) {
-    console.log(
-      "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number",
-    );
-    Alert.alert(
-      "Error",
-      "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number",
-    );
-    return false;
-  }
-  if (password !== confirmPassword) {
-    console.log("Passwords do not match");
-    Alert.alert("Error", "Passwords do not match");
     return false;
   }
   return true;
@@ -52,10 +21,9 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleCreateAccount = async () => {
-    if (!validateForm(email, name, password, confirmPassword)) return;
+    if (!validateForm(email, name, password)) return;
 
     try {
       const response = await axios.post("https://example.com/api/register", {
@@ -74,13 +42,16 @@ export default function Register() {
   return (
     <SafeAreaView id="create-account" style={styles.createAccount}>
       <Text style={styles.title}>Create Account</Text>
-      {/* <View id="social-media-container" style={styles.socialMediaContainer}>
-        <Text>Twitter</Text>
-        <Text>Facebook</Text>
-        <Text>Google</Text>
-      </View>
-      <Text>Or create an account with</Text> */}
       <View id="create-account-form" style={styles.form}>
+        <TextInput
+          placeholder="Name"
+          autoComplete="name"
+          textContentType="name"
+          style={styles.formInput}
+          value={name}
+          onChangeText={setName}
+          placeholderTextColor={colors.grey}
+        />
         <TextInput
           placeholder="Email"
           keyboardType="email-address"
@@ -92,32 +63,13 @@ export default function Register() {
           placeholderTextColor={colors.grey}
         />
         <TextInput
-          placeholder="Name"
-          autoComplete="name"
-          textContentType="name"
-          style={styles.formInput}
-          value={name}
-          onChangeText={setName}
-          placeholderTextColor={colors.grey}
-        />
-        <TextInput
           placeholder="Password"
           autoComplete="password"
-          textContentType="password" // Prevents strong password autofill
+          textContentType="password"
           secureTextEntry={true}
           style={styles.formInput}
           value={password}
           onChangeText={setPassword}
-          placeholderTextColor={colors.grey}
-        />
-        <TextInput
-          placeholder="Confirm Password"
-          autoComplete="password"
-          textContentType="password" // Prevents strong password autofill
-          secureTextEntry={true}
-          style={styles.formInput}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
           placeholderTextColor={colors.grey}
         />
       </View>
@@ -163,12 +115,7 @@ const styles = StyleSheet.create({
     borderColor: colors.grey,
     color: colors.black,
   },
-  socialMediaContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
   link: {
     color: colors.darkGreen,
-    textDecorationLine: "underline",
   },
 });
