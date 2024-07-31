@@ -87,7 +87,12 @@ export default function Register() {
         </Text>
         .
       </Text>
-      <TextButton text="Create Account" onPress={handleCreateAccount} />
+      <TextButton
+        text="Create Account"
+        onPress={handleCreateAccount}
+        textColor={colors.white}
+        backgroundColor={colors.lightGreen}
+      />
     </SafeAreaView>
   );
 }

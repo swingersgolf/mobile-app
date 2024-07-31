@@ -2,6 +2,7 @@ import { Text } from "react-native";
 import { Redirect, Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useSession } from "../../contexts/AuthContext";
+import React from "react";
 
 export default function AppLayout() {
   const { session, isLoading } = useSession();
@@ -16,7 +17,7 @@ export default function AppLayout() {
   if (!session) {
     // On web, static rendering will stop here as the user is not authenticated
     // in the headless Node process that the pages are rendered in.
-    return <Redirect href="/landing-screen" />;
+    return <Redirect href="/landing" />;
   }
 
   // This layout can be deferred because it"s not the root layout.
