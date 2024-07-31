@@ -1,9 +1,12 @@
 import { fireEvent, render } from "@testing-library/react-native";
-import Button from "./Button";
+import TextButton from "./TextButton";
+import React from "react";
 
-describe("Button", () => {
+describe("TextButton", () => {
   it("renders correctly", () => {
-    const { getByTestId } = render(<Button text="Test" onPress={() => {}} />);
+    const { getByTestId } = render(
+      <TextButton text="Test" onPress={() => {}} />,
+    );
 
     // Verify if the button is rendered
     const button = getByTestId("button");
@@ -13,7 +16,7 @@ describe("Button", () => {
   it("calls onPress when pressed", () => {
     const mockOnPress = jest.fn();
     const { getByTestId } = render(
-      <Button text="Test" onPress={mockOnPress} />,
+      <TextButton text="Test" onPress={mockOnPress} />,
     );
 
     const button = getByTestId("button");

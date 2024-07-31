@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import Button from "@/components/Button";
+import Button from "@/components/TextButton";
 import BannerLogo from "@/assets/branding/BannerLogo.svg";
 
 const LandingScreen = () => {

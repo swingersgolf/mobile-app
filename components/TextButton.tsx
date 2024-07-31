@@ -1,5 +1,6 @@
 import React from "react";
 import { Pressable, Text, StyleSheet } from "react-native";
+import { colors } from "@/constants/Colors";
 
 type ButtonProps = {
   text: string;
@@ -7,7 +8,7 @@ type ButtonProps = {
   onPress: () => void;
 };
 
-const Button = ({ onPress, text, outline = false }: ButtonProps) => {
+const TextButton = ({ onPress, text, outline = false }: ButtonProps) => {
   return (
     <Pressable
       onPress={onPress}
@@ -17,12 +18,19 @@ const Button = ({ onPress, text, outline = false }: ButtonProps) => {
       ]}
       testID="button"
     >
-      <Text style={buttonStyles.text}>{text}</Text>
+      <Text
+        style={[
+          buttonStyles.textBase,
+          outline ? buttonStyles.outlinedText : buttonStyles.filledText,
+        ]}
+      >
+        {text}
+      </Text>
     </Pressable>
   );
 };
 
-export default Button;
+export default TextButton;
 
 const buttonStyles = StyleSheet.create({
   base: {
@@ -32,14 +40,21 @@ const buttonStyles = StyleSheet.create({
     alignItems: "center",
   },
   filled: {
-    backgroundColor: "#2a9d8f",
+    backgroundColor: colors.darkGreen,
   },
   outlined: {
     borderWidth: 1,
-    borderColor: "#2a9d8f",
+    borderColor: colors.darkGreen,
   },
-  text: {
-    color: "white",
+  textBase: {
+    color: colors.white,
+    fontSize: 16,
     fontWeight: "bold",
+  },
+  filledText: {
+    color: colors.white,
+  },
+  outlinedText: {
+    color: colors.darkGreen,
   },
 });

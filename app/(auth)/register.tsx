@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Button, Text, View, StyleSheet, TextInput, Alert } from "react-native";
+import { Text, View, StyleSheet, TextInput, Alert } from "react-native";
+import { colors } from "@/constants/Colors";
 import * as Linking from "expo-linking";
+import TextButton from "@/components/TextButton";
 
 const validateEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -70,7 +72,7 @@ export default function Register() {
 
   return (
     <View id="create-account" style={styles.createAccount}>
-      <Text>Create Account</Text>
+      <Text style={styles.title}>Create Account</Text>
       {/* <View id="social-media-container" style={styles.socialMediaContainer}>
         <Text>Twitter</Text>
         <Text>Facebook</Text>
@@ -116,7 +118,7 @@ export default function Register() {
         </Text>
         .
       </Text>
-      <Button title="Create Account" onPress={handleCreateAccount} />
+      <TextButton text="Create Account" onPress={handleCreateAccount} />
     </View>
   );
 }
@@ -125,6 +127,11 @@ const styles = StyleSheet.create({
   createAccount: {
     padding: 20,
     rowGap: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   form: {
     width: "100%",
@@ -137,14 +144,15 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: colors.black,
+    color: colors.black,
   },
   socialMediaContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
   },
   link: {
-    color: "blue",
+    color: colors.darkGreen,
     textDecorationLine: "underline",
   },
 });
