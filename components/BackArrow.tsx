@@ -4,17 +4,18 @@ import React from "react";
 
 type BackButtonProps = {
   style?: StyleProp<ViewStyle>;
+  color?: string;
   onPress: () => void;
 };
 
-const BackButton = ({ style, onPress }: BackButtonProps) => {
+const BackButton = ({ style, color, onPress }: BackButtonProps) => {
   return (
     <Pressable
       style={[styles.button, style]}
       onPress={onPress}
       testID="back-arrow"
     >
-      <FontAwesome size={28} name="chevron-left" color="black" />
+      <FontAwesome size={28} name="chevron-left" color={color} />
     </Pressable>
   );
 };

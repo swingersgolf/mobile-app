@@ -34,7 +34,7 @@ export default TextButton;
 
 const buttonStyles = StyleSheet.create({
   base: {
-    padding: 10,
+    paddingVertical: 15,
     borderRadius: 5,
     width: "100%",
     alignItems: "center",
@@ -48,7 +48,7 @@ const buttonStyles = StyleSheet.create({
   },
   textBase: {
     color: colors.white,
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
   },
   filledText: {

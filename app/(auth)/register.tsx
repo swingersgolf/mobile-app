@@ -4,6 +4,7 @@ import { Text, View, StyleSheet, TextInput, Alert } from "react-native";
 import { colors } from "@/constants/Colors";
 import * as Linking from "expo-linking";
 import TextButton from "@/components/TextButton";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const validateEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -71,7 +72,7 @@ export default function Register() {
   };
 
   return (
-    <View id="create-account" style={styles.createAccount}>
+    <SafeAreaView id="create-account" style={styles.createAccount}>
       <Text style={styles.title}>Create Account</Text>
       {/* <View id="social-media-container" style={styles.socialMediaContainer}>
         <Text>Twitter</Text>
@@ -83,29 +84,37 @@ export default function Register() {
         <TextInput
           placeholder="Email"
           keyboardType="email-address"
+          autoComplete="email"
           style={styles.formInput}
           value={email}
           onChangeText={setEmail}
+          placeholderTextColor={colors.grey}
         />
         <TextInput
           placeholder="Name"
+          autoComplete="name"
           style={styles.formInput}
           value={name}
           onChangeText={setName}
+          placeholderTextColor={colors.grey}
         />
         <TextInput
           placeholder="Password"
+          autoComplete="password"
           secureTextEntry={true}
           style={styles.formInput}
           value={password}
           onChangeText={setPassword}
+          placeholderTextColor={colors.grey}
         />
         <TextInput
           placeholder="Confirm Password"
+          autoComplete="password"
           secureTextEntry={true}
           style={styles.formInput}
           value={confirmPassword}
           onChangeText={setConfirmPassword}
+          placeholderTextColor={colors.grey}
         />
       </View>
       <Text>
@@ -119,13 +128,15 @@ export default function Register() {
         .
       </Text>
       <TextButton text="Create Account" onPress={handleCreateAccount} />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   createAccount: {
-    padding: 20,
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
     rowGap: 20,
   },
   title: {
@@ -140,11 +151,12 @@ const styles = StyleSheet.create({
   },
   formInput: {
     width: "100%",
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
     margin: 5,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: colors.black,
+    borderColor: colors.grey,
     color: colors.black,
   },
   socialMediaContainer: {
