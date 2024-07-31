@@ -1,11 +1,4 @@
-import {
-  Pressable,
-  Text,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-} from "react-native";
-import { useTheme } from "@/contexts/ThemeContext";
+import { Pressable, Text, StyleSheet } from "react-native";
 
 type ButtonProps = {
   text: string;
@@ -14,28 +7,6 @@ type ButtonProps = {
 };
 
 const Button = ({ onPress, text, outline = false }: ButtonProps) => {
-  const { accent, backgroundPrimary } = useTheme();
-
-  const buttonStyles = StyleSheet.create({
-    base: {
-      paddingVertical: 15,
-      borderWidth: 1,
-      borderColor: accent,
-      display: "flex",
-      alignItems: "center",
-      borderRadius: 9999,
-    } as ViewStyle,
-    filled: {
-      backgroundColor: accent,
-    } as ViewStyle,
-    outlined: {
-      backgroundColor: "transparent",
-    } as ViewStyle,
-    text: {
-      color: outline ? accent : backgroundPrimary,
-    } as TextStyle,
-  });
-
   return (
     <Pressable
       onPress={onPress}
@@ -51,3 +22,23 @@ const Button = ({ onPress, text, outline = false }: ButtonProps) => {
 };
 
 export default Button;
+
+const buttonStyles = StyleSheet.create({
+  base: {
+    padding: 10,
+    borderRadius: 5,
+    width: "100%",
+    alignItems: "center",
+  },
+  filled: {
+    backgroundColor: "#2a9d8f",
+  },
+  outlined: {
+    borderWidth: 1,
+    borderColor: "#2a9d8f",
+  },
+  text: {
+    color: "white",
+    fontWeight: "bold",
+  },
+});

@@ -1,11 +1,12 @@
 import { router } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
 import { useSession } from "../../contexts/AuthContext";
+import React from "react";
 
-export default function SignIn() {
+const Login = () => {
   const { signIn } = useSession();
   return (
-    <View style={styles.container}>
+    <View id="login" style={styles.container}>
       <Text
         onPress={() => {
           signIn();

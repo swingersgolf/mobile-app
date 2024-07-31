@@ -6,22 +6,14 @@ import BannerLogo from "@/assets/branding/BannerLogo.svg";
 const LandingScreen = () => {
   const router = useRouter();
 
-  const handleNavigateToSignIn = () => {
-    router.push("/sign-in");
-  };
-
-  const handleNavigateToCreateAccount = () => {
-    router.push("/create-account");
-  };
-
   return (
     <View style={styles.container}>
       <BannerLogo width={300} height={75} />
       <View style={styles.buttonsContainer}>
-        <Button text="Sign In" onPress={handleNavigateToSignIn} />
+        <Button text="Sign In" onPress={() => router.push("/login")} />
         <Button
           text="Create Account"
-          onPress={handleNavigateToCreateAccount}
+          onPress={() => router.push("/register")}
           outline
         />
       </View>
@@ -36,6 +28,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
   },
   buttonsContainer: {
     position: "absolute",
