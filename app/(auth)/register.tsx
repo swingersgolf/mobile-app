@@ -40,7 +40,11 @@ export default function Register() {
   };
 
   return (
-    <SafeAreaView id="create-account" style={styles.createAccount}>
+    <SafeAreaView
+      id="create-account"
+      testID="create-account"
+      style={styles.createAccount}
+    >
       <Text style={styles.title}>Create Account</Text>
       <View id="create-account-form" style={styles.form}>
         <TextInput

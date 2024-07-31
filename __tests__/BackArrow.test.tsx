@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react-native";
-import BackArrow from "./BackArrow";
+import BackArrow from "@/components/BackArrow";
 import React from "react";
 
 // Mock router.back function

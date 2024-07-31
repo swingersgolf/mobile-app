@@ -1,5 +1,5 @@
 import { fireEvent, render } from "@testing-library/react-native";
-import TextButton from "./TextButton";
+import TextButton from "@/components/TextButton";
 import React from "react";
 
 describe("TextButton", () => {
