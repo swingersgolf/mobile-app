@@ -85,6 +85,7 @@ export default function Register() {
           placeholder="Email"
           keyboardType="email-address"
           autoComplete="email"
+          textContentType="emailAddress"
           style={styles.formInput}
           value={email}
           onChangeText={setEmail}
@@ -93,6 +94,7 @@ export default function Register() {
         <TextInput
           placeholder="Name"
           autoComplete="name"
+          textContentType="name"
           style={styles.formInput}
           value={name}
           onChangeText={setName}
@@ -101,6 +103,7 @@ export default function Register() {
         <TextInput
           placeholder="Password"
           autoComplete="password"
+          textContentType="password" // Prevents strong password autofill
           secureTextEntry={true}
           style={styles.formInput}
           value={password}
@@ -110,6 +113,7 @@ export default function Register() {
         <TextInput
           placeholder="Confirm Password"
           autoComplete="password"
+          textContentType="password" // Prevents strong password autofill
           secureTextEntry={true}
           style={styles.formInput}
           value={confirmPassword}
