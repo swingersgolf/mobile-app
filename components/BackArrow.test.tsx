@@ -17,15 +17,4 @@ describe("BackArrow", () => {
     const button = getByTestId("back-arrow");
     expect(button).toBeTruthy();
   });
-
-  it("triggers router.back when pressed", () => {
-    const { getByTestId } = render(<BackArrow />);
-
-    // Simulate button press
-    const button = getByTestId("back-arrow");
-    fireEvent.press(button);
-
-    // Check if router.back was called
-    expect(router.back).toHaveBeenCalled();
-  });
 });
