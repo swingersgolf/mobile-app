@@ -19,7 +19,9 @@ const Login = () => {
       </Text>
     </View>
   );
-}
+};
+
+export default Login;
 
 const styles = StyleSheet.create({
   container: {

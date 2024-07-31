@@ -60,6 +60,7 @@ export default function Register() {
         name,
         password,
       });
+      console.log(response.data);
       Alert.alert("Success", "Account created successfully");
     } catch (error) {
       console.error(error);
