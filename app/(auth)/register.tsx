@@ -11,6 +11,7 @@ import {
 import { colors } from "@/constants/Colors";
 import * as Linking from "expo-linking";
 import TextButton from "@/components/TextButton";
+import { router } from "expo-router";
 
 // Function to validate email format
 const isValidEmail = (email: string) => {
@@ -176,6 +177,13 @@ export default function Register() {
         textColor={colors.white}
         backgroundColor={colors.lightGreen}
       />
+      {/* add text link to login screen if you already have an account */}
+      <Text>
+        Already have an account?&nbsp;
+        <Text style={styles.link} onPress={() => router.push("/login")}>
+          Login
+        </Text>
+      </Text>
     </SafeAreaView>
   );
 }
