@@ -1,17 +1,10 @@
 import { useState } from "react";
-import axios from "axios";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TextInput,
-  SafeAreaView,
-  Alert,
-} from "react-native";
+import { Text, View, StyleSheet, TextInput, SafeAreaView } from "react-native";
 import { colors } from "@/constants/Colors";
 import * as Linking from "expo-linking";
 import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
+import { useSession } from "@/contexts/AuthContext";
 
 // Function to validate email format
 const isValidEmail = (email: string) => {
@@ -53,6 +46,8 @@ const validateForm = (
 const handleLinkPress = (url: string) => Linking.openURL(url);
 
 export default function Register() {
+  const { createAccount, signIn } = useSession();
+
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -70,17 +65,11 @@ export default function Register() {
       return;
     }
 
-    try {
-      const response = await axios.post("https://example.com/api/register", {
-        email,
-        name,
-        password,
-      });
-      console.log(response.data);
-      Alert.alert("Success", "Account created successfully");
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "An error occurred while creating the account");
+    const createAccountSuccess = await createAccount(email, name, password);
+    const signInSuccess = await signIn(email, password);
+
+    if (createAccountSuccess && signInSuccess) {
+      router.replace("/");
     }
   };
 

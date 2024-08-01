@@ -9,11 +9,17 @@ import {
 const AuthContext = createContext<{
   signIn: (email: string, password: string) => Promise<boolean>;
   signOut: () => void;
+  createAccount: (
+    email: string,
+    name: string,
+    password: string,
+  ) => Promise<boolean>;
   session?: string | null;
   isLoading: boolean;
 }>({
   signIn: async () => false,
   signOut: () => null,
+  createAccount: async () => false,
   session: null,
   isLoading: false,
 });
@@ -56,11 +62,33 @@ export function SessionProvider({ children }: PropsWithChildren) {
     setStorageItemAsync("session", null);
   };
 
+  const createAccount = async (
+    email: string,
+    name: string,
+    password: string,
+  ): Promise<boolean> => {
+    try {
+      const response = await axios.post("https://example.com/api/register", {
+        email,
+        name,
+        password,
+      });
+      console.log(response.data);
+      Alert.alert("Success", "Account created successfully");
+      return true;
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "An error occurred while creating the account");
+      return false;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         signIn,
         signOut,
+        createAccount,
         session,
         isLoading,
       }}
