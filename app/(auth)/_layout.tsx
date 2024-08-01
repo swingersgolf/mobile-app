@@ -1,36 +1,55 @@
-import { Slot } from "expo-router";
-import { SafeAreaView, StyleSheet, View } from "react-native";
-import BackButton from "@/components/BackButton";
+import { Slot, useRouter } from "expo-router";
+import {
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import BackArrow from "@/components/BackArrow";
 import Icon from "@/assets/branding/Icon.svg";
+import { colors } from "@/constants/Colors";
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function UnauthorizedLayout() {
+const UnauthorizedLayout = () => {
+  const router = useRouter();
   return (
-    <>
-      <SafeAreaView style={styles.container}>
-        <BackButton style={styles.backButton} />
-        <View style={styles.iconContainer}>
-          <Icon height={50} width={50} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView id="auth-screen" style={styles.authScreen}>
+        <View id="navbar" style={styles.navbar}>
+          <BackArrow
+            style={styles.backArrow}
+            onPress={() => router.replace("/")}
+          />
+          <Icon style={styles.icon} height={50} width={50} />
         </View>
+        <Slot />
       </SafeAreaView>
-      <Slot />
-    </>
+    </TouchableWithoutFeedback>
   );
-}
+};
+
+export default UnauthorizedLayout;
 
 const styles = StyleSheet.create({
-  container: {
+  authScreen: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: colors.white,
+    gap: 40,
+  },
+  navbar: {
+    width: "100%",
+    display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    width: "100%",
-    position: "relative",
-  },
-  backButton: {
-    position: "absolute",
-    left: 16,
-  },
-  iconContainer: {
-    flex: 1,
     justifyContent: "center",
-    alignItems: "center",
   },
+  backArrow: {
+    position: "absolute",
+    left: 0,
+  },
+  icon: {},
 });

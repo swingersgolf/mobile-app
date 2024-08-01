@@ -1,7 +1,8 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useSession } from "../../contexts/AuthContext";
+import React from "react";
 
-export default function Index() {
+export default function Home() {
   const { signOut } = useSession();
   return (
     <View style={styles.container}>
