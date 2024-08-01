@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TextInput,
-  SafeAreaView,
-  Alert,
-} from "react-native";
+import { Text, View, StyleSheet, TextInput, SafeAreaView } from "react-native";
 import { colors } from "@/constants/Colors";
 import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
@@ -70,24 +62,28 @@ export default function Login() {
   //       password,
   //     });
   //     console.log(response.data);
+  //     signIn();
+  //     console.log("Login successful");
   //     Alert.alert("Success", "Login successful");
   //     // Redirect to home or another screen on successful login
-  //     router.push("/home");
+  //     router.replace("/");
   //   } catch (error) {
   //     console.error(error);
   //     Alert.alert("Error", "An error occurred while logging in");
   //   }
   // };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!validateLoginForm(email, password, setInvalidFields)) {
       setHasAttemptedSubmit(true);
       return;
     }
 
-    signIn();
+    const success = await signIn(email, password);
 
-    router.replace("/");
+    if (success) {
+      router.replace("/");
+    }
   };
 
   const handleChangeText = (field: "email" | "password", text: string) => {
