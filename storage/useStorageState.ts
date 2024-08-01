@@ -1,13 +1,13 @@
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
-import React, { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
 
 function useAsyncState<T>(
   initialValue: [boolean, T | null] = [true, null],
 ): UseStateHook<T> {
-  return React.useReducer(
+  return useReducer(
     (
       state: [boolean, T | null],
       action: T | null = null,

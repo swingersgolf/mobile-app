@@ -1,7 +1,10 @@
-import React, { useContext, createContext, PropsWithChildren } from "react";
+import { useContext, createContext, PropsWithChildren } from "react";
 import { Alert } from "react-native";
 import axios from "axios";
-import { setStorageItemAsync, useStorageState } from "@/useStorageState";
+import {
+  setStorageItemAsync,
+  useStorageState,
+} from "@/storage/useStorageState";
 
 const AuthContext = createContext<{
   signIn: (email: string, password: string) => Promise<boolean>;

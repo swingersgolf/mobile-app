@@ -10,4 +10,11 @@ module.exports = {
     ],
   },
   ignorePatterns: ["expo-env.d.ts"],
+  settings: {
+    "import/resolver": {
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
+  },
 };

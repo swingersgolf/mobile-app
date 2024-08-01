@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Text, View, StyleSheet, TextInput, SafeAreaView } from "react-native";
 import { colors } from "@/constants/Colors";
 import TextButton from "@/components/TextButton";
@@ -49,29 +49,6 @@ export default function Login() {
     emailFormat?: boolean;
   }>({});
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
-
-  // const handleLogin = async () => {
-  //   if (!validateLoginForm(email, password, setInvalidFields)) {
-  //     setHasAttemptedSubmit(true);
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axios.post("https://example.com/api/login", {
-  //       email,
-  //       password,
-  //     });
-  //     console.log(response.data);
-  //     signIn();
-  //     console.log("Login successful");
-  //     Alert.alert("Success", "Login successful");
-  //     // Redirect to home or another screen on successful login
-  //     router.replace("/");
-  //   } catch (error) {
-  //     console.error(error);
-  //     Alert.alert("Error", "An error occurred while logging in");
-  //   }
-  // };
 
   const handleLogin = async () => {
     if (!validateLoginForm(email, password, setInvalidFields)) {

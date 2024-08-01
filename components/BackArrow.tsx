@@ -1,6 +1,5 @@
 import { Pressable, StyleProp, ViewStyle, StyleSheet } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import React from "react";
 
 type BackButtonProps = {
   style?: StyleProp<ViewStyle>;
