@@ -90,25 +90,12 @@ export default function Register() {
     // Update field value
     if (field === "email") {
       setEmail(text);
-      // Check email validity and update invalidFields
-      if (!text) {
-        setInvalidFields((prev) => ({
-          ...prev,
-          email: true,
-          emailFormat: false,
-        }));
-      } else if (!isValidEmail(text)) {
-        setInvalidFields((prev) => ({
-          ...prev,
-          emailFormat: true,
-        }));
-      } else {
-        setInvalidFields((prev) => ({
-          ...prev,
-          email: false,
-          emailFormat: false,
-        }));
-      }
+      // Clear email validation errors on input change
+      setInvalidFields((prev) => ({
+        ...prev,
+        email: text ? false : prev.email,
+        emailFormat: false,
+      }));
     }
     if (field === "name") setName(text);
     if (field === "password") setPassword(text);
@@ -146,15 +133,15 @@ export default function Register() {
           textContentType="emailAddress"
           style={[
             styles.formInput,
-            (invalidFields.email ||
-              (invalidFields.emailFormat && hasAttemptedSubmit)) &&
+            hasAttemptedSubmit &&
+              (invalidFields.email || invalidFields.emailFormat) &&
               styles.invalidInput,
           ]}
           value={email}
           onChangeText={(text) => handleChangeText("email", text)}
           placeholderTextColor={colors.grey}
         />
-        {invalidFields.emailFormat && hasAttemptedSubmit && (
+        {hasAttemptedSubmit && invalidFields.emailFormat && (
           <Text style={styles.errorText}>
             Please enter a valid email address.
           </Text>
@@ -221,10 +208,10 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   invalidInput: {
-    borderColor: "red",
+    borderColor: colors.alert,
   },
   errorText: {
-    color: "red",
+    color: colors.alert,
     marginVertical: 5,
     width: "100%",
     textAlign: "center",

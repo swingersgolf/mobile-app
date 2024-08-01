@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     backgroundColor: colors.white,
+    gap: 40,
   },
   navbar: {
     width: "100%",
