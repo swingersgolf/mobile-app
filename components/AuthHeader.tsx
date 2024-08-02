@@ -1,5 +1,4 @@
-import { useRouter } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import BackArrow from "@/components/BackArrow";
 import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
