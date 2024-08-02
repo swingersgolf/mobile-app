@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 import { Redirect, Tabs } from "expo-router";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { useSession } from "@/contexts/AuthContext";
 import { colors } from "@/constants/Colors";
 

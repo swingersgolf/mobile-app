@@ -13,7 +13,7 @@ const BackButton = ({ style, color }: BackButtonProps) => {
     <Pressable
       style={[styles.button, style]}
       onPress={() => router.back()}
-      testID="back-arrow"
+      testID="back-button"
     >
       <FontAwesome size={28} name="chevron-left" color={color} />
     </Pressable>

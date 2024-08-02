@@ -1,26 +1,27 @@
-import { render } from "@testing-library/react-native";
-import BackArrow from "@/components/BackArrow";
-import React from "react";
+import { render, fireEvent } from "@testing-library/react-native";
+import BackButton from "@/components/BackButton";
+import { useRouter } from "expo-router";
 
-// Mock router.back function
+// Mock useRouter hook and its methods
+const mockBack = jest.fn();
+
 jest.mock("expo-router", () => ({
-  router: {
-    back: jest.fn(),
-  },
+  useRouter: () => ({
+    back: mockBack,
+  }),
 }));
 
-describe("BackArrow", () => {
-  it("renders correctly", () => {
-    const { getByTestId } = render(
-      <BackArrow
-        onPress={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-      />,
-    );
+describe("BackButton", () => {
+  it("calls router.back when pressed", () => {
+    const { getByTestId } = render(<BackButton color="black" />);
 
-    // Verify if the button is rendered
-    const button = getByTestId("back-arrow");
-    expect(button).toBeTruthy();
+    // Get the back button
+    const backButton = getByTestId("back-button");
+
+    // Fire the press event
+    fireEvent.press(backButton);
+
+    // Check if the back function was called
+    expect(mockBack).toHaveBeenCalled();
   });
 });
