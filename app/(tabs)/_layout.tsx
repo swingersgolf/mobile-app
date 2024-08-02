@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 import { Redirect, Tabs } from "expo-router";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useSession } from "../../contexts/AuthContext";
 import { colors } from "../../constants/Colors";
 
@@ -32,8 +32,9 @@ export default function AppLayout() {
         name="index"
         options={{
           title: "Home",
+          tabBarLabel: () => null, // Hide the label
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
+            <AntDesign name="home" size={24} color={color} />
           ),
         }}
       />
@@ -41,8 +42,9 @@ export default function AppLayout() {
         name="profile"
         options={{
           title: "Profile",
+          tabBarLabel: () => null, // Hide the label
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="user" color={color} />
+            <AntDesign name="user" size={24} color={color} />
           ),
         }}
       />
