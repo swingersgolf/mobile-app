@@ -40,21 +40,23 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
 
   const signIn = async (email: string, password: string): Promise<boolean> => {
-    try {
-      const response = await axios.post("https://example.com/api/login", {
-        email,
-        password,
-      });
-      const token = response.data.token; // Adjust according to your API response structure
-      await setStorageItemAsync("session", token);
-      setSession(token);
-      Alert.alert("Success", "Login successful");
-      return true;
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "An error occurred while logging in");
-      return false;
-    }
+    // try {
+    //   const response = await axios.post("https://example.com/api/login", {
+    //     email,
+    //     password,
+    //   });
+    //   const token = response.data.token; // Adjust according to your API response structure
+    //   await setStorageItemAsync("session", token);
+    //   setSession(token);
+    //   Alert.alert("Success", "Login successful");
+    //   return true;
+    // } catch (error) {
+    //   console.error(error);
+    //   Alert.alert("Error", "An error occurred while logging in");
+    //   return false;
+    // }
+    setSession("token");
+    return true;
   };
 
   const signOut = () => {

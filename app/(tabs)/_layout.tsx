@@ -2,6 +2,7 @@ import { Text } from "react-native";
 import { Redirect, Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useSession } from "../../contexts/AuthContext";
+import { colors } from "../../constants/Colors";
 
 export default function AppLayout() {
   const { session, isLoading } = useSession();
@@ -21,13 +22,27 @@ export default function AppLayout() {
 
   // This layout can be deferred because it"s not the root layout.
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: colors.lightGreen,
+        headerShown: false,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="home" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="user" color={color} />
           ),
         }}
       />
