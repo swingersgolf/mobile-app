@@ -1,8 +1,8 @@
 import { Text } from "react-native";
 import { Redirect, Tabs } from "expo-router";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useSession } from "../../contexts/AuthContext";
-import { colors } from "../../constants/Colors";
+import { useSession } from "@/contexts/AuthContext";
+import { colors } from "@/constants/Colors";
 
 export default function AppLayout() {
   const { session, isLoading } = useSession();
