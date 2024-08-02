@@ -1,4 +1,5 @@
 import AuthHeader from "@/components/AuthHeader";
+import { colors } from "@/constants/Colors";
 import { Stack } from "expo-router";
 
 const UnauthorizedLayout = () => {
@@ -6,7 +7,7 @@ const UnauthorizedLayout = () => {
     <Stack
       screenOptions={{
         headerShown: true,
-        contentStyle: { padding: 20 },
+        contentStyle: { padding: 20, backgroundColor: colors.white },
         header: () => AuthHeader(),
       }}
     >

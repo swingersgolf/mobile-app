@@ -1,17 +1,18 @@
 import { Pressable, StyleProp, ViewStyle, StyleSheet } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useRouter } from "expo-router";
 
 type BackButtonProps = {
   style?: StyleProp<ViewStyle>;
   color?: string;
-  onPress: () => void;
 };
 
-const BackButton = ({ style, color, onPress }: BackButtonProps) => {
+const BackButton = ({ style, color }: BackButtonProps) => {
+  const router = useRouter();
   return (
     <Pressable
       style={[styles.button, style]}
-      onPress={onPress}
+      onPress={() => router.back()}
       testID="back-arrow"
     >
       <FontAwesome size={28} name="chevron-left" color={color} />

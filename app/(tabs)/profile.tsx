@@ -1,5 +1,4 @@
-import { Text, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, StyleSheet, SafeAreaView } from "react-native";
 
 const Profile = () => {
   return (
