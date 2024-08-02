@@ -1,6 +1,5 @@
 import { render, fireEvent } from "@testing-library/react-native";
 import BackButton from "@/components/BackButton";
-import { useRouter } from "expo-router";
 
 // Mock useRouter hook and its methods
 const mockBack = jest.fn();
