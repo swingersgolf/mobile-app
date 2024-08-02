@@ -2,7 +2,6 @@ import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import TextButton from "@/components/TextButton";
 import BannerLogoWhite from "@/assets/branding/BannerLogoWhite.svg";
-import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "@/constants/Colors";
 
