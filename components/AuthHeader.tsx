@@ -6,9 +6,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const AuthHeader = () => {
   return (
-    <SafeAreaView id="navbar" style={styles.navbar}>
+    <SafeAreaView
+      id="auth-header"
+      testID="auth-header"
+      style={styles.authHeader}
+    >
       <BackButton style={styles.backArrow} />
-      <Icon style={styles.icon} height={50} width={50} />
+      <Icon
+        id="icon"
+        testID="icon"
+        style={styles.icon}
+        height={50}
+        width={50}
+      />
     </SafeAreaView>
   );
 };
@@ -16,7 +26,7 @@ const AuthHeader = () => {
 export default AuthHeader;
 
 const styles = StyleSheet.create({
-  navbar: {
+  authHeader: {
     width: "100%",
     display: "flex",
     flexDirection: "row",

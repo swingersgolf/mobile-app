@@ -32,7 +32,7 @@ const TextButton = ({
   };
 
   return (
-    <Pressable onPress={onPress} style={buttonStyle} testID="button">
+    <Pressable onPress={onPress} style={buttonStyle} testID="text-button">
       <Text style={textStyle}>{text}</Text>
     </Pressable>
   );

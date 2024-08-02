@@ -11,6 +11,14 @@ jest.mock("expo-router", () => ({
 }));
 
 describe("BackButton", () => {
+  it("renders correctly", () => {
+    const { getByTestId } = render(<BackButton />);
+
+    // Verify if the back button is rendered
+    const button = getByTestId("back-button");
+    expect(button).toBeTruthy();
+  });
+
   it("calls router.back when pressed", () => {
     const { getByTestId } = render(<BackButton color="black" />);
 

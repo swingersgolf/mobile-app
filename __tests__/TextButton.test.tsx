@@ -12,8 +12,8 @@ describe("TextButton", () => {
       />,
     );
 
-    // Verify if the button is rendered
-    const button = getByTestId("button");
+    // Verify if the text button is rendered
+    const button = getByTestId("text-button");
     expect(button).toBeTruthy();
   });
 
@@ -28,7 +28,7 @@ describe("TextButton", () => {
       />,
     );
 
-    const button = getByTestId("button");
+    const button = getByTestId("text-button");
 
     // Simulate a press event
     fireEvent.press(button);
