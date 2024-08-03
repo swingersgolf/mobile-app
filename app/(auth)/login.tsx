@@ -1,87 +1,35 @@
-import { useState } from "react";
-import { Text, View, StyleSheet, TextInput, SafeAreaView } from "react-native";
-import { colors } from "@/constants/Colors";
+import { FC } from "react";
+import { SafeAreaView, Text, View, TextInput, StyleSheet } from "react-native";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginSchema } from "@/utils/validationSchemas";
 import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
+import { colors } from "@/constants/Colors";
 import { useSession } from "@/contexts/AuthContext";
+import { Feather } from "@expo/vector-icons";
 
-// Function to validate email format
-const isValidEmail = (email: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+type LoginFormValues = {
+  email: string;
+  password: string;
 };
 
-const validateLoginForm = (
-  email: string,
-  password: string,
-  setInvalidFields: (fields: {
-    email?: boolean;
-    password?: boolean;
-    emailFormat?: boolean;
-  }) => void,
-) => {
-  const invalidFields: {
-    email?: boolean;
-    password?: boolean;
-    emailFormat?: boolean;
-  } = {};
-
-  if (!email) {
-    invalidFields.email = true;
-  } else if (!isValidEmail(email)) {
-    invalidFields.emailFormat = true;
-  }
-  if (!password) invalidFields.password = true;
-
-  setInvalidFields(invalidFields);
-
-  return Object.keys(invalidFields).length === 0;
-};
-
-export default function Login() {
+const Login: FC = () => {
   const { signIn } = useSession();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [invalidFields, setInvalidFields] = useState<{
-    email?: boolean;
-    password?: boolean;
-    emailFormat?: boolean;
-  }>({});
-  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: yupResolver(loginSchema),
+  });
 
-  const handleLogin = async () => {
-    if (!validateLoginForm(email, password, setInvalidFields)) {
-      setHasAttemptedSubmit(true);
-      return;
-    }
-
-    const success = await signIn(email, password);
+  const onSubmit = async (data: LoginFormValues) => {
+    const success = await signIn(data.email, data.password);
 
     if (success) {
       router.replace("/");
-    }
-  };
-
-  const handleChangeText = (field: "email" | "password", text: string) => {
-    // Update field value
-    if (field === "email") {
-      setEmail(text);
-      // Clear email validation errors on input change
-      setInvalidFields((prev) => ({
-        ...prev,
-        email: text ? false : prev.email,
-        emailFormat: false,
-      }));
-    }
-    if (field === "password") setPassword(text);
-
-    // Remove the red outline if the field has a value
-    if (field !== "email") {
-      setInvalidFields((prev) => ({
-        ...prev,
-        [field]: text ? false : prev[field],
-      }));
     }
   };
 
@@ -89,47 +37,76 @@ export default function Login() {
     <SafeAreaView id="login" testID="login" style={styles.login}>
       <Text style={styles.title}>Login</Text>
       <View id="login-form" style={styles.form}>
-        <TextInput
-          placeholder="Email"
-          keyboardType="email-address"
-          autoComplete="email"
-          textContentType="emailAddress"
-          style={[
-            styles.formInput,
-            hasAttemptedSubmit &&
-              (invalidFields.email || invalidFields.emailFormat) &&
-              styles.invalidInput,
-          ]}
-          value={email}
-          onChangeText={(text) => handleChangeText("email", text)}
-          placeholderTextColor={colors.grey}
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <>
+              <TextInput
+                placeholder="Email"
+                keyboardType="email-address"
+                autoComplete="email"
+                textContentType="emailAddress"
+                style={[styles.formInput, errors.email && styles.invalidInput]}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholderTextColor={colors.grey}
+              />
+              {errors.email && (
+                <View style={styles.alert}>
+                  <Feather
+                    name="alert-triangle"
+                    size={12}
+                    style={styles.alertIcon}
+                  />
+                  <Text style={styles.errorText}>{errors.email.message}</Text>
+                </View>
+              )}
+            </>
+          )}
         />
-        {hasAttemptedSubmit && invalidFields.emailFormat && (
-          <Text style={styles.errorText}>
-            Please enter a valid email address.
-          </Text>
-        )}
-        <TextInput
-          placeholder="Password"
-          autoComplete="password"
-          textContentType="password"
-          secureTextEntry={true}
-          style={[
-            styles.formInput,
-            invalidFields.password && styles.invalidInput,
-          ]}
-          value={password}
-          onChangeText={(text) => handleChangeText("password", text)}
-          placeholderTextColor={colors.grey}
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <>
+              <TextInput
+                placeholder="Password"
+                autoComplete="password"
+                textContentType="password"
+                secureTextEntry={true}
+                style={[
+                  styles.formInput,
+                  errors.password && styles.invalidInput,
+                ]}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholderTextColor={colors.grey}
+              />
+              {errors.password && (
+                <View style={styles.alert}>
+                  <Feather
+                    name="alert-triangle"
+                    size={12}
+                    style={styles.alertIcon}
+                  />
+                  <Text style={styles.errorText}>
+                    {errors.password.message}
+                  </Text>
+                </View>
+              )}
+            </>
+          )}
         />
       </View>
       <TextButton
         text="Login"
-        onPress={handleLogin}
+        onPress={handleSubmit(onSubmit)}
         textColor={colors.white}
         backgroundColor={colors.lightGreen}
       />
-      {/* Add text link to registration screen if the user does not have an account */}
       <Text>
         Don't have an account?&nbsp;
         <Text style={styles.link} onPress={() => router.push("/register")}>
@@ -138,7 +115,7 @@ export default function Login() {
       </Text>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   login: {
@@ -174,9 +151,22 @@ const styles = StyleSheet.create({
     color: colors.alert,
     marginVertical: 5,
     width: "100%",
-    textAlign: "center",
+    textAlign: "left",
   },
   link: {
     color: colors.darkGreen,
   },
+  alert: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    width: "100%",
+    columnGap: 6,
+  },
+  alertIcon: {
+    color: colors.alert,
+  },
 });
+
+export default Login;
