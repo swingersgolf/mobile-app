@@ -1,4 +1,10 @@
-import { useContext, createContext, PropsWithChildren } from "react";
+import {
+  createContext,
+  useContext,
+  PropsWithChildren,
+  useEffect,
+  useCallback,
+} from "react";
 import { Alert } from "react-native";
 import axios from "axios";
 import {
@@ -6,96 +12,95 @@ import {
   useStorageState,
 } from "@/storage/useStorageState";
 
-const AuthContext = createContext<{
-  signIn: (email: string, password: string) => Promise<boolean>;
+// Define the shape of your context
+interface AuthContextType {
+  token: string | null;
+  signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   createAccount: (
-    email: string,
     name: string,
+    email: string,
     password: string,
-  ) => Promise<boolean>;
-  session?: string | null;
+  ) => Promise<void>;
   isLoading: boolean;
-}>({
-  signIn: async () => false,
-  signOut: () => null,
-  createAccount: async () => false,
-  session: null,
-  isLoading: false,
-});
-
-// This hook can be used to access the user info.
-export function useSession() {
-  const value = useContext(AuthContext);
-  if (process.env.NODE_ENV !== "production") {
-    if (!value) {
-      throw new Error("useSession must be wrapped in a <SessionProvider />");
-    }
-  }
-
-  return value;
 }
 
-export function SessionProvider({ children }: PropsWithChildren) {
-  const [[isLoading, session], setSession] = useStorageState("session");
+// Create the context with a default value
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-  const signIn = async (email: string, password: string): Promise<boolean> => {
-    // try {
-    //   const response = await axios.post("https://example.com/api/login", {
-    //     email,
-    //     password,
-    //   });
-    //   const token = response.data.token; // Adjust according to your API response structure
-    //   await setStorageItemAsync("session", token);
-    //   setSession(token);
-    //   Alert.alert("Success", "Login successful");
-    //   return true;
-    // } catch (error) {
-    //   console.error(error);
-    //   Alert.alert("Error", "An error occurred while logging in");
-    //   return false;
-    // }
-    setSession("token");
-    return true;
-  };
+// Custom hook to use the AuthContext
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within a SessionProvider");
+  }
+  return context;
+};
 
-  const signOut = () => {
-    setSession(null);
-    setStorageItemAsync("session", null);
-  };
+export const AuthProvider = ({ children }: PropsWithChildren) => {
+  const [[isLoading, token], setToken] = useStorageState("token");
 
-  const createAccount = async (
-    email: string,
-    name: string,
-    password: string,
-  ): Promise<boolean> => {
+  // Sync token with SecureStore or local storage
+  useEffect(() => {
+    const syncStorage = async () => {
+      if (token) {
+        await setStorageItemAsync("token", token);
+      } else {
+        await setStorageItemAsync("token", null);
+      }
+    };
+    syncStorage();
+  }, [token]);
+
+  // Sign-in function
+  const signIn = async (email: string, password: string) => {
     try {
-      const response = await axios.post("https://example.com/api/register", {
+      console.log("Logging in...", email, password);
+      const response = await axios.post("http://127.0.0.1:8000/api/login", {
         email,
-        name,
         password,
       });
-      console.log(response.data);
-      Alert.alert("Success", "Account created successfully");
-      return true;
+      setToken(response.data.data.token);
+      Alert.alert("Success", "Login successful");
+      return Promise.resolve();
     } catch (error) {
-      console.error(error);
+      console.error("Error logging in:", error);
+      Alert.alert("Error", "An error occurred while logging in");
+      return Promise.reject(error);
+    }
+  };
+
+  // Sign-out function
+  const signOut = useCallback(() => {
+    setToken(null);
+  }, [setToken]);
+
+  // Create account function
+  const createAccount = async (
+    name: string,
+    email: string,
+    password: string,
+  ) => {
+    try {
+      await axios.post("http://127.0.0.1:8000/api/register", {
+        name,
+        email,
+        password,
+      });
+      Alert.alert("Success", "Account created successfully");
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error creating account:", error);
       Alert.alert("Error", "An error occurred while creating the account");
-      return false;
+      return Promise.reject(error);
     }
   };
 
   return (
     <AuthContext.Provider
-      value={{
-        signIn,
-        signOut,
-        createAccount,
-        session,
-        isLoading,
-      }}
+      value={{ token, signIn, signOut, createAccount, isLoading }}
     >
       {children}
     </AuthContext.Provider>
   );
-}
+};

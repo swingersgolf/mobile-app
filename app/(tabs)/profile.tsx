@@ -1,10 +1,10 @@
 import { Text, StyleSheet, SafeAreaView, View, Image } from "react-native";
-import { useSession } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import TextButton from "@/components/TextButton"; // Assuming this is the path to your component
 import { colors } from "@/constants/Colors";
 
 const Profile = () => {
-  const { signOut } = useSession(); // Assuming `user` contains user data
+  const { signOut } = useAuth(); // Assuming `user` contains user data
 
   return (
     <SafeAreaView style={styles.profile}>

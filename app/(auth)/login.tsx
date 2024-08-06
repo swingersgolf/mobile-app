@@ -6,7 +6,7 @@ import { loginSchema } from "@/utils/validationSchemas";
 import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
-import { useSession } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Feather } from "@expo/vector-icons";
 
 type LoginFormValues = {
@@ -15,7 +15,7 @@ type LoginFormValues = {
 };
 
 const Login: FC = () => {
-  const { signIn } = useSession();
+  const { signIn } = useAuth();
 
   const {
     control,
@@ -23,14 +23,15 @@ const Login: FC = () => {
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: yupResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    const success = await signIn(data.email, data.password);
-
-    if (success) {
-      router.replace("/");
-    }
+    await signIn(data.email, data.password);
+    router.replace("/");
   };
 
   return (

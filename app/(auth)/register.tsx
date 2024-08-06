@@ -7,8 +7,8 @@ import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
 import * as Linking from "expo-linking";
-import { useSession } from "@/contexts/AuthContext";
 import { Feather } from "@expo/vector-icons";
+import { useAuth } from "@/contexts/AuthContext";
 
 type RegisterFormValues = {
   email: string;
@@ -17,7 +17,7 @@ type RegisterFormValues = {
 };
 
 const Register: FC = () => {
-  const { createAccount, signIn } = useSession();
+  const { createAccount, signIn } = useAuth();
 
   const {
     control,
@@ -25,19 +25,17 @@ const Register: FC = () => {
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: yupResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      name: "",
+      password: "",
+    },
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
-    const createAccountSuccess = await createAccount(
-      data.email,
-      data.name,
-      data.password,
-    );
-    const signInSuccess = await signIn(data.email, data.password);
-
-    if (createAccountSuccess && signInSuccess) {
-      router.replace("/");
-    }
+    await createAccount(data.email, data.name, data.password);
+    await signIn(data.email, data.password);
+    router.replace("/");
   };
 
   const handleLinkPress = (url: string) => Linking.openURL(url);
@@ -62,7 +60,7 @@ const Register: FC = () => {
                 style={[styles.formInput, errors.name && styles.invalidInput]}
                 onBlur={onBlur}
                 onChangeText={onChange}
-                value={value}
+                value={value || ""}
                 placeholderTextColor={colors.grey}
               />
               {errors.name && (
@@ -91,7 +89,7 @@ const Register: FC = () => {
                 style={[styles.formInput, errors.email && styles.invalidInput]}
                 onBlur={onBlur}
                 onChangeText={onChange}
-                value={value}
+                value={value || ""}
                 placeholderTextColor={colors.grey}
               />
               {errors.email && (
@@ -123,7 +121,7 @@ const Register: FC = () => {
                 ]}
                 onBlur={onBlur}
                 onChangeText={onChange}
-                value={value}
+                value={value || ""}
                 placeholderTextColor={colors.grey}
               />
               {errors.password && (
