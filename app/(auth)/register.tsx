@@ -83,7 +83,7 @@ const Register: FC = () => {
             <>
               <TextInput
                 placeholder="Email"
-                keyboardType="email-address"
+                inputMode="email"
                 autoComplete="email"
                 textContentType="emailAddress"
                 style={[styles.formInput, errors.email && styles.invalidInput]}

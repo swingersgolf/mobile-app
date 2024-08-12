@@ -38,6 +38,7 @@ export const useAuth = (): AuthContextType => {
 };
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const [[isLoading, token], setToken] = useStorageState("token");
 
   // Sync token with SecureStore or local storage
@@ -56,7 +57,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const signIn = async (email: string, password: string) => {
     try {
       console.log("Logging in...", email, password);
-      const response = await axios.post("http://127.0.0.1:8000/api/login", {
+      const response = await axios.post(`${apiUrl}/login`, {
         email,
         password,
       });
@@ -82,7 +83,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     password: string,
   ) => {
     try {
-      await axios.post("http://127.0.0.1:8000/api/register", {
+      await axios.post(`${apiUrl}/register`, {
         name,
         email,
         password,
