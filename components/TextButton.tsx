@@ -15,25 +15,42 @@ const TextButton = ({
   textColor,
   backgroundColor,
 }: ButtonProps) => {
-  const buttonStyle: ViewStyle = {
-    paddingVertical: 15,
-    borderRadius: 5,
-    width: "100%",
-    alignItems: "center",
-    backgroundColor: outline ? "transparent" : backgroundColor,
-    borderWidth: outline ? 1 : 0,
-    borderColor: outline ? backgroundColor : "transparent",
-  };
-
-  const textStyle: TextStyle = {
-    color: outline ? backgroundColor : textColor,
-    fontSize: 20,
-    fontWeight: "bold",
-  };
-
   return (
-    <Pressable onPress={onPress} style={buttonStyle} testID="text-button">
-      <Text style={textStyle}>{text}</Text>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => {
+        const buttonStyle: ViewStyle = {
+          paddingVertical: 15,
+          borderRadius: 5,
+          width: "100%",
+          alignItems: "center",
+          backgroundColor: outline
+            ? "transparent"
+            : pressed
+              ? "lighten"
+              : backgroundColor,
+          borderWidth: outline ? 1 : 0,
+          borderColor: outline
+            ? pressed
+              ? "lighten"
+              : backgroundColor
+            : "transparent",
+          opacity: pressed ? 0.7 : 1, // Adjust opacity when pressed
+        };
+
+        return buttonStyle;
+      }}
+      testID="text-button"
+    >
+      <Text
+        style={{
+          color: outline ? backgroundColor : textColor,
+          fontSize: 20,
+          fontWeight: "bold",
+        }}
+      >
+        {text}
+      </Text>
     </Pressable>
   );
 };
