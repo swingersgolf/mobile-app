@@ -5,7 +5,6 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { Alert } from "react-native";
 import axios from "axios";
 import {
   setStorageItemAsync,
