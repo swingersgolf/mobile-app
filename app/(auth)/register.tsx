@@ -67,7 +67,9 @@ const Register: FC = () => {
     >
       <Text style={styles.title}>Create Account</Text>
       {loading ? (
-        <Spinner />
+        <View style={styles.spinnerContainer}>
+          <Spinner />
+        </View>
       ) : (
         <View id="create-account-form" style={styles.form}>
           <Controller
@@ -252,6 +254,12 @@ const styles = StyleSheet.create({
   },
   alertIcon: {
     color: colors.alert,
+  },
+  spinnerContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

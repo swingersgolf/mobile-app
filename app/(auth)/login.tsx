@@ -57,7 +57,9 @@ const Login: FC = () => {
     <SafeAreaView id="login" testID="login" style={styles.login}>
       <Text style={styles.title}>Login</Text>
       {loading ? (
-        <Spinner />
+        <View style={styles.spinnerContainer}>
+          <Spinner />
+        </View>
       ) : (
         <View id="login-form" style={styles.form}>
           <Controller
@@ -203,6 +205,12 @@ const styles = StyleSheet.create({
   },
   alertIcon: {
     color: colors.alert,
+  },
+  spinnerContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
