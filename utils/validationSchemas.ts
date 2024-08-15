@@ -10,10 +10,10 @@ export const loginSchema = yup.object().shape({
 });
 
 export const registerSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
   email: yup
     .string()
     .email("Please enter a valid email address")
     .required("Email is required"),
-  name: yup.string().required("Name is required"),
   password: yup.string().required("Password is required"),
 });

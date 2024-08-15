@@ -61,12 +61,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         email,
         password,
       });
-      setToken(response.data.data.token);
-      Alert.alert("Success", "Login successful");
+      setToken(response.data.token);
       return Promise.resolve();
     } catch (error) {
       console.error("Error logging in:", error);
-      Alert.alert("Error", "An error occurred while logging in");
       return Promise.reject(error);
     }
   };
@@ -88,11 +86,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         email,
         password,
       });
-      Alert.alert("Success", "Account created successfully");
       return Promise.resolve();
     } catch (error) {
       console.error("Error creating account:", error);
-      Alert.alert("Error", "An error occurred while creating the account");
       return Promise.reject(error);
     }
   };

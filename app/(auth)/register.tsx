@@ -26,14 +26,14 @@ const Register: FC = () => {
   } = useForm<RegisterFormValues>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
-      email: "",
       name: "",
+      email: "",
       password: "",
     },
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
-    await createAccount(data.email, data.name, data.password);
+    await createAccount(data.name, data.email, data.password);
     await signIn(data.email, data.password);
     router.replace("/");
   };
