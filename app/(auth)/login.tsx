@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { SafeAreaView, Text, View, TextInput, StyleSheet } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,6 +8,8 @@ import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
 import { useAuth } from "@/contexts/AuthContext";
 import { Feather } from "@expo/vector-icons";
+import axios from "axios";
+import Spinner from "@/components/Spinner";
 
 type LoginFormValues = {
   email: string;
@@ -16,6 +18,8 @@ type LoginFormValues = {
 
 const Login: FC = () => {
   const { signIn } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -29,82 +33,114 @@ const Login: FC = () => {
     },
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
-    await signIn(data.email, data.password);
-    router.replace("/");
+  const handleSignIn = async (data: LoginFormValues) => {
+    setLoading(true);
+    setError(""); // Clear any previous errors
+    try {
+      await signIn(data.email, data.password);
+      router.replace("/");
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage =
+          error.response.data.message ||
+          "Failed to create account. Please try again.";
+        setError(errorMessage);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <SafeAreaView id="login" testID="login" style={styles.login}>
       <Text style={styles.title}>Login</Text>
-      <View id="login-form" style={styles.form}>
-        <Controller
-          control={control}
-          name="email"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <>
-              <TextInput
-                placeholder="Email"
-                keyboardType="email-address"
-                autoComplete="email"
-                textContentType="emailAddress"
-                style={[styles.formInput, errors.email && styles.invalidInput]}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholderTextColor={colors.grey}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <View id="login-form" style={styles.form}>
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <TextInput
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  autoComplete="email"
+                  textContentType="emailAddress"
+                  style={[
+                    styles.formInput,
+                    errors.email && styles.invalidInput,
+                  ]}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholderTextColor={colors.grey}
+                />
+                {errors.email && (
+                  <View style={styles.alert}>
+                    <Feather
+                      name="alert-triangle"
+                      size={12}
+                      style={styles.alertIcon}
+                    />
+                    <Text style={styles.errorText}>{errors.email.message}</Text>
+                  </View>
+                )}
+              </>
+            )}
+          />
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <TextInput
+                  placeholder="Password"
+                  autoComplete="password"
+                  textContentType="password"
+                  secureTextEntry={true}
+                  style={[
+                    styles.formInput,
+                    errors.password && styles.invalidInput,
+                  ]}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholderTextColor={colors.grey}
+                />
+                {errors.password && (
+                  <View style={styles.alert}>
+                    <Feather
+                      name="alert-triangle"
+                      size={12}
+                      style={styles.alertIcon}
+                    />
+                    <Text style={styles.errorText}>
+                      {errors.password.message}
+                    </Text>
+                  </View>
+                )}
+              </>
+            )}
+          />
+          {error && (
+            <View style={styles.alert}>
+              <Feather
+                name="alert-triangle"
+                size={12}
+                style={styles.alertIcon}
               />
-              {errors.email && (
-                <View style={styles.alert}>
-                  <Feather
-                    name="alert-triangle"
-                    size={12}
-                    style={styles.alertIcon}
-                  />
-                  <Text style={styles.errorText}>{errors.email.message}</Text>
-                </View>
-              )}
-            </>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
           )}
-        />
-        <Controller
-          control={control}
-          name="password"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <>
-              <TextInput
-                placeholder="Password"
-                autoComplete="password"
-                textContentType="password"
-                secureTextEntry={true}
-                style={[
-                  styles.formInput,
-                  errors.password && styles.invalidInput,
-                ]}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholderTextColor={colors.grey}
-              />
-              {errors.password && (
-                <View style={styles.alert}>
-                  <Feather
-                    name="alert-triangle"
-                    size={12}
-                    style={styles.alertIcon}
-                  />
-                  <Text style={styles.errorText}>
-                    {errors.password.message}
-                  </Text>
-                </View>
-              )}
-            </>
-          )}
-        />
-      </View>
+        </View>
+      )}
       <TextButton
         text="Login"
-        onPress={handleSubmit(onSubmit)}
+        onPress={handleSubmit(handleSignIn)}
         textColor={colors.white}
         backgroundColor={colors.lightGreen}
       />
