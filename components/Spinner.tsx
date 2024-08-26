@@ -1,3 +1,4 @@
+import { colors } from "@/constants/Colors";
 import { View, StyleSheet, Animated } from "react-native";
 
 const Spinner = () => {
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     borderWidth: 5,
-    borderColor: "#5CB85C",
+    borderColor: colors.primary.default,
     borderTopColor: "transparent",
     borderBottomColor: "transparent",
   },

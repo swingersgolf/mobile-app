@@ -7,7 +7,14 @@ const UnauthorizedLayout = () => {
     <Stack
       screenOptions={{
         headerShown: true,
-        contentStyle: { padding: 20, backgroundColor: colors.white },
+        contentStyle: {
+          padding: 20,
+          backgroundColor: colors.background.primary,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        },
         header: () => AuthHeader(),
       }}
     >

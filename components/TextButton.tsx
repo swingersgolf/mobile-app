@@ -1,4 +1,4 @@
-import { Pressable, Text, ViewStyle, TextStyle } from "react-native";
+import { Pressable, Text, ViewStyle } from "react-native";
 
 type ButtonProps = {
   text: string;
@@ -30,11 +30,7 @@ const TextButton = ({
               ? "lighten"
               : backgroundColor,
           borderWidth: outline ? 1 : 0,
-          borderColor: outline
-            ? pressed
-              ? "lighten"
-              : backgroundColor
-            : "transparent",
+          borderColor: outline ? textColor : backgroundColor,
           opacity: pressed ? 0.7 : 1, // Adjust opacity when pressed
         };
 
@@ -44,7 +40,7 @@ const TextButton = ({
     >
       <Text
         style={{
-          color: outline ? backgroundColor : textColor,
+          color: textColor,
           fontSize: 20,
           fontWeight: "bold",
         }}

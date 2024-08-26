@@ -11,7 +11,7 @@ const AuthHeader = () => {
       testID="auth-header"
       style={styles.authHeader}
     >
-      <BackButton style={styles.backArrow} />
+      <BackButton style={styles.backArrow} color={colors.neutral.dark} />
       <Icon
         id="icon"
         testID="icon"
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.white,
+    backgroundColor: colors.background.primary,
   },
   backArrow: {
     position: "absolute",

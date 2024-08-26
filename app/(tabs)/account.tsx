@@ -3,15 +3,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import TextButton from "@/components/TextButton"; // Assuming this is the path to your component
 import { colors } from "@/constants/Colors";
 
-const Profile = () => {
-  const { signOut } = useAuth(); // Assuming `user` contains user data
-
+const Account = () => {
+  const { signOut, account } = useAuth(); // Assuming `user` contains user data
   return (
     <SafeAreaView style={styles.profile}>
       <View style={styles.profileContent}>
         {true ? (
           <View style={styles.profileImage}>
-            <Text style={{ color: colors.white, textAlign: "center" }}>
+            <Text style={{ textAlign: "center" }}>
               Click to add profile picture
             </Text>
           </View>
@@ -24,19 +23,21 @@ const Profile = () => {
         )}
         <View style={styles.profileField}>
           <Text style={styles.fieldTitle}>Name</Text>
-          <Text style={styles.fieldContent}>John Doe</Text>
+          <Text style={styles.fieldContent}>
+            {account?.name && account.name}
+          </Text>
         </View>
         <View style={styles.profileField}>
           <Text style={styles.fieldTitle}>Email</Text>
-          <Text style={styles.fieldContent}>johndoe@example.com</Text>
+          <Text style={styles.fieldContent}>
+            {account?.email && account.email}
+          </Text>
         </View>
         <View style={styles.profileField}>
-          <Text style={styles.fieldTitle}>Age</Text>
-          <Text style={styles.fieldContent}>74</Text>
-        </View>
-        <View style={styles.profileField}>
-          <Text style={styles.fieldTitle}>Handicap Index</Text>
-          <Text style={styles.fieldContent}>-12.0</Text>
+          <Text style={styles.fieldTitle}>Handicap</Text>
+          <Text style={styles.fieldContent}>
+            {account?.handicap && account.handicap}
+          </Text>
         </View>
         <View style={styles.buttonsContainer}>
           <TextButton
@@ -44,15 +45,15 @@ const Profile = () => {
             onPress={() => {
               /* Add edit profile functionality */
             }}
-            textColor={colors.white}
-            backgroundColor={colors.lightGreen}
+            textColor={colors.neutral.light}
+            backgroundColor={colors.primary.default}
           />
           <TextButton
             text="Sign Out"
             onPress={signOut}
-            textColor={colors.lightGreen}
-            backgroundColor={colors.lightGreen}
+            textColor={colors.primary.default}
             outline
+            backgroundColor={colors.background.primary}
           />
         </View>
       </View>
@@ -60,12 +61,12 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Account;
 
 const styles = StyleSheet.create({
   profile: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.background.primary,
   },
   profileContent: {
     display: "flex",
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     height: 150,
     padding: 20,
     borderRadius: 9999,
-    backgroundColor: colors.grey,
+    backgroundColor: colors.neutral.medium,
   },
   profileFields: {},
   profileField: {
@@ -95,11 +96,11 @@ const styles = StyleSheet.create({
   },
   fieldTitle: {
     fontSize: 16,
-    color: colors.lightGreen,
+    color: colors.neutral.dark,
   },
   fieldContent: {
     fontSize: 20,
-    color: colors.black,
+    color: colors.neutral.dark,
   },
   buttonsContainer: {
     width: "100%",

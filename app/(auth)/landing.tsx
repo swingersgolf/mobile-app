@@ -1,7 +1,7 @@
 import { View, StyleSheet, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import TextButton from "@/components/TextButton";
-import BannerLogoWhite from "@/assets/branding/BannerLogoWhite.svg";
+import BannerLogoLight from "@/assets/branding/BannerLogoLight.svg";
 import { colors } from "@/constants/Colors";
 
 const Landing = () => {
@@ -9,20 +9,20 @@ const Landing = () => {
 
   return (
     <SafeAreaView style={styles.landing}>
-      <BannerLogoWhite width={300} height={75} />
+      <BannerLogoLight width={300} height={75} />
       <View style={styles.buttonsContainer}>
         <TextButton
           text="Sign In"
           onPress={() => router.push("/login")}
-          backgroundColor={colors.white}
-          textColor={colors.lightGreen}
+          backgroundColor={colors.background.primary}
+          textColor={colors.primary.default}
         />
         <TextButton
           text="Create Account"
           onPress={() => router.push("/register")}
           outline
-          backgroundColor={colors.white}
-          textColor={colors.white}
+          backgroundColor={colors.primary.default}
+          textColor={colors.neutral.light}
         />
       </View>
     </SafeAreaView>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     position: "relative",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.lightGreen,
+    backgroundColor: colors.primary.default,
   },
   buttonsContainer: {
     padding: 20,

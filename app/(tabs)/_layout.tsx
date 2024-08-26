@@ -24,7 +24,7 @@ export default function AppLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.lightGreen,
+        tabBarActiveTintColor: colors.primary.default,
         headerShown: false,
       }}
     >
@@ -39,9 +39,9 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="account"
         options={{
-          title: "Profile",
+          title: "Account",
           tabBarLabel: () => null, // Hide the label
           tabBarIcon: ({ color }) => (
             <AntDesign name="user" size={24} color={color} />
