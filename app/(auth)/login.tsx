@@ -82,105 +82,112 @@ const Login: FC = () => {
             <Spinner />
           </View>
         ) : (
-          <View id="login-form" style={styles.form}>
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <>
-                  <TextInput
-                    placeholder="Email"
-                    keyboardType="email-address"
-                    autoComplete="email"
-                    textContentType="emailAddress"
-                    style={[
-                      styles.formInput,
-                      errors.email && styles.invalidInput,
-                    ]}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    placeholderTextColor={colors.neutral.medium}
+          <>
+            <View id="login-form" style={styles.form}>
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <TextInput
+                      placeholder="Email"
+                      keyboardType="email-address"
+                      autoComplete="email"
+                      textContentType="emailAddress"
+                      style={[
+                        styles.formInput,
+                        errors.email && styles.invalidInput,
+                      ]}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholderTextColor={colors.neutral.medium}
+                    />
+                    {errors.email && (
+                      <View style={styles.alert}>
+                        <Feather
+                          name="alert-triangle"
+                          size={12}
+                          style={styles.alertIcon}
+                        />
+                        <Text style={styles.errorText}>
+                          {errors.email.message}
+                        </Text>
+                      </View>
+                    )}
+                  </>
+                )}
+              />
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <TextInput
+                      placeholder="Password"
+                      autoComplete="password"
+                      textContentType="password"
+                      secureTextEntry={true}
+                      style={[
+                        styles.formInput,
+                        errors.password && styles.invalidInput,
+                      ]}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholderTextColor={colors.neutral.medium}
+                    />
+                    {errors.password && (
+                      <View style={styles.alert}>
+                        <Feather
+                          name="alert-triangle"
+                          size={12}
+                          style={styles.alertIcon}
+                        />
+                        <Text style={styles.errorText}>
+                          {errors.password.message}
+                        </Text>
+                      </View>
+                    )}
+                  </>
+                )}
+              />
+              {error && (
+                <View style={styles.alert}>
+                  <Feather
+                    name="alert-triangle"
+                    size={12}
+                    style={styles.alertIcon}
                   />
-                  {errors.email && (
-                    <View style={styles.alert}>
-                      <Feather
-                        name="alert-triangle"
-                        size={12}
-                        style={styles.alertIcon}
-                      />
-                      <Text style={styles.errorText}>
-                        {errors.email.message}
-                      </Text>
-                    </View>
-                  )}
-                </>
+                  <Text style={styles.errorText}>{error}</Text>
+                </View>
               )}
-            />
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <>
-                  <TextInput
-                    placeholder="Password"
-                    autoComplete="password"
-                    textContentType="password"
-                    secureTextEntry={true}
-                    style={[
-                      styles.formInput,
-                      errors.password && styles.invalidInput,
-                    ]}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    placeholderTextColor={colors.neutral.medium}
-                  />
-                  {errors.password && (
-                    <View style={styles.alert}>
-                      <Feather
-                        name="alert-triangle"
-                        size={12}
-                        style={styles.alertIcon}
-                      />
-                      <Text style={styles.errorText}>
-                        {errors.password.message}
-                      </Text>
-                    </View>
-                  )}
-                </>
-              )}
-            />
-            {error && (
-              <View style={styles.alert}>
-                <Feather
-                  name="alert-triangle"
-                  size={12}
-                  style={styles.alertIcon}
-                />
-                <Text style={styles.errorText}>{error}</Text>
-              </View>
-            )}
-            <TextButton
-              text="Sign in"
-              onPress={handleSubmit(handleSignIn)}
-              textColor={colors.neutral.light}
-              backgroundColor={colors.primary.default}
-            />
-          </View>
+              <TextButton
+                text="Sign in"
+                onPress={handleSubmit(handleSignIn)}
+                textColor={colors.neutral.light}
+                backgroundColor={colors.primary.default}
+              />
+            </View>
+            <View
+              id="social-media-platforms"
+              style={styles.socialMediaContainer}
+            >
+              {socialMediaProviders.map((provider, index) => (
+                <Pressable key={index}>{provider.icon}</Pressable>
+              ))}
+            </View>
+            <Text style={styles.register}>
+              New to Swingers?&nbsp;
+              <Text
+                style={styles.link}
+                onPress={() => router.push("/register")}
+              >
+                Create an account
+              </Text>
+            </Text>
+          </>
         )}
-
-        <View id="social-media-platforms" style={styles.socialMediaContainer}>
-          {socialMediaProviders.map((provider, index) => (
-            <Pressable key={index}>{provider.icon}</Pressable>
-          ))}
-        </View>
-        <Text style={styles.register}>
-          New to Swingers?&nbsp;
-          <Text style={styles.link} onPress={() => router.push("/register")}>
-            Create an account
-          </Text>
-        </Text>
       </Card>
     </View>
   );
