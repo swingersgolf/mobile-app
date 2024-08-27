@@ -11,14 +11,7 @@ import {
   setStorageItemAsync,
   useStorageState,
 } from "@/storage/useStorageState";
-
-interface AccountType {
-  name: string;
-  age: number;
-  email: string;
-  handicap: number;
-  postalCode: string;
-}
+import { AccountType } from "@/utils/types";
 
 interface AuthContextType {
   token: string | null;

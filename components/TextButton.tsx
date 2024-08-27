@@ -1,11 +1,14 @@
 import { Pressable, Text, ViewStyle } from "react-native";
 
+import { DimensionValue } from "react-native";
+
 type ButtonProps = {
   text: string;
   outline?: boolean;
-  onPress: () => void;
+  onPress: (() => void) | ((data: Record<string, any>) => Promise<void>);
   textColor: string;
   backgroundColor: string;
+  width?: DimensionValue | undefined;
 };
 
 const TextButton = ({
@@ -14,6 +17,7 @@ const TextButton = ({
   outline = false,
   textColor,
   backgroundColor,
+  width,
 }: ButtonProps) => {
   return (
     <Pressable
@@ -22,14 +26,14 @@ const TextButton = ({
         const buttonStyle: ViewStyle = {
           paddingVertical: 15,
           borderRadius: 5,
-          width: "100%",
+          width: width ? width : "100%",
           alignItems: "center",
           backgroundColor: outline
             ? "transparent"
             : pressed
               ? "lighten"
               : backgroundColor,
-          borderWidth: outline ? 1 : 0,
+          borderWidth: 1,
           borderColor: outline ? textColor : backgroundColor,
           opacity: pressed ? 0.7 : 1, // Adjust opacity when pressed
         };
