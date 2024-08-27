@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Keyboard, Pressable, Text } from "react-native";
 import { Redirect, Tabs } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,32 +22,34 @@ export default function AppLayout() {
 
   // This layout can be deferred because it"s not the root layout.
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: colors.primary.default,
-        headerShown: false,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarLabel: () => null, // Hide the label
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="home" size={24} color={color} />
-          ),
+    <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: colors.primary.default,
+          headerShown: false,
         }}
-      />
-      <Tabs.Screen
-        name="account"
-        options={{
-          title: "Account",
-          tabBarLabel: () => null, // Hide the label
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="user" size={24} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "Home",
+            tabBarLabel: () => null, // Hide the label
+            tabBarIcon: ({ color }) => (
+              <AntDesign name="home" size={24} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="account"
+          options={{
+            title: "Account",
+            tabBarLabel: () => null, // Hide the label
+            tabBarIcon: ({ color }) => (
+              <AntDesign name="user" size={24} color={color} />
+            ),
+          }}
+        />
+      </Tabs>
+    </Pressable>
   );
 }
