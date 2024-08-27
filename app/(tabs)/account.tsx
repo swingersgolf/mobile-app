@@ -114,7 +114,7 @@ const Account = () => {
                   />
                 ) : (
                   <Text style={styles.fieldContent}>
-                    {account?.[field.key] && account[field.key]}
+                    {account[field.key] ? account[field.key] : "—"}
                   </Text>
                 )}
               </View>
