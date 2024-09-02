@@ -11,7 +11,6 @@ import { Feather } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
-import Card from "@/components/Card";
 
 type LoginFormValues = {
   email: string;
@@ -59,7 +58,7 @@ const Login: FC = () => {
     try {
       await signIn(data.email, data.password);
       router.replace("/");
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
           error.response.data.message ||
@@ -75,19 +74,27 @@ const Login: FC = () => {
 
   return (
     <View id="login" testID="login" style={styles.login}>
-      <Card>
-        <Text style={styles.title}>Sign in to your account</Text>
-        {loading ? (
-          <View style={styles.spinnerContainer}>
-            <Spinner />
-          </View>
-        ) : (
-          <>
-            <View id="login-form" style={styles.form}>
+      <Text style={styles.title}>Sign in to your account</Text>
+      {loading ? (
+        <View style={styles.spinnerContainer}>
+          <Spinner />
+        </View>
+      ) : (
+        <>
+          <View id="login-form" style={styles.form}>
+            <View style={styles.inputWrapper}>
               <Controller
                 control={control}
                 name="email"
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({
+                  field: { onChange, onBlur, value },
+                }: {
+                  field: {
+                    onChange: (value: string) => void;
+                    onBlur: () => void;
+                    value: string;
+                  };
+                }) => (
                   <>
                     <TextInput
                       placeholder="Email"
@@ -104,12 +111,7 @@ const Login: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.email && (
-                      <View style={styles.alert}>
-                        <Feather
-                          name="alert-triangle"
-                          size={12}
-                          style={styles.alertIcon}
-                        />
+                      <View style={styles.errorTextContainer}>
                         <Text style={styles.errorText}>
                           {errors.email.message}
                         </Text>
@@ -118,10 +120,20 @@ const Login: FC = () => {
                   </>
                 )}
               />
+            </View>
+            <View style={styles.inputWrapper}>
               <Controller
                 control={control}
                 name="password"
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({
+                  field: { onChange, onBlur, value },
+                }: {
+                  field: {
+                    onChange: (value: string) => void;
+                    onBlur: () => void;
+                    value: string;
+                  };
+                }) => (
                   <>
                     <TextInput
                       placeholder="Password"
@@ -138,12 +150,7 @@ const Login: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.password && (
-                      <View style={styles.alert}>
-                        <Feather
-                          name="alert-triangle"
-                          size={12}
-                          style={styles.alertIcon}
-                        />
+                      <View style={styles.errorTextContainer}>
                         <Text style={styles.errorText}>
                           {errors.password.message}
                         </Text>
@@ -152,43 +159,37 @@ const Login: FC = () => {
                   </>
                 )}
               />
-              {error && (
-                <View style={styles.alert}>
-                  <Feather
-                    name="alert-triangle"
-                    size={12}
-                    style={styles.alertIcon}
-                  />
-                  <Text style={styles.errorText}>{error}</Text>
-                </View>
-              )}
-              <TextButton
-                text="Sign in"
-                onPress={handleSubmit(handleSignIn)}
-                textColor={colors.neutral.light}
-                backgroundColor={colors.primary.default}
-              />
             </View>
-            <View
-              id="social-media-platforms"
-              style={styles.socialMediaContainer}
-            >
-              {socialMediaProviders.map((provider, index) => (
-                <Pressable key={index}>{provider.icon}</Pressable>
-              ))}
-            </View>
-            <Text style={styles.register}>
-              New to Swingers?&nbsp;
-              <Text
-                style={styles.link}
-                onPress={() => router.push("/register")}
-              >
-                Create an account
-              </Text>
+            {error && (
+              <View style={styles.alert}>
+                <Feather
+                  name="alert-triangle"
+                  size={12}
+                  style={styles.alertIcon}
+                />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            )}
+            <TextButton
+              text="Sign in"
+              onPress={handleSubmit(handleSignIn)}
+              textColor={colors.neutral.light}
+              backgroundColor={colors.primary.default}
+            />
+          </View>
+          <View id="social-media-platforms" style={styles.socialMediaContainer}>
+            {socialMediaProviders.map((provider, index) => (
+              <Pressable key={index}>{provider.icon}</Pressable>
+            ))}
+          </View>
+          <Text style={styles.register}>
+            New to Swingers?&nbsp;
+            <Text style={styles.link} onPress={() => router.push("/register")}>
+              Create an account
             </Text>
-          </>
-        )}
-      </Card>
+          </Text>
+        </>
+      )}
     </View>
   );
 };
@@ -199,7 +200,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     height: "100%",
-    backgroundColor: colors.background.primary,
+    rowGap: 20,
+    padding: 20,
   },
   title: {
     fontSize: 24,
@@ -211,6 +213,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     rowGap: 10,
+  },
+  inputWrapper: {
+    position: "relative",
+    width: "100%",
   },
   formInput: {
     width: "100%",
@@ -224,10 +230,19 @@ const styles = StyleSheet.create({
   invalidInput: {
     borderColor: colors.alert.error,
   },
+  errorTextContainer: {
+    position: "absolute",
+    right: 10,
+    top: "50%",
+    transform: [{ translateY: -8 }],
+    flexDirection: "row",
+    alignItems: "center",
+    pointerEvents: "none", // This ensures that clicks pass through to the input field
+  },
   errorText: {
     color: colors.alert.error,
-    width: "100%",
-    textAlign: "left",
+    fontSize: 12,
+    marginLeft: 5,
   },
   link: {
     color: colors.primary.light,

@@ -12,11 +12,11 @@ import { registerSchema } from "@/utils/validationSchemas";
 import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
+import { Linking } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
-import Card from "@/components/Card";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDateYYYY_MM_DD } from "@/utils/date";
 
@@ -56,7 +56,7 @@ const Register: FC = () => {
       await createAccount(data.name, data.email, data.password, data.birthdate);
       await signIn(data.email, data.password);
       router.replace("/");
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
           error.response.data.message ||
@@ -93,19 +93,27 @@ const Register: FC = () => {
       testID="create-account"
       style={styles.createAccount}
     >
-      <Card>
-        <Text style={styles.title}>Create your account</Text>
-        {loading ? (
-          <View style={styles.spinnerContainer}>
-            <Spinner />
-          </View>
-        ) : (
-          <>
-            <View id="create-account-form" style={styles.form}>
+      <Text style={styles.title}>Create your account</Text>
+      {loading ? (
+        <View style={styles.spinnerContainer}>
+          <Spinner />
+        </View>
+      ) : (
+        <>
+          <View id="create-account-form" style={styles.form}>
+            <View style={styles.inputWrapper}>
               <Controller
                 control={control}
                 name="name"
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({
+                  field: { onChange, onBlur, value },
+                }: {
+                  field: {
+                    onChange: (value: string) => void;
+                    onBlur: () => void;
+                    value: string;
+                  };
+                }) => (
                   <>
                     <TextInput
                       placeholder="Name"
@@ -121,12 +129,7 @@ const Register: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.name && (
-                      <View style={styles.alert}>
-                        <Feather
-                          name="alert-triangle"
-                          size={12}
-                          style={styles.alertIcon}
-                        />
+                      <View style={styles.errorTextContainer}>
                         <Text style={styles.errorText}>
                           {errors.name.message}
                         </Text>
@@ -135,10 +138,20 @@ const Register: FC = () => {
                   </>
                 )}
               />
+            </View>
+            <View style={styles.inputWrapper}>
               <Controller
                 control={control}
                 name="email"
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({
+                  field: { onChange, onBlur, value },
+                }: {
+                  field: {
+                    onChange: (value: string) => void;
+                    onBlur: () => void;
+                    value: string;
+                  };
+                }) => (
                   <>
                     <TextInput
                       placeholder="Email"
@@ -157,12 +170,7 @@ const Register: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.email && (
-                      <View style={styles.alert}>
-                        <Feather
-                          name="alert-triangle"
-                          size={12}
-                          style={styles.alertIcon}
-                        />
+                      <View style={styles.errorTextContainer}>
                         <Text style={styles.errorText}>
                           {errors.email.message}
                         </Text>
@@ -171,10 +179,16 @@ const Register: FC = () => {
                   </>
                 )}
               />
+            </View>
+            <View style={styles.inputWrapper}>
               <Controller
                 control={control}
                 name="birthdate"
-                render={({ field: { onChange, value } }) => (
+                render={({
+                  field: { value },
+                }: {
+                  field: { value: string };
+                }) => (
                   <>
                     <TouchableOpacity
                       onPress={showDatePicker}
@@ -203,12 +217,7 @@ const Register: FC = () => {
                       onCancel={hideDatePicker}
                     />
                     {errors.birthdate && (
-                      <View style={styles.alert}>
-                        <Feather
-                          name="alert-triangle"
-                          size={12}
-                          style={styles.alertIcon}
-                        />
+                      <View style={styles.errorTextContainer}>
                         <Text style={styles.errorText}>
                           {errors.birthdate.message}
                         </Text>
@@ -217,10 +226,20 @@ const Register: FC = () => {
                   </>
                 )}
               />
+            </View>
+            <View style={styles.inputWrapper}>
               <Controller
                 control={control}
                 name="password"
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({
+                  field: { onChange, onBlur, value },
+                }: {
+                  field: {
+                    onChange: (value: string) => void;
+                    onBlur: () => void;
+                    value: string;
+                  };
+                }) => (
                   <>
                     <TextInput
                       placeholder="Password"
@@ -237,12 +256,7 @@ const Register: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.password && (
-                      <View style={styles.alert}>
-                        <Feather
-                          name="alert-triangle"
-                          size={12}
-                          style={styles.alertIcon}
-                        />
+                      <View style={styles.errorTextContainer}>
                         <Text style={styles.errorText}>
                           {errors.password.message}
                         </Text>
@@ -251,42 +265,42 @@ const Register: FC = () => {
                   </>
                 )}
               />
-              {error && (
-                <View style={styles.alert}>
-                  <Feather
-                    name="alert-triangle"
-                    size={12}
-                    style={styles.alertIcon}
-                  />
-                  <Text style={styles.errorText}>{error}</Text>
-                </View>
-              )}
-              <TextButton
-                text="Create Account"
-                onPress={handleSubmit(handleCreateAccount)}
-                textColor={colors.neutral.light}
-                backgroundColor={colors.primary.default}
-              />
-              <Text style={styles.privacy}>
-                By clicking create account you are agreeing to follow our&nbsp;
-                <Text
-                  style={styles.link}
-                  onPress={() => handleLinkPress("https://google.com")}
-                >
-                  privacy & terms
-                </Text>
-                .
-              </Text>
             </View>
-            <Text style={styles.login}>
-              Already have an account?&nbsp;
-              <Text style={styles.link} onPress={() => router.push("/login")}>
-                Login
+            {error && (
+              <View style={styles.alert}>
+                <Feather
+                  name="alert-triangle"
+                  size={12}
+                  style={styles.alertIcon}
+                />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            )}
+            <TextButton
+              text="Create Account"
+              onPress={handleSubmit(handleCreateAccount)}
+              textColor={colors.neutral.light}
+              backgroundColor={colors.primary.default}
+            />
+            <Text style={styles.privacy}>
+              By clicking create account you are agreeing to follow our&nbsp;
+              <Text
+                style={styles.link}
+                onPress={() => handleLinkPress("https://google.com")}
+              >
+                privacy & terms
               </Text>
+              .
             </Text>
-          </>
-        )}
-      </Card>
+          </View>
+          <Text style={styles.login}>
+            Already have an account?&nbsp;
+            <Text style={styles.link} onPress={() => router.push("/login")}>
+              Login
+            </Text>
+          </Text>
+        </>
+      )}
     </View>
   );
 };
@@ -296,8 +310,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    height: "100%",
     rowGap: 20,
+    padding: 20,
   },
   title: {
     fontSize: 24,
@@ -309,6 +323,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     rowGap: 10,
+  },
+  inputWrapper: {
+    position: "relative",
+    width: "100%",
   },
   formInput: {
     width: "100%",
@@ -322,11 +340,19 @@ const styles = StyleSheet.create({
   invalidInput: {
     borderColor: colors.alert.error,
   },
+  errorTextContainer: {
+    position: "absolute",
+    right: 10,
+    top: "50%",
+    transform: [{ translateY: -8 }],
+    flexDirection: "row",
+    alignItems: "center",
+    pointerEvents: "none", // This ensures that clicks pass through to the input field
+  },
   errorText: {
     color: colors.alert.error,
-    width: "100%",
-    textAlign: "left",
     fontSize: 12,
+    marginLeft: 5,
   },
   alert: {
     display: "flex",

@@ -34,7 +34,7 @@ export default function AppLayout() {
           options={{
             title: "Home",
             tabBarLabel: () => null, // Hide the label
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color }: { color: string }) => (
               <AntDesign name="home" size={24} color={color} />
             ),
           }}
@@ -44,7 +44,7 @@ export default function AppLayout() {
           options={{
             title: "Account",
             tabBarLabel: () => null, // Hide the label
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color }: { color: string }) => (
               <AntDesign name="user" size={24} color={color} />
             ),
           }}

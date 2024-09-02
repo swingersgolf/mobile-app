@@ -1,6 +1,6 @@
-const { getDefaultConfig } = require("expo/metro-config");
+import { getDefaultConfig } from "expo/metro-config";
 
-module.exports = (() => {
+export default (() => {
   const config = getDefaultConfig(process.cwd());
 
   const { transformer, resolver } = config;

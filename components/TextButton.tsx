@@ -1,11 +1,10 @@
 import { Pressable, Text, ViewStyle } from "react-native";
-
 import { DimensionValue } from "react-native";
 
 type ButtonProps = {
   text: string;
   outline?: boolean;
-  onPress: (() => void) | ((data: Record<string, any>) => Promise<void>);
+  onPress: (() => void) | ((data: Record<string, unknown>) => Promise<void>);
   textColor: string;
   backgroundColor: string;
   width?: DimensionValue | undefined;
@@ -22,7 +21,7 @@ const TextButton = ({
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => {
+      style={({ pressed }: { pressed: boolean }) => {
         const buttonStyle: ViewStyle = {
           paddingVertical: 15,
           borderRadius: 5,

@@ -1,9 +1,9 @@
 import { render } from "@testing-library/react-native";
 import AuthHeader from "@/components/AuthHeader";
-import React from "react";
 
 // Mock the SVG component
 jest.mock("@/assets/branding/Icon.svg", () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { View } = require("react-native");
   return {
     __esModule: true,

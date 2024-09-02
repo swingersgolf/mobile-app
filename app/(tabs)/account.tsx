@@ -61,7 +61,7 @@ const Account = () => {
       await fetchAccount();
       setIsEditing(false);
       setEditedAccount({});
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
           error.response.data.message ||
@@ -127,7 +127,9 @@ const Account = () => {
                     <TextInput
                       style={styles.input}
                       value={editedAccount[field.key] as string}
-                      onChangeText={(value) => handleChange(field.key, value)}
+                      onChangeText={(value: string) =>
+                        handleChange(field.key, value)
+                      }
                       keyboardType={field.keyboardType}
                     />
                   )

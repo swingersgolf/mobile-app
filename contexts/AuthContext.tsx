@@ -113,7 +113,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const updateAccount = async (updatedAccount: Record<string, any>) => {
+  const updateAccount = async (updatedAccount: Record<string, unknown>) => {
     try {
       if (token) {
         await axios.patch(`${apiUrl}/v1/user`, updatedAccount, {
