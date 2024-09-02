@@ -1,39 +1,51 @@
 import { FC, useState } from "react";
-import { Text, View, TextInput, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "@/utils/validationSchemas";
 import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
-import * as Linking from "expo-linking";
 import { Feather } from "@expo/vector-icons";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import Card from "@/components/Card";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { formatDateYYYY_MM_DD } from "@/utils/date";
 
 type RegisterFormValues = {
   email: string;
   name: string;
   password: string;
+  birthdate: string;
 };
 
 const Register: FC = () => {
   const { createAccount, signIn } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<RegisterFormValues>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
+      birthdate: "",
     },
   });
 
@@ -41,7 +53,7 @@ const Register: FC = () => {
     setLoading(true);
     setError(""); // Clear any previous errors
     try {
-      await createAccount(data.name, data.email, data.password);
+      await createAccount(data.name, data.email, data.password, data.birthdate);
       await signIn(data.email, data.password);
       router.replace("/");
     } catch (error: any) {
@@ -56,6 +68,21 @@ const Register: FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date: Date) => {
+    setSelectedDate(date);
+    const formattedDate = formatDateYYYY_MM_DD(date);
+    setValue("birthdate", formattedDate);
+    hideDatePicker();
   };
 
   const handleLinkPress = (url: string) => Linking.openURL(url);
@@ -118,6 +145,8 @@ const Register: FC = () => {
                       inputMode="email"
                       autoComplete="email"
                       textContentType="emailAddress"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
                       style={[
                         styles.formInput,
                         errors.email && styles.invalidInput,
@@ -136,6 +165,52 @@ const Register: FC = () => {
                         />
                         <Text style={styles.errorText}>
                           {errors.email.message}
+                        </Text>
+                      </View>
+                    )}
+                  </>
+                )}
+              />
+              <Controller
+                control={control}
+                name="birthdate"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <TouchableOpacity
+                      onPress={showDatePicker}
+                      style={[
+                        styles.formInput,
+                        errors.birthdate && styles.invalidInput,
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          color: value
+                            ? colors.neutral.dark
+                            : colors.neutral.medium,
+                        }}
+                      >
+                        {selectedDate
+                          ? formatDateYYYY_MM_DD(selectedDate)
+                          : "Birthdate"}
+                      </Text>
+                    </TouchableOpacity>
+                    <DateTimePickerModal
+                      isVisible={isDatePickerVisible}
+                      mode="date"
+                      date={selectedDate || new Date()}
+                      onConfirm={(date) => handleConfirm(date)}
+                      onCancel={hideDatePicker}
+                    />
+                    {errors.birthdate && (
+                      <View style={styles.alert}>
+                        <Feather
+                          name="alert-triangle"
+                          size={12}
+                          style={styles.alertIcon}
+                        />
+                        <Text style={styles.errorText}>
+                          {errors.birthdate.message}
                         </Text>
                       </View>
                     )}
@@ -253,33 +328,29 @@ const styles = StyleSheet.create({
     textAlign: "left",
     fontSize: 12,
   },
-  link: {
-    color: colors.primary.light,
-  },
   alert: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    gap: 5,
     width: "100%",
-    columnGap: 6,
+    justifyContent: "flex-start",
   },
   alertIcon: {
     color: colors.alert.error,
   },
+  privacy: {
+    textAlign: "left",
+  },
+  link: {
+    color: colors.primary.light,
+  },
   spinnerContainer: {
     width: "100%",
-    display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
-  privacy: {
-    textAlign: "left",
-    color: colors.neutral.dark,
-  },
   login: {
     textAlign: "center",
-    color: colors.neutral.dark,
   },
 });
 

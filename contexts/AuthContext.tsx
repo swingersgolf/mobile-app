@@ -22,6 +22,7 @@ interface AuthContextType {
     name: string,
     email: string,
     password: string,
+    birthdate: string,
   ) => Promise<void>;
   isLoading: boolean;
   fetchAccount: () => Promise<void>;
@@ -79,12 +80,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     name: string,
     email: string,
     password: string,
+    birthdate: string,
   ) => {
     try {
       await axios.post(`${apiUrl}/register`, {
         name,
         email,
         password,
+        birthdate,
       });
       return Promise.resolve();
     } catch (error) {

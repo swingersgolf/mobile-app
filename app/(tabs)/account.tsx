@@ -15,9 +15,24 @@ import axios from "axios";
 import { Feather } from "@expo/vector-icons";
 
 const editableFields = [
-  { key: "handicap", label: "Handicap", keyboardType: "numeric" },
-  { key: "birthdate", label: "Birthdate", keyboardType: "default" },
-  { key: "postalcode", label: "Postal Code", keyboardType: "default" },
+  {
+    key: "handicap",
+    label: "Handicap",
+    keyboardType: "numeric",
+    type: "number",
+  },
+  {
+    key: "birthdate",
+    label: "Birthdate",
+    keyboardType: "default",
+    type: "date",
+  },
+  {
+    key: "postalcode",
+    label: "Postal Code",
+    keyboardType: "default",
+    type: "string",
+  },
 ];
 const uneditableFields = [
   { key: "name", label: "Name" },
@@ -106,12 +121,16 @@ const Account = () => {
               <View style={styles.profileField} key={index}>
                 <Text style={styles.fieldTitle}>{field.label}</Text>
                 {isEditing ? (
-                  <TextInput
-                    style={styles.input}
-                    value={editedAccount[field.key]?.toString() || ""}
-                    onChangeText={(value) => handleChange(field.key, value)}
-                    keyboardType={field.keyboardType as any}
-                  />
+                  field.type === "date" ? (
+                    <Text>Date</Text>
+                  ) : (
+                    <TextInput
+                      style={styles.input}
+                      value={editedAccount[field.key] as string}
+                      onChangeText={(value) => handleChange(field.key, value)}
+                      keyboardType={field.keyboardType}
+                    />
+                  )
                 ) : (
                   <Text style={styles.fieldContent}>
                     {account[field.key] ? account[field.key] : "—"}

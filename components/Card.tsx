@@ -8,7 +8,6 @@ const Card = ({ children }: { children: ReactNode }) => {
 
 export default Card;
 
-// className={`${className} flex flex-col bg-white shadow-card rounded-lg p-6 md:p-16 z-30`}
 const styles = StyleSheet.create({
   card: {
     display: "flex",

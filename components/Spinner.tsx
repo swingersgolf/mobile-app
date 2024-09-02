@@ -20,7 +20,7 @@ const Spinner = () => {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="spinner">
       <Animated.View
         style={[styles.loader, { transform: [{ rotate: spin }] }]}
       />
