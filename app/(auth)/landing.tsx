@@ -1,4 +1,4 @@
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import TextButton from "@/components/TextButton";
 import BannerLogoLight from "@/assets/branding/BannerLogoLight.svg";
@@ -8,7 +8,7 @@ const Landing = () => {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={styles.landing}>
+    <View style={styles.landing}>
       <BannerLogoLight width={300} height={75} />
       <View style={styles.buttonsContainer}>
         <TextButton
@@ -25,7 +25,7 @@ const Landing = () => {
           textColor={colors.neutral.light}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

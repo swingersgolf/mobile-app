@@ -1,5 +1,11 @@
+import { View, Text } from "react-native";
+
 const EditAccount = () => {
-  return <div>Edit Account</div>;
+  return (
+    <View>
+      <Text>Edit account screen</Text>
+    </View>
+  );
 };
 
 export default EditAccount;

@@ -3,7 +3,6 @@ import {
   Text,
   View,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
   Keyboard,
 } from "react-native";
@@ -20,6 +19,7 @@ import axios from "axios";
 import Spinner from "@/components/Spinner";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDateYYYY_MM_DD } from "@/utils/date";
+import { authStyles } from "./authStyles";
 
 type RegisterFormValues = {
   email: string;
@@ -93,17 +93,17 @@ const Register: FC = () => {
     <View
       id="create-account"
       testID="create-account"
-      style={styles.createAccount}
+      style={authStyles.container}
     >
-      <Text style={styles.title}>Create your account</Text>
+      <Text style={authStyles.title}>Create your account</Text>
       {loading ? (
-        <View style={styles.spinnerContainer}>
+        <View style={authStyles.spinnerContainer}>
           <Spinner />
         </View>
       ) : (
         <>
-          <View id="create-account-form" style={styles.form}>
-            <View style={styles.inputWrapper}>
+          <View id="create-account-form" style={authStyles.form}>
+            <View style={authStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="name"
@@ -122,8 +122,8 @@ const Register: FC = () => {
                       autoComplete="name"
                       textContentType="name"
                       style={[
-                        styles.formInput,
-                        errors.name && styles.invalidInput,
+                        authStyles.formInput,
+                        errors.name && authStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -131,8 +131,8 @@ const Register: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.name && (
-                      <View style={styles.errorTextContainer}>
-                        <Text style={styles.errorText}>
+                      <View style={authStyles.errorTextContainer}>
+                        <Text style={authStyles.errorText}>
                           {errors.name.message}
                         </Text>
                       </View>
@@ -141,7 +141,7 @@ const Register: FC = () => {
                 )}
               />
             </View>
-            <View style={styles.inputWrapper}>
+            <View style={authStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="email"
@@ -163,8 +163,8 @@ const Register: FC = () => {
                       keyboardType="email-address"
                       autoCapitalize="none"
                       style={[
-                        styles.formInput,
-                        errors.email && styles.invalidInput,
+                        authStyles.formInput,
+                        errors.email && authStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -172,8 +172,8 @@ const Register: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.email && (
-                      <View style={styles.errorTextContainer}>
-                        <Text style={styles.errorText}>
+                      <View style={authStyles.errorTextContainer}>
+                        <Text style={authStyles.errorText}>
                           {errors.email.message}
                         </Text>
                       </View>
@@ -182,7 +182,7 @@ const Register: FC = () => {
                 )}
               />
             </View>
-            <View style={styles.inputWrapper}>
+            <View style={authStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="birthdate"
@@ -195,8 +195,8 @@ const Register: FC = () => {
                     <TouchableOpacity
                       onPress={showDatePicker}
                       style={[
-                        styles.formInput,
-                        errors.birthdate && styles.invalidInput,
+                        authStyles.formInput,
+                        errors.birthdate && authStyles.invalidInput,
                       ]}
                     >
                       <Text
@@ -219,8 +219,8 @@ const Register: FC = () => {
                       onCancel={hideDatePicker}
                     />
                     {errors.birthdate && (
-                      <View style={styles.errorTextContainer}>
-                        <Text style={styles.errorText}>
+                      <View style={authStyles.errorTextContainer}>
+                        <Text style={authStyles.errorText}>
                           {errors.birthdate.message}
                         </Text>
                       </View>
@@ -229,7 +229,7 @@ const Register: FC = () => {
                 )}
               />
             </View>
-            <View style={styles.inputWrapper}>
+            <View style={authStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="password"
@@ -249,8 +249,8 @@ const Register: FC = () => {
                       textContentType="password"
                       secureTextEntry={true}
                       style={[
-                        styles.formInput,
-                        errors.password && styles.invalidInput,
+                        authStyles.formInput,
+                        errors.password && authStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -258,8 +258,8 @@ const Register: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.password && (
-                      <View style={styles.errorTextContainer}>
-                        <Text style={styles.errorText}>
+                      <View style={authStyles.errorTextContainer}>
+                        <Text style={authStyles.errorText}>
                           {errors.password.message}
                         </Text>
                       </View>
@@ -269,13 +269,13 @@ const Register: FC = () => {
               />
             </View>
             {error && (
-              <View style={styles.alert}>
+              <View style={authStyles.alert}>
                 <Feather
                   name="alert-triangle"
                   size={12}
-                  style={styles.alertIcon}
+                  style={authStyles.alertIcon}
                 />
-                <Text style={styles.errorText}>{error}</Text>
+                <Text style={authStyles.errorText}>{error}</Text>
               </View>
             )}
             <TextButton
@@ -284,10 +284,10 @@ const Register: FC = () => {
               textColor={colors.neutral.light}
               backgroundColor={colors.primary.default}
             />
-            <Text style={styles.privacy}>
+            <Text style={authStyles.privacy}>
               By clicking create account you are agreeing to follow our&nbsp;
               <Text
-                style={styles.link}
+                style={authStyles.link}
                 onPress={() => handleLinkPress("https://google.com")}
               >
                 privacy & terms
@@ -295,9 +295,9 @@ const Register: FC = () => {
               .
             </Text>
           </View>
-          <Text style={styles.login}>
+          <Text style={authStyles.authLink}>
             Already have an account?&nbsp;
-            <Text style={styles.link} onPress={() => router.push("/login")}>
+            <Text style={authStyles.link} onPress={() => router.push("/login")}>
               Login
             </Text>
           </Text>
@@ -306,80 +306,5 @@ const Register: FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  createAccount: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    rowGap: 20,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "left",
-  },
-  form: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    rowGap: 10,
-  },
-  inputWrapper: {
-    position: "relative",
-    width: "100%",
-  },
-  formInput: {
-    width: "100%",
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: colors.neutral.medium,
-    color: colors.neutral.dark,
-  },
-  invalidInput: {
-    borderColor: colors.alert.error,
-  },
-  errorTextContainer: {
-    position: "absolute",
-    right: 10,
-    top: "50%",
-    transform: [{ translateY: -8 }],
-    flexDirection: "row",
-    alignItems: "center",
-    pointerEvents: "none", // This ensures that clicks pass through to the input field
-  },
-  errorText: {
-    color: colors.alert.error,
-    fontSize: 12,
-    marginLeft: 5,
-  },
-  alert: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 5,
-    width: "100%",
-    justifyContent: "flex-start",
-  },
-  alertIcon: {
-    color: colors.alert.error,
-  },
-  privacy: {
-    textAlign: "left",
-  },
-  link: {
-    color: colors.primary.light,
-  },
-  spinnerContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  login: {
-    textAlign: "center",
-  },
-});
 
 export default Register;

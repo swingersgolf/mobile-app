@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Text, View, TextInput, StyleSheet, Pressable } from "react-native";
+import { Text, View, TextInput, Pressable } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "@/utils/validationSchemas";
@@ -11,6 +11,7 @@ import { Feather } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
+import { authStyles } from "./authStyles";
 
 type LoginFormValues = {
   email: string;
@@ -73,16 +74,16 @@ const Login: FC = () => {
   };
 
   return (
-    <View id="login" testID="login" style={styles.login}>
-      <Text style={styles.title}>Sign in to your account</Text>
+    <View id="login" testID="login" style={authStyles.container}>
+      <Text style={authStyles.title}>Sign in to your account</Text>
       {loading ? (
-        <View style={styles.spinnerContainer}>
+        <View style={authStyles.spinnerContainer}>
           <Spinner />
         </View>
       ) : (
         <>
-          <View id="login-form" style={styles.form}>
-            <View style={styles.inputWrapper}>
+          <View id="login-form" style={authStyles.form}>
+            <View style={authStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="email"
@@ -102,8 +103,8 @@ const Login: FC = () => {
                       autoComplete="email"
                       textContentType="emailAddress"
                       style={[
-                        styles.formInput,
-                        errors.email && styles.invalidInput,
+                        authStyles.formInput,
+                        errors.email && authStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -111,8 +112,8 @@ const Login: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.email && (
-                      <View style={styles.errorTextContainer}>
-                        <Text style={styles.errorText}>
+                      <View style={authStyles.errorTextContainer}>
+                        <Text style={authStyles.errorText}>
                           {errors.email.message}
                         </Text>
                       </View>
@@ -121,7 +122,7 @@ const Login: FC = () => {
                 )}
               />
             </View>
-            <View style={styles.inputWrapper}>
+            <View style={authStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="password"
@@ -141,8 +142,8 @@ const Login: FC = () => {
                       textContentType="password"
                       secureTextEntry={true}
                       style={[
-                        styles.formInput,
-                        errors.password && styles.invalidInput,
+                        authStyles.formInput,
+                        errors.password && authStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -150,8 +151,8 @@ const Login: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.password && (
-                      <View style={styles.errorTextContainer}>
-                        <Text style={styles.errorText}>
+                      <View style={authStyles.errorTextContainer}>
+                        <Text style={authStyles.errorText}>
                           {errors.password.message}
                         </Text>
                       </View>
@@ -161,13 +162,13 @@ const Login: FC = () => {
               />
             </View>
             {error && (
-              <View style={styles.alert}>
+              <View style={authStyles.alert}>
                 <Feather
                   name="alert-triangle"
                   size={12}
-                  style={styles.alertIcon}
+                  style={authStyles.alertIcon}
                 />
-                <Text style={styles.errorText}>{error}</Text>
+                <Text style={authStyles.errorText}>{error}</Text>
               </View>
             )}
             <TextButton
@@ -177,14 +178,20 @@ const Login: FC = () => {
               backgroundColor={colors.primary.default}
             />
           </View>
-          <View id="social-media-platforms" style={styles.socialMediaContainer}>
+          <View
+            id="social-media-platforms"
+            style={authStyles.socialMediaContainer}
+          >
             {socialMediaProviders.map((provider, index) => (
               <Pressable key={index}>{provider.icon}</Pressable>
             ))}
           </View>
-          <Text style={styles.register}>
+          <Text style={authStyles.authLink}>
             New to Swingers?&nbsp;
-            <Text style={styles.link} onPress={() => router.push("/register")}>
+            <Text
+              style={authStyles.link}
+              onPress={() => router.push("/register")}
+            >
               Create an account
             </Text>
           </Text>
@@ -193,87 +200,5 @@ const Login: FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  login: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    height: "100%",
-    rowGap: 20,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "left",
-  },
-  form: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    rowGap: 10,
-  },
-  inputWrapper: {
-    position: "relative",
-    width: "100%",
-  },
-  formInput: {
-    width: "100%",
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: colors.neutral.medium,
-    color: colors.neutral.dark,
-  },
-  invalidInput: {
-    borderColor: colors.alert.error,
-  },
-  errorTextContainer: {
-    position: "absolute",
-    right: 10,
-    top: "50%",
-    transform: [{ translateY: -8 }],
-    flexDirection: "row",
-    alignItems: "center",
-    pointerEvents: "none", // This ensures that clicks pass through to the input field
-  },
-  errorText: {
-    color: colors.alert.error,
-    fontSize: 12,
-    marginLeft: 5,
-  },
-  link: {
-    color: colors.primary.light,
-  },
-  alert: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    width: "100%",
-    columnGap: 6,
-  },
-  alertIcon: {
-    color: colors.alert.error,
-  },
-  spinnerContainer: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  register: {
-    textAlign: "center",
-  },
-  socialMediaContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    width: "100%",
-  },
-});
 
 export default Login;
