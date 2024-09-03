@@ -25,6 +25,7 @@ const AccountLayout = () => {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="edit" />
+        <Stack.Screen name="settings" />
       </Stack>
     </Pressable>
   );

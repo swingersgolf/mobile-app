@@ -7,11 +7,11 @@ import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
 import { useAuth } from "@/contexts/AuthContext";
-import { Feather } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import { authStyles } from "./authStyles";
+import Alert from "@/components/Alert";
 
 type LoginFormValues = {
   email: string;
@@ -161,16 +161,7 @@ const Login: FC = () => {
                 )}
               />
             </View>
-            {error && (
-              <View style={authStyles.alert}>
-                <Feather
-                  name="alert-triangle"
-                  size={12}
-                  style={authStyles.alertIcon}
-                />
-                <Text style={authStyles.errorText}>{error}</Text>
-              </View>
-            )}
+            {error && <Alert error={error} />}
             <TextButton
               text="Sign in"
               onPress={handleSubmit(handleSignIn)}

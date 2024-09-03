@@ -13,13 +13,13 @@ import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
 import { Linking } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDateYYYY_MM_DD } from "@/utils/date";
 import { authStyles } from "./authStyles";
+import Alert from "@/components/Alert";
 
 type RegisterFormValues = {
   email: string;
@@ -268,16 +268,7 @@ const Register: FC = () => {
                 )}
               />
             </View>
-            {error && (
-              <View style={authStyles.alert}>
-                <Feather
-                  name="alert-triangle"
-                  size={12}
-                  style={authStyles.alertIcon}
-                />
-                <Text style={authStyles.errorText}>{error}</Text>
-              </View>
-            )}
+            {error && <Alert error={error} />}
             <TextButton
               text="Create Account"
               onPress={handleSubmit(handleCreateAccount)}

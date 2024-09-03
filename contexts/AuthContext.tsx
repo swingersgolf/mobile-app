@@ -11,7 +11,7 @@ import {
   setStorageItemAsync,
   useStorageState,
 } from "@/storage/useStorageState";
-import { UserType, ProfileType } from "@/utils/types";
+import { UserType, ProfileType } from "@/types/authTypes";
 
 interface AuthContextType {
   token: string | null;
@@ -138,12 +138,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const updateProfile = async (updatedProfile: ProfileType) => {
     try {
       if (token) {
-        await axios.patch(`${apiUrl}/v1/user-profile`, updateProfile, {
+        await axios.patch(`${apiUrl}/v1/user-profile`, updatedProfile, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Set Content-Type header
           },
         });
+        await fetchProfile();
       }
       return Promise.resolve();
     } catch (error) {
