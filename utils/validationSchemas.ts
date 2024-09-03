@@ -19,10 +19,10 @@ export const registerSchema = yup.object().shape({
   password: yup.string().required("Password is required"),
   birthdate: yup
     .string()
-    .required("Birthdate is required")
+    .required("Date of birth is required")
     .test(
       "is-valid-format",
-      "Birthdate must be in YYYY-MM-DD format",
+      "Date of birth must be in YYYY-MM-DD format",
       (value) => {
         if (!value) return true; // Skip format check if birthdate is not provided
         return /^\d{4}-\d{2}-\d{2}$/.test(value);

@@ -1,7 +1,10 @@
-export interface AccountType {
+export interface UserType {
   name: string;
-  age: number;
   email: string;
+  password: string;
+  birthdate: string;
+}
+
+export interface ProfileType {
   handicap: number;
-  postalCode: string;
 }

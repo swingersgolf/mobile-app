@@ -1,6 +1,7 @@
-import { getDefaultConfig } from "expo/metro-config";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { getDefaultConfig } = require("expo/metro-config");
 
-export default (() => {
+module.exports = (() => {
   const config = getDefaultConfig(process.cwd());
 
   const { transformer, resolver } = config;

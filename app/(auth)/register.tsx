@@ -5,6 +5,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -71,6 +72,7 @@ const Register: FC = () => {
   };
 
   const showDatePicker = () => {
+    Keyboard.dismiss();
     setDatePickerVisibility(true);
   };
 
@@ -206,7 +208,7 @@ const Register: FC = () => {
                       >
                         {selectedDate
                           ? formatDateYYYY_MM_DD(selectedDate)
-                          : "Birthdate"}
+                          : "Date of birth"}
                       </Text>
                     </TouchableOpacity>
                     <DateTimePickerModal

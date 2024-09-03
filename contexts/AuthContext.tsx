@@ -11,11 +11,12 @@ import {
   setStorageItemAsync,
   useStorageState,
 } from "@/storage/useStorageState";
-import { AccountType } from "@/utils/types";
+import { UserType, ProfileType } from "@/utils/types";
 
 interface AuthContextType {
   token: string | null;
-  account: AccountType | null;
+  user: UserType | null;
+  profile: ProfileType | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   createAccount: (
@@ -25,8 +26,9 @@ interface AuthContextType {
     birthdate: string,
   ) => Promise<void>;
   isLoading: boolean;
-  fetchAccount: () => Promise<void>;
-  updateAccount: (updatedAccount: AccountType) => Promise<void>;
+  fetchUser: () => Promise<void>;
+  fetchProfile: () => Promise<void>;
+  updateProfile: (updatedProfile: ProfileType) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,16 +44,19 @@ export const useAuth = (): AuthContextType => {
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const [[isLoading, token], setToken] = useStorageState("token");
-  const [account, setAccount] = useState<AccountType | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
+  const [profile, setProfile] = useState<ProfileType | null>(null);
 
   useEffect(() => {
     const syncStorage = async () => {
       if (token) {
         await setStorageItemAsync("token", token);
-        await fetchAccount();
+        await fetchUser();
+        await fetchProfile();
       } else {
         await setStorageItemAsync("token", null);
-        setAccount(null);
+        setUser(null);
+        setProfile(null);
       }
     };
     syncStorage();
@@ -60,7 +65,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const response = await axios.post(`${apiUrl}/login`, {
+      const response = await axios.post(`${apiUrl}/v1/login`, {
         email,
         password,
       });
@@ -83,7 +88,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     birthdate: string,
   ) => {
     try {
-      await axios.post(`${apiUrl}/register`, {
+      await axios.post(`${apiUrl}/v1/register`, {
         name,
         email,
         password,
@@ -96,7 +101,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const fetchAccount = async () => {
+  const fetchUser = async () => {
     try {
       if (token) {
         const response = await axios.get(`${apiUrl}/v1/user`, {
@@ -104,7 +109,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setAccount(response.data.data);
+        setUser(response.data.data);
       }
       return Promise.resolve();
     } catch (error) {
@@ -113,10 +118,27 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const updateAccount = async (updatedAccount: Record<string, unknown>) => {
+  const fetchProfile = async () => {
     try {
       if (token) {
-        await axios.patch(`${apiUrl}/v1/user`, updatedAccount, {
+        const response = await axios.get(`${apiUrl}/v1/user-profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setProfile(response.data.data);
+      }
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      return Promise.reject(error);
+    }
+  };
+
+  const updateProfile = async (updatedProfile: ProfileType) => {
+    try {
+      if (token) {
+        await axios.patch(`${apiUrl}/v1/user-profile`, updateProfile, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json", // Set Content-Type header
@@ -134,12 +156,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     <AuthContext.Provider
       value={{
         token,
-        account,
+        user,
+        profile,
         signIn,
         signOut,
         createAccount,
-        fetchAccount,
-        updateAccount,
+        fetchUser,
+        fetchProfile,
+        updateProfile,
         isLoading,
       }}
     >
