@@ -1,4 +1,4 @@
-import { Keyboard, Pressable } from "react-native";
+import { Keyboard, Pressable, View } from "react-native";
 import { Redirect, Tabs } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,7 +9,18 @@ const HomeLayout = () => {
   const { token, isLoading } = useAuth();
 
   if (isLoading) {
-    return <Spinner />;
+    return (
+      <View
+        style={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spinner />
+      </View>
+    );
   }
 
   if (!token) {

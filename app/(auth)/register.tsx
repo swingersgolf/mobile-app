@@ -18,7 +18,7 @@ import axios from "axios";
 import Spinner from "@/components/Spinner";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDateYYYY_MM_DD } from "@/utils/date";
-import { authStyles } from "@/styles/authStyles";
+import authStyles from "@/styles/authStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
 import formStyles from "@/styles/FormStyles";
 

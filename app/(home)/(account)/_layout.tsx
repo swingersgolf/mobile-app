@@ -1,8 +1,7 @@
-import React from "react";
 import { Pressable, Keyboard } from "react-native";
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
+import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
-import { AntDesign } from "@expo/vector-icons"; // Import Ant Design icons
 
 const AccountLayout = () => {
   return (
@@ -24,23 +23,15 @@ const AccountLayout = () => {
         <Stack.Screen
           name="index"
           options={{
-            headerTitle: "Account",
-            headerRight: () => (
-              <Pressable
-                onPress={() => router.push("settings")} // Add your settings handler here
-                style={{ marginRight: 15 }} // Adjust the margin as needed
-              >
-                <AntDesign
-                  name="setting"
-                  size={24}
-                  color={colors.neutral.dark}
-                />
-              </Pressable>
+            headerTitle: () => (
+              <Icon id="icon" testID="icon" height={30} width={30} />
             ),
           }}
         />
-        <Stack.Screen name="edit" options={{ headerTitle: "Edit profile" }} />
-        <Stack.Screen name="settings" options={{ headerTitle: "Settings" }} />
+        <Stack.Screen
+          name="edit"
+          options={{ presentation: "modal", headerTitle: "Edit profile" }}
+        />
       </Stack>
     </Pressable>
   );

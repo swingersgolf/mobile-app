@@ -1,41 +1,57 @@
 import { StyleSheet } from "react-native";
 import { colors } from "@/constants/Colors";
 
-export const accountStyles = StyleSheet.create({
+const accountStyles = StyleSheet.create({
   container: {
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "flex-start",
   },
   spinnerContainer: {
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    flex: 1,
+  },
+  accountContainer: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    alignItems: "center",
+    rowGap: 30,
   },
   accountContent: {
     display: "flex",
     flexDirection: "column",
-    rowGap: 10,
+    rowGap: 20,
     width: "100%",
-    padding: 20,
   },
-  userContent: {
+  profilePicture: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 150,
+    height: 150,
+    borderRadius: 9999,
+    backgroundColor: colors.neutral.medium,
+  },
+  user: {
+    fontSize: 24,
+  },
+  infoContainer: {
     display: "flex",
     flexDirection: "column",
     width: "100%",
   },
-  userInfo: {
-    color: colors.neutral.medium,
+  infoTitle: {
+    fontSize: 20,
+    color: colors.neutral.dark,
   },
-  profileContent: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-  },
-  profileInfo: {
+  info: {
     color: colors.neutral.medium,
+    fontSize: 16,
   },
   buttonContainer: {
     display: "flex",
@@ -59,18 +75,6 @@ export const accountStyles = StyleSheet.create({
     borderColor: colors.neutral.medium,
     color: colors.neutral.dark,
   },
-  formInputTitle: {
-    color: colors.neutral.dark,
-    fontSize: 16,
-    textAlign: "left",
-    position: "absolute",
-    left: 10,
-    top: -10,
-    backgroundColor: colors.background.primary,
-    zIndex: 100,
-    paddingHorizontal: 5,
-  },
-  formInputTitleError: {
-    color: colors.alert.error,
-  },
 });
+
+export default accountStyles;

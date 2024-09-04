@@ -1,5 +1,5 @@
 import { View, Text, TextInput } from "react-native";
-import { accountStyles } from "@/styles/accountStyles";
+import accountStyles from "@/styles/accountStyles";
 import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
 import { useAuth } from "@/contexts/AuthContext";

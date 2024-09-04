@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
-import { authStyles } from "@/styles/authStyles";
+import authStyles from "@/styles/authStyles";
 import formStyles from "@/styles/FormStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
 
