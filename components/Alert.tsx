@@ -1,36 +1,26 @@
-import { colors } from "@/constants/Colors";
+import alertStyles from "@/styles/AlertStyles";
 import { Feather } from "@expo/vector-icons";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 
 interface AlertProps {
-  error: string;
+  error: string | undefined;
 }
 
-const Alert = ({ error }: AlertProps) => {
+export const InFormAlert = ({ error }: AlertProps) => {
   return (
-    <View style={styles.alert}>
-      <Feather name="alert-triangle" size={12} style={styles.alertIcon} />
-      <Text style={styles.errorText}>{error}</Text>
+    <View style={alertStyles.errorTextContainer}>
+      <Text style={alertStyles.errorText}>{error}</Text>
     </View>
   );
 };
 
-export const styles = StyleSheet.create({
-  errorText: {
-    color: colors.alert.error,
-    fontSize: 12,
-    marginLeft: 5,
-  },
-  alert: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 5,
-    width: "100%",
-    justifyContent: "flex-start",
-  },
-  alertIcon: {
-    color: colors.alert.error,
-  },
-});
+const Alert = ({ error }: AlertProps) => {
+  return (
+    <View style={alertStyles.alert}>
+      <Feather name="alert-triangle" size={12} style={alertStyles.alertIcon} />
+      <Text style={alertStyles.errorText}>{error}</Text>
+    </View>
+  );
+};
 
 export default Alert;

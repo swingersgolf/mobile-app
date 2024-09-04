@@ -7,4 +7,5 @@ export interface UserType {
 
 export interface ProfileType {
   handicap: number;
+  postalCode: string;
 }

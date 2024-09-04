@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { Text, View, TextInput, Pressable } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { loginSchema } from "@/utils/validationSchemas";
+import { loginSchema } from "@/schemas/loginSchema";
 import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
@@ -10,8 +10,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
-import { authStyles } from "./authStyles";
-import Alert from "@/components/Alert";
+import { authStyles } from "@/styles/authStyles";
+import formStyles from "@/styles/FormStyles";
+import Alert, { InFormAlert } from "@/components/Alert";
 
 type LoginFormValues = {
   email: string;
@@ -75,15 +76,15 @@ const Login: FC = () => {
 
   return (
     <View id="login" testID="login" style={authStyles.container}>
-      <Text style={authStyles.title}>Sign in to your account</Text>
       {loading ? (
         <View style={authStyles.spinnerContainer}>
           <Spinner />
         </View>
       ) : (
         <>
-          <View id="login-form" style={authStyles.form}>
-            <View style={authStyles.inputWrapper}>
+          <Text style={authStyles.title}>Sign in to your account</Text>
+          <View id="login-form" style={formStyles.form}>
+            <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="email"
@@ -97,14 +98,25 @@ const Login: FC = () => {
                   };
                 }) => (
                   <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.email && formStyles.formInputTitleError,
+                          ,
+                        ]}
+                      >
+                        Email
+                      </Text>
+                    )}
                     <TextInput
                       placeholder="Email"
                       keyboardType="email-address"
                       autoComplete="email"
                       textContentType="emailAddress"
                       style={[
-                        authStyles.formInput,
-                        errors.email && authStyles.invalidInput,
+                        formStyles.formInput,
+                        errors.email && formStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -112,17 +124,13 @@ const Login: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.email && (
-                      <View style={authStyles.errorTextContainer}>
-                        <Text style={authStyles.errorText}>
-                          {errors.email.message}
-                        </Text>
-                      </View>
+                      <InFormAlert error={errors.email.message} />
                     )}
                   </>
                 )}
               />
             </View>
-            <View style={authStyles.inputWrapper}>
+            <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="password"
@@ -136,14 +144,24 @@ const Login: FC = () => {
                   };
                 }) => (
                   <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.password && formStyles.formInputTitleError,
+                        ]}
+                      >
+                        Password
+                      </Text>
+                    )}
                     <TextInput
                       placeholder="Password"
                       autoComplete="password"
                       textContentType="password"
                       secureTextEntry={true}
                       style={[
-                        authStyles.formInput,
-                        errors.password && authStyles.invalidInput,
+                        formStyles.formInput,
+                        errors.password && formStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -151,11 +169,7 @@ const Login: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.password && (
-                      <View style={authStyles.errorTextContainer}>
-                        <Text style={authStyles.errorText}>
-                          {errors.password.message}
-                        </Text>
-                      </View>
+                      <InFormAlert error={errors.password.message} />
                     )}
                   </>
                 )}

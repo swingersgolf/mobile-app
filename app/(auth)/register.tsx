@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { registerSchema } from "@/utils/validationSchemas";
+import { registerSchema } from "@/schemas/registerSchema";
 import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
@@ -18,8 +18,9 @@ import axios from "axios";
 import Spinner from "@/components/Spinner";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDateYYYY_MM_DD } from "@/utils/date";
-import { authStyles } from "./authStyles";
-import Alert from "@/components/Alert";
+import { authStyles } from "@/styles/authStyles";
+import Alert, { InFormAlert } from "@/components/Alert";
+import formStyles from "@/styles/FormStyles";
 
 type RegisterFormValues = {
   email: string;
@@ -40,6 +41,7 @@ const Register: FC = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    trigger,
   } = useForm<RegisterFormValues>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
@@ -84,6 +86,7 @@ const Register: FC = () => {
     setSelectedDate(date);
     const formattedDate = formatDateYYYY_MM_DD(date);
     setValue("birthdate", formattedDate);
+    trigger("birthdate"); // Re-validate the birthdate field
     hideDatePicker();
   };
 
@@ -95,15 +98,15 @@ const Register: FC = () => {
       testID="create-account"
       style={authStyles.container}
     >
-      <Text style={authStyles.title}>Create your account</Text>
       {loading ? (
         <View style={authStyles.spinnerContainer}>
           <Spinner />
         </View>
       ) : (
         <>
-          <View id="create-account-form" style={authStyles.form}>
-            <View style={authStyles.inputWrapper}>
+          <Text style={authStyles.title}>Create your account</Text>
+          <View id="create-account-form" style={formStyles.form}>
+            <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="name"
@@ -117,31 +120,35 @@ const Register: FC = () => {
                   };
                 }) => (
                   <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.name && formStyles.formInputTitleError,
+                        ]}
+                      >
+                        Name
+                      </Text>
+                    )}
                     <TextInput
                       placeholder="Name"
                       autoComplete="name"
                       textContentType="name"
                       style={[
-                        authStyles.formInput,
-                        errors.name && authStyles.invalidInput,
+                        formStyles.formInput,
+                        errors.name && formStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value || ""}
                       placeholderTextColor={colors.neutral.medium}
                     />
-                    {errors.name && (
-                      <View style={authStyles.errorTextContainer}>
-                        <Text style={authStyles.errorText}>
-                          {errors.name.message}
-                        </Text>
-                      </View>
-                    )}
+                    {errors.name && <InFormAlert error={errors.name.message} />}
                   </>
                 )}
               />
             </View>
-            <View style={authStyles.inputWrapper}>
+            <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="email"
@@ -155,6 +162,16 @@ const Register: FC = () => {
                   };
                 }) => (
                   <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.email && formStyles.formInputTitleError,
+                        ]}
+                      >
+                        Email
+                      </Text>
+                    )}
                     <TextInput
                       placeholder="Email"
                       inputMode="email"
@@ -163,8 +180,8 @@ const Register: FC = () => {
                       keyboardType="email-address"
                       autoCapitalize="none"
                       style={[
-                        authStyles.formInput,
-                        errors.email && authStyles.invalidInput,
+                        formStyles.formInput,
+                        errors.email && formStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -172,17 +189,13 @@ const Register: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.email && (
-                      <View style={authStyles.errorTextContainer}>
-                        <Text style={authStyles.errorText}>
-                          {errors.email.message}
-                        </Text>
-                      </View>
+                      <InFormAlert error={errors.email.message} />
                     )}
                   </>
                 )}
               />
             </View>
-            <View style={authStyles.inputWrapper}>
+            <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="birthdate"
@@ -192,11 +205,21 @@ const Register: FC = () => {
                   field: { value: string };
                 }) => (
                   <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.birthdate && formStyles.formInputTitleError,
+                        ]}
+                      >
+                        Date of birth
+                      </Text>
+                    )}
                     <TouchableOpacity
                       onPress={showDatePicker}
                       style={[
-                        authStyles.formInput,
-                        errors.birthdate && authStyles.invalidInput,
+                        formStyles.formInput,
+                        errors.birthdate && formStyles.invalidInput,
                       ]}
                     >
                       <Text
@@ -219,17 +242,13 @@ const Register: FC = () => {
                       onCancel={hideDatePicker}
                     />
                     {errors.birthdate && (
-                      <View style={authStyles.errorTextContainer}>
-                        <Text style={authStyles.errorText}>
-                          {errors.birthdate.message}
-                        </Text>
-                      </View>
+                      <InFormAlert error={errors.birthdate.message} />
                     )}
                   </>
                 )}
               />
             </View>
-            <View style={authStyles.inputWrapper}>
+            <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}
                 name="password"
@@ -243,14 +262,24 @@ const Register: FC = () => {
                   };
                 }) => (
                   <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.password && formStyles.formInputTitleError,
+                        ]}
+                      >
+                        Password
+                      </Text>
+                    )}
                     <TextInput
                       placeholder="Password"
                       autoComplete="password"
                       textContentType="password"
                       secureTextEntry={true}
                       style={[
-                        authStyles.formInput,
-                        errors.password && authStyles.invalidInput,
+                        formStyles.formInput,
+                        errors.password && formStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -258,11 +287,7 @@ const Register: FC = () => {
                       placeholderTextColor={colors.neutral.medium}
                     />
                     {errors.password && (
-                      <View style={authStyles.errorTextContainer}>
-                        <Text style={authStyles.errorText}>
-                          {errors.password.message}
-                        </Text>
-                      </View>
+                      <InFormAlert error={errors.password.message} />
                     )}
                   </>
                 )}
