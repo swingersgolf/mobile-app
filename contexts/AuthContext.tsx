@@ -1,99 +1,174 @@
-import { useContext, createContext, PropsWithChildren } from "react";
-import { Alert } from "react-native";
+import {
+  createContext,
+  useContext,
+  PropsWithChildren,
+  useEffect,
+  useCallback,
+  useState,
+} from "react";
 import axios from "axios";
 import {
   setStorageItemAsync,
   useStorageState,
 } from "@/storage/useStorageState";
+import { UserType, ProfileType } from "@/types/authTypes";
 
-const AuthContext = createContext<{
-  signIn: (email: string, password: string) => Promise<boolean>;
+interface AuthContextType {
+  token: string | null;
+  user: UserType | null;
+  profile: ProfileType | null;
+  signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   createAccount: (
-    email: string,
     name: string,
+    email: string,
     password: string,
-  ) => Promise<boolean>;
-  session?: string | null;
+    birthdate: string,
+  ) => Promise<void>;
   isLoading: boolean;
-}>({
-  signIn: async () => false,
-  signOut: () => null,
-  createAccount: async () => false,
-  session: null,
-  isLoading: false,
-});
-
-// This hook can be used to access the user info.
-export function useSession() {
-  const value = useContext(AuthContext);
-  if (process.env.NODE_ENV !== "production") {
-    if (!value) {
-      throw new Error("useSession must be wrapped in a <SessionProvider />");
-    }
-  }
-
-  return value;
+  fetchUser: () => Promise<void>;
+  fetchProfile: () => Promise<void>;
+  updateProfile: (updatedProfile: ProfileType) => Promise<void>;
 }
 
-export function SessionProvider({ children }: PropsWithChildren) {
-  const [[isLoading, session], setSession] = useStorageState("session");
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-  const signIn = async (email: string, password: string): Promise<boolean> => {
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within a SessionProvider");
+  }
+  return context;
+};
+
+export const AuthProvider = ({ children }: PropsWithChildren) => {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+  const [[isLoading, token], setToken] = useStorageState("token");
+  const [user, setUser] = useState<UserType | null>(null);
+  const [profile, setProfile] = useState<ProfileType | null>(null);
+
+  useEffect(() => {
+    const syncStorage = async () => {
+      if (token) {
+        await setStorageItemAsync("token", token);
+        await fetchUser();
+        await fetchProfile();
+      } else {
+        await setStorageItemAsync("token", null);
+        setUser(null);
+        setProfile(null);
+      }
+    };
+    syncStorage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const signIn = async (email: string, password: string) => {
     try {
-      const response = await axios.post("https://example.com/api/login", {
+      const response = await axios.post(`${apiUrl}/v1/login`, {
         email,
         password,
       });
-      const token = response.data.token; // Adjust according to your API response structure
-      await setStorageItemAsync("session", token);
-      setSession(token);
-      Alert.alert("Success", "Login successful");
-      return true;
+      setToken(response.data.token);
+      return Promise.resolve();
     } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "An error occurred while logging in");
-      return false;
+      console.error("Error logging in:", error);
+      return Promise.reject(error);
     }
   };
 
-  const signOut = () => {
-    setSession(null);
-    setStorageItemAsync("session", null);
-  };
+  const signOut = useCallback(() => {
+    setToken(null);
+  }, [setToken]);
 
   const createAccount = async (
-    email: string,
     name: string,
+    email: string,
     password: string,
-  ): Promise<boolean> => {
+    birthdate: string,
+  ) => {
     try {
-      const response = await axios.post("https://example.com/api/register", {
-        email,
+      await axios.post(`${apiUrl}/v1/register`, {
         name,
+        email,
         password,
+        birthdate,
       });
-      console.log(response.data);
-      Alert.alert("Success", "Account created successfully");
-      return true;
+      return Promise.resolve();
     } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "An error occurred while creating the account");
-      return false;
+      console.error("Error creating account:", error);
+      return Promise.reject(error);
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      if (token) {
+        const response = await axios.get(`${apiUrl}/v1/user`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUser(response.data.data);
+      }
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      return Promise.reject(error);
+    }
+  };
+
+  const fetchProfile = async () => {
+    try {
+      if (token) {
+        const response = await axios.get(`${apiUrl}/v1/user-profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setProfile(response.data.data);
+      }
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      return Promise.reject(error);
+    }
+  };
+
+  const updateProfile = async (updatedProfile: ProfileType) => {
+    try {
+      if (token) {
+        await axios.patch(`${apiUrl}/v1/user-profile`, updatedProfile, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Set Content-Type header
+          },
+        });
+        await fetchProfile();
+      }
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return Promise.reject(error);
     }
   };
 
   return (
     <AuthContext.Provider
       value={{
+        token,
+        user,
+        profile,
         signIn,
         signOut,
         createAccount,
-        session,
+        fetchUser,
+        fetchProfile,
+        updateProfile,
         isLoading,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-}
+};

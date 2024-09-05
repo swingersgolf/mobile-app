@@ -1,11 +1,13 @@
-import { Pressable, Text, ViewStyle, TextStyle } from "react-native";
+import { Pressable, Text, ViewStyle } from "react-native";
+import { DimensionValue } from "react-native";
 
 type ButtonProps = {
   text: string;
   outline?: boolean;
-  onPress: () => void;
+  onPress: (() => void) | ((data: Record<string, unknown>) => Promise<void>);
   textColor: string;
   backgroundColor: string;
+  width?: DimensionValue | undefined;
 };
 
 const TextButton = ({
@@ -14,26 +16,40 @@ const TextButton = ({
   outline = false,
   textColor,
   backgroundColor,
+  width,
 }: ButtonProps) => {
-  const buttonStyle: ViewStyle = {
-    paddingVertical: 15,
-    borderRadius: 5,
-    width: "100%",
-    alignItems: "center",
-    backgroundColor: outline ? "transparent" : backgroundColor,
-    borderWidth: outline ? 1 : 0,
-    borderColor: outline ? backgroundColor : "transparent",
-  };
-
-  const textStyle: TextStyle = {
-    color: outline ? backgroundColor : textColor,
-    fontSize: 20,
-    fontWeight: "bold",
-  };
-
   return (
-    <Pressable onPress={onPress} style={buttonStyle} testID="button">
-      <Text style={textStyle}>{text}</Text>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }: { pressed: boolean }) => {
+        const buttonStyle: ViewStyle = {
+          paddingVertical: 15,
+          borderRadius: 5,
+          width: width ? width : "100%",
+          alignItems: "center",
+          backgroundColor: outline
+            ? "transparent"
+            : pressed
+              ? "lighten"
+              : backgroundColor,
+          borderWidth: 1,
+          borderColor: outline ? textColor : backgroundColor,
+          opacity: pressed ? 0.7 : 1, // Adjust opacity when pressed
+        };
+
+        return buttonStyle;
+      }}
+      testID="text-button"
+    >
+      <Text
+        style={{
+          color: textColor,
+          fontSize: 20,
+          fontWeight: "bold",
+        }}
+      >
+        {text}
+      </Text>
     </Pressable>
   );
 };

@@ -1,9 +1,9 @@
 import { Pressable, Keyboard } from "react-native";
+import { Stack } from "expo-router";
 import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
-import { Stack } from "expo-router";
 
-const UnauthorizedLayout = () => {
+const AccountLayout = () => {
   return (
     <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
       <Stack
@@ -11,9 +11,6 @@ const UnauthorizedLayout = () => {
           headerShown: true,
           headerBackTitleVisible: false,
           headerTintColor: colors.neutral.dark,
-          headerTitle: () => (
-            <Icon id="icon" testID="icon" height={30} width={30} />
-          ),
           contentStyle: {
             backgroundColor: colors.background.primary,
             padding: 20,
@@ -24,14 +21,20 @@ const UnauthorizedLayout = () => {
         }}
       >
         <Stack.Screen
-          name="landing"
-          options={{ headerShown: false, contentStyle: undefined }}
+          name="index"
+          options={{
+            headerTitle: () => (
+              <Icon id="icon" testID="icon" height={30} width={30} />
+            ),
+          }}
         />
-        <Stack.Screen name="login" options={{}} />
-        <Stack.Screen name="register" options={{}} />
+        <Stack.Screen
+          name="edit"
+          options={{ presentation: "modal", headerTitle: "Edit profile" }}
+        />
       </Stack>
     </Pressable>
   );
 };
 
-export default UnauthorizedLayout;
+export default AccountLayout;

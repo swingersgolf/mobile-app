@@ -1,6 +1,7 @@
 module.exports = {
-  extends: ["expo", "prettier"],
-  plugins: ["prettier"],
+  parser: "@typescript-eslint/parser",
+  extends: ["expo", "prettier", "plugin:@typescript-eslint/recommended"],
+  plugins: ["prettier", "@typescript-eslint", "import"],
   rules: {
     "prettier/prettier": [
       "error",
@@ -8,12 +9,22 @@ module.exports = {
         endOfLine: "auto",
       },
     ],
+    "import/no-unresolved": [
+      "error",
+      {
+        ignore: ["^@components/", "^@utils/"],
+      },
+    ],
   },
   ignorePatterns: ["expo-env.d.ts"],
   settings: {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
     "import/resolver": {
-      node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      typescript: {
+        alwaysTryTypes: true,
+        project: "./tsconfig.json", // Adjust this path if needed
       },
     },
   },

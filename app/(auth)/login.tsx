@@ -1,182 +1,209 @@
-import { useState } from "react";
-import { Text, View, StyleSheet, TextInput, SafeAreaView } from "react-native";
-import { colors } from "@/constants/Colors";
+import { FC, useState } from "react";
+import { Text, View, TextInput, Pressable } from "react-native";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginSchema } from "@/schemas/loginSchema";
 import TextButton from "@/components/TextButton";
 import { router } from "expo-router";
-import { useSession } from "@/contexts/AuthContext";
+import { colors } from "@/constants/Colors";
+import { useAuth } from "@/contexts/AuthContext";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import axios from "axios";
+import Spinner from "@/components/Spinner";
+import authStyles from "@/styles/authStyles";
+import formStyles from "@/styles/FormStyles";
+import Alert, { InFormAlert } from "@/components/Alert";
 
-// Function to validate email format
-const isValidEmail = (email: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+type LoginFormValues = {
+  email: string;
+  password: string;
 };
 
-const validateLoginForm = (
-  email: string,
-  password: string,
-  setInvalidFields: (fields: {
-    email?: boolean;
-    password?: boolean;
-    emailFormat?: boolean;
-  }) => void,
-) => {
-  const invalidFields: {
-    email?: boolean;
-    password?: boolean;
-    emailFormat?: boolean;
-  } = {};
+const socialMediaProviders = [
+  {
+    name: "Google",
+    icon: <AntDesign name="google" size={24} color="black" />,
+    signInMethod: "signInWithGoogle",
+  },
+  {
+    name: "Facebook",
+    icon: <AntDesign name="facebook-square" size={24} color="black" />,
+    signInMethod: "signInWithFacebook",
+  },
+  {
+    name: "Twitter",
+    icon: <AntDesign name="twitter" size={24} color="black" />,
+    signInMethod: "signInWithTwitter",
+  },
+];
 
-  if (!email) {
-    invalidFields.email = true;
-  } else if (!isValidEmail(email)) {
-    invalidFields.emailFormat = true;
-  }
-  if (!password) invalidFields.password = true;
+const Login: FC = () => {
+  const { signIn } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  setInvalidFields(invalidFields);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: yupResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  return Object.keys(invalidFields).length === 0;
-};
-
-export default function Login() {
-  const { signIn } = useSession();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [invalidFields, setInvalidFields] = useState<{
-    email?: boolean;
-    password?: boolean;
-    emailFormat?: boolean;
-  }>({});
-  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
-
-  const handleLogin = async () => {
-    if (!validateLoginForm(email, password, setInvalidFields)) {
-      setHasAttemptedSubmit(true);
-      return;
-    }
-
-    const success = await signIn(email, password);
-
-    if (success) {
+  const handleSignIn = async (data: LoginFormValues) => {
+    setLoading(true);
+    setError(""); // Clear any previous errors
+    try {
+      await signIn(data.email, data.password);
       router.replace("/");
-    }
-  };
-
-  const handleChangeText = (field: "email" | "password", text: string) => {
-    // Update field value
-    if (field === "email") {
-      setEmail(text);
-      // Clear email validation errors on input change
-      setInvalidFields((prev) => ({
-        ...prev,
-        email: text ? false : prev.email,
-        emailFormat: false,
-      }));
-    }
-    if (field === "password") setPassword(text);
-
-    // Remove the red outline if the field has a value
-    if (field !== "email") {
-      setInvalidFields((prev) => ({
-        ...prev,
-        [field]: text ? false : prev[field],
-      }));
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage =
+          error.response.data.message ||
+          "Failed to create account. Please try again.";
+        setError(errorMessage);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView id="login" testID="login" style={styles.login}>
-      <Text style={styles.title}>Login</Text>
-      <View id="login-form" style={styles.form}>
-        <TextInput
-          placeholder="Email"
-          keyboardType="email-address"
-          autoComplete="email"
-          textContentType="emailAddress"
-          style={[
-            styles.formInput,
-            hasAttemptedSubmit &&
-              (invalidFields.email || invalidFields.emailFormat) &&
-              styles.invalidInput,
-          ]}
-          value={email}
-          onChangeText={(text) => handleChangeText("email", text)}
-          placeholderTextColor={colors.grey}
-        />
-        {hasAttemptedSubmit && invalidFields.emailFormat && (
-          <Text style={styles.errorText}>
-            Please enter a valid email address.
+    <View id="login" testID="login" style={authStyles.container}>
+      {loading ? (
+        <View style={authStyles.spinnerContainer}>
+          <Spinner />
+        </View>
+      ) : (
+        <>
+          <Text style={authStyles.title}>Sign in to your account</Text>
+          <View id="login-form" style={formStyles.form}>
+            <View style={formStyles.inputWrapper}>
+              <Controller
+                control={control}
+                name="email"
+                render={({
+                  field: { onChange, onBlur, value },
+                }: {
+                  field: {
+                    onChange: (value: string) => void;
+                    onBlur: () => void;
+                    value: string;
+                  };
+                }) => (
+                  <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.email && formStyles.formInputTitleError,
+                          ,
+                        ]}
+                      >
+                        Email
+                      </Text>
+                    )}
+                    <TextInput
+                      placeholder="Email"
+                      keyboardType="email-address"
+                      autoComplete="email"
+                      textContentType="emailAddress"
+                      style={[
+                        formStyles.formInput,
+                        errors.email && formStyles.invalidInput,
+                      ]}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholderTextColor={colors.neutral.medium}
+                    />
+                    {errors.email && (
+                      <InFormAlert error={errors.email.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+            <View style={formStyles.inputWrapper}>
+              <Controller
+                control={control}
+                name="password"
+                render={({
+                  field: { onChange, onBlur, value },
+                }: {
+                  field: {
+                    onChange: (value: string) => void;
+                    onBlur: () => void;
+                    value: string;
+                  };
+                }) => (
+                  <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.password && formStyles.formInputTitleError,
+                        ]}
+                      >
+                        Password
+                      </Text>
+                    )}
+                    <TextInput
+                      placeholder="Password"
+                      autoComplete="password"
+                      textContentType="password"
+                      secureTextEntry={true}
+                      style={[
+                        formStyles.formInput,
+                        errors.password && formStyles.invalidInput,
+                      ]}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholderTextColor={colors.neutral.medium}
+                    />
+                    {errors.password && (
+                      <InFormAlert error={errors.password.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+            {error && <Alert error={error} />}
+            <TextButton
+              text="Sign in"
+              onPress={handleSubmit(handleSignIn)}
+              textColor={colors.neutral.light}
+              backgroundColor={colors.primary.default}
+            />
+          </View>
+          <View
+            id="social-media-platforms"
+            style={authStyles.socialMediaContainer}
+          >
+            {socialMediaProviders.map((provider, index) => (
+              <Pressable key={index}>{provider.icon}</Pressable>
+            ))}
+          </View>
+          <Text style={authStyles.authLink}>
+            New to Swingers?&nbsp;
+            <Text
+              style={authStyles.link}
+              onPress={() => router.push("/register")}
+            >
+              Create an account
+            </Text>
           </Text>
-        )}
-        <TextInput
-          placeholder="Password"
-          autoComplete="password"
-          textContentType="password"
-          secureTextEntry={true}
-          style={[
-            styles.formInput,
-            invalidFields.password && styles.invalidInput,
-          ]}
-          value={password}
-          onChangeText={(text) => handleChangeText("password", text)}
-          placeholderTextColor={colors.grey}
-        />
-      </View>
-      <TextButton
-        text="Login"
-        onPress={handleLogin}
-        textColor={colors.white}
-        backgroundColor={colors.lightGreen}
-      />
-      {/* Add text link to registration screen if the user does not have an account */}
-      <Text>
-        Don't have an account?&nbsp;
-        <Text style={styles.link} onPress={() => router.push("/register")}>
-          Register
-        </Text>
-      </Text>
-    </SafeAreaView>
+        </>
+      )}
+    </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  login: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    rowGap: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  form: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  formInput: {
-    width: "100%",
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    margin: 5,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: colors.grey,
-    color: colors.black,
-  },
-  invalidInput: {
-    borderColor: colors.alert,
-  },
-  errorText: {
-    color: colors.alert,
-    marginVertical: 5,
-    width: "100%",
-    textAlign: "center",
-  },
-  link: {
-    color: colors.darkGreen,
-  },
-});
+export default Login;
