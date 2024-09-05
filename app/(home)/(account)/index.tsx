@@ -27,7 +27,7 @@ const Account = () => {
                 {user &&
                   Object.entries(user).map(([key, value]) => (
                     <Text key={key} style={accountStyles.info}>
-                      {convertCamelCaseToLabel(key)}: {value ?? "N/A"}
+                      {convertCamelCaseToLabel(key)}: {value}
                     </Text>
                   ))}
               </View>
@@ -36,7 +36,7 @@ const Account = () => {
                 {profile &&
                   Object.entries(profile).map(([key, value]) => (
                     <Text key={key} style={accountStyles.info}>
-                      {convertCamelCaseToLabel(key)}: {value ?? "N/A"}
+                      {convertCamelCaseToLabel(key)}: {value}
                     </Text>
                   ))}
               </View>

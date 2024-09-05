@@ -52,14 +52,14 @@ const EditAccount = () => {
   } = useForm({
     resolver: yupResolver(profileSchema),
     defaultValues: {
-      handicap: profile?.handicap || 0,
-      postalCode: profile?.postalCode || "",
+      handicap: profile?.handicap,
+      postalCode: profile?.postalCode,
     },
   });
 
   return (
     <View style={accountStyles.container}>
-      {loading ? (
+      {!profile || loading ? (
         <View style={accountStyles.spinnerContainer}>
           <Spinner />
         </View>
