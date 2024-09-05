@@ -93,7 +93,7 @@ const EditAccount = () => {
                         ]}
                         onBlur={onBlur}
                         onChangeText={onChange}
-                        value={value}
+                        value={value?.toString()}
                         placeholderTextColor={colors.neutral.medium}
                       />
                       {errors.handicap && (
