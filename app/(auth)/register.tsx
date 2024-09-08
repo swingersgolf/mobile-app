@@ -30,7 +30,7 @@ type RegisterFormValues = {
 };
 
 const Register: FC = () => {
-  const { createAccount, signIn } = useAuth();
+  const { createAccount } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -54,11 +54,10 @@ const Register: FC = () => {
 
   const handleCreateAccount = async (data: RegisterFormValues) => {
     setLoading(true);
-    setError(""); // Clear any previous errors
+    setError("");
     try {
       await createAccount(data.name, data.email, data.password, data.birthdate);
-      await signIn(data.email, data.password);
-      router.replace("/");
+      router.replace("/verify");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =

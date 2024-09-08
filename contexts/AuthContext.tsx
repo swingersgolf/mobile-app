@@ -29,6 +29,7 @@ interface AuthContextType {
   fetchUser: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (updatedProfile: ProfileType) => Promise<void>;
+  verifyEmail: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -94,6 +95,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         password,
         birthdate,
       });
+      setUser({ name, email, password, birthdate });
       return Promise.resolve();
     } catch (error) {
       console.error("Error creating account:", error);
@@ -153,6 +155,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const verifyEmail = async () => {
+    console.log("verifyEmail");
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -165,6 +171,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         fetchUser,
         fetchProfile,
         updateProfile,
+        verifyEmail,
         isLoading,
       }}
     >

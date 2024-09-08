@@ -29,6 +29,7 @@ const UnauthorizedLayout = () => {
         />
         <Stack.Screen name="login" options={{}} />
         <Stack.Screen name="register" options={{}} />
+        <Stack.Screen name="verify" options={{ presentation: "modal" }} />
       </Stack>
     </Pressable>
   );
