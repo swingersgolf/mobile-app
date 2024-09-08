@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import {
   Text,
   View,
@@ -29,7 +29,7 @@ type RegisterFormValues = {
   birthdate: string;
 };
 
-const Register: FC = () => {
+const Register = () => {
   const { createAccount } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);

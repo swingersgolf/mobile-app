@@ -21,6 +21,7 @@ const Verify = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { user, signIn, verifyEmail } = useAuth();
+  const { emailNotVerified, setEmailNotVerified } = useState();
 
   const {
     control,
