@@ -8,7 +8,7 @@ import authStyles from "@/styles/authStyles";
 import formStyles from "@/styles/FormStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { router } from "expo-router";
+import { router, use, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { View, Text, TextInput } from "react-native";
@@ -20,8 +20,8 @@ type VerifyEmailFormValues = {
 const Verify = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { user, signIn, verifyEmail } = useAuth();
-  const { emailNotVerified, setEmailNotVerified } = useState();
+  const { signIn, verifyEmail, resendVerificationCode } = useAuth();
+  const { email, password } = useLocalSearchParams(); // Retrieve the email
 
   const {
     control,
@@ -34,12 +34,12 @@ const Verify = () => {
     },
   });
 
-  const handleVerifyEmail = async () => {
+  const handleVerifyEmail = async (data: VerifyEmailFormValues) => {
     setLoading(true);
     setError("");
     try {
-      await verifyEmail();
-      await signIn(user.email, user.password);
+      await verifyEmail(email as string, data.code);
+      await signIn(email as string, password as string);
       router.replace("/");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
@@ -50,6 +50,26 @@ const Verify = () => {
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendVerificationCode = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      await resendVerificationCode(email as string);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage =
+          error.response.data.message ||
+          "Failed to resend code. Please try again.";
+        setError(errorMessage);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -115,12 +135,21 @@ const Verify = () => {
               />
             </View>
             {error && <Alert error={error} />}
-            <TextButton
-              text="Verify"
-              onPress={handleSubmit(handleVerifyEmail)}
-              textColor={colors.neutral.light}
-              backgroundColor={colors.primary.default}
-            />
+            <View style={authStyles.buttonContainer}>
+              <TextButton
+                text="Verify"
+                onPress={handleSubmit(handleVerifyEmail)}
+                textColor={colors.neutral.light}
+                backgroundColor={colors.primary.default}
+              />
+              <TextButton
+                text={"Resend code"}
+                onPress={handleResendVerificationCode}
+                textColor={colors.primary.default}
+                backgroundColor={colors.primary.default}
+                outline
+              />
+            </View>
           </View>
         </>
       )}

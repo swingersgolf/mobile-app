@@ -42,23 +42,25 @@ const Account = () => {
               </View>
             </View>
           </View>
-          <View style={accountStyles.buttonContainer}>
-            <TextButton
-              text={"Edit profile"}
-              onPress={() => router.push("edit")}
-              textColor={colors.neutral.light}
-              backgroundColor={colors.primary.default}
-            />
-            <TextButton
-              text={"Sign out"}
-              onPress={signOut}
-              textColor={colors.primary.default}
-              backgroundColor={colors.primary.default}
-              outline
-            />
-          </View>
         </>
       )}
+      <View style={accountStyles.buttonContainer}>
+        {user && profile && (
+          <TextButton
+            text={"Edit profile"}
+            onPress={() => router.push("edit")}
+            textColor={colors.neutral.light}
+            backgroundColor={colors.primary.default}
+          />
+        )}
+        <TextButton
+          text={"Sign out"}
+          onPress={signOut}
+          textColor={colors.primary.default}
+          backgroundColor={colors.primary.default}
+          outline
+        />
+      </View>
     </View>
   );
 };

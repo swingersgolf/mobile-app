@@ -36,6 +36,13 @@ const authStyles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+    rowGap: 10,
+  },
 });
 
 export default authStyles;

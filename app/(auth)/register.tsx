@@ -57,7 +57,10 @@ const Register = () => {
     setError("");
     try {
       await createAccount(data.name, data.email, data.password, data.birthdate);
-      router.replace("/verify");
+      router.replace({
+        pathname: "/verify",
+        params: { email: data.email, password: data.password },
+      });
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =

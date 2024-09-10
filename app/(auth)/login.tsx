@@ -65,8 +65,15 @@ const Login = () => {
         const errorMessage =
           error.response.data.message ||
           "Failed to create account. Please try again.";
-        if (error.response.status === 403) {
-          router.replace("/verify");
+        if (error.response.status === 428) {
+          setError(
+            error.response.data.message ||
+              "Account not verified. Please verify your email.",
+          );
+          router.replace({
+            pathname: "/verify",
+            params: { email: data.email, password: data.password },
+          });
         } else {
           setError(errorMessage);
         }

@@ -29,7 +29,8 @@ interface AuthContextType {
   fetchUser: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (updatedProfile: ProfileType) => Promise<void>;
-  verifyEmail: () => Promise<void>;
+  verifyEmail: (email: string, code: string) => Promise<void>;
+  resendVerificationCode: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -95,7 +96,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         password,
         birthdate,
       });
-      setUser({ name, email, password, birthdate });
       return Promise.resolve();
     } catch (error) {
       console.error("Error creating account:", error);
@@ -155,8 +155,31 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const verifyEmail = async () => {
-    console.log("verifyEmail");
+  const verifyEmail = async (email: string, code: string) => {
+    try {
+      const response = await axios.post(`${apiUrl}/v1/verify`, {
+        email,
+        code,
+      });
+      console.log(response);
+      setToken(response.data.token);
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error logging in:", error);
+      return Promise.reject(error);
+    }
+  };
+
+  const resendVerificationCode = async (email: string) => {
+    try {
+      await axios.post(`${apiUrl}/v1/resend`, {
+        email,
+      });
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error resending verification code:", error);
+      return Promise.reject(error);
+    }
   };
 
   return (
@@ -172,6 +195,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         fetchProfile,
         updateProfile,
         verifyEmail,
+        resendVerificationCode,
         isLoading,
       }}
     >
