@@ -8,7 +8,7 @@ import authStyles from "@/styles/authStyles";
 import formStyles from "@/styles/FormStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { router, use, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { View, Text, TextInput } from "react-native";

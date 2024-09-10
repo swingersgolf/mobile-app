@@ -38,7 +38,7 @@ const socialMediaProviders = [
 ];
 
 const Login = () => {
-  const { signIn } = useAuth();
+  const { signIn, resendVerificationCode } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -66,10 +66,7 @@ const Login = () => {
           error.response.data.message ||
           "Failed to create account. Please try again.";
         if (error.response.status === 428) {
-          setError(
-            error.response.data.message ||
-              "Account not verified. Please verify your email.",
-          );
+          await resendVerificationCode(data.email);
           router.replace({
             pathname: "/verify",
             params: { email: data.email, password: data.password },
