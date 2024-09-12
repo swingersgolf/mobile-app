@@ -21,9 +21,17 @@ const EditAccount = () => {
 
   const handleSaveChanges = async (data: ProfileType) => {
     setLoading(true);
-    setError(""); // Clear any previous errors
+    setError("");
+
+    // Create a new object with only the fields that have a value
+    const filteredData = Object.fromEntries(
+      Object.entries(data).filter(
+        ([_, value]) => value !== "" && value != null,
+      ),
+    );
+
     try {
-      await updateProfile(data);
+      await updateProfile(filteredData);
       router.back();
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
@@ -92,7 +100,9 @@ const EditAccount = () => {
                           errors.handicap && formStyles.invalidInput,
                         ]}
                         onBlur={onBlur}
-                        onChangeText={onChange}
+                        onChangeText={(val) => {
+                          onChange(val === "" ? null : val); // Set null if the input is cleared
+                        }}
                         value={value?.toString()}
                         placeholderTextColor={colors.neutral.medium}
                       />

@@ -29,6 +29,8 @@ interface AuthContextType {
   fetchUser: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (updatedProfile: ProfileType) => Promise<void>;
+  verifyEmail: (email: string, code: string) => Promise<void>;
+  resendVerificationCode: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -153,6 +155,33 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const verifyEmail = async (email: string, code: string) => {
+    try {
+      const response = await axios.post(`${apiUrl}/v1/verify`, {
+        email,
+        code,
+      });
+      console.log(response);
+      setToken(response.data.token);
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error logging in:", error);
+      return Promise.reject(error);
+    }
+  };
+
+  const resendVerificationCode = async (email: string) => {
+    try {
+      await axios.post(`${apiUrl}/v1/resend`, {
+        email,
+      });
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error resending verification code:", error);
+      return Promise.reject(error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -165,6 +194,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         fetchUser,
         fetchProfile,
         updateProfile,
+        verifyEmail,
+        resendVerificationCode,
         isLoading,
       }}
     >

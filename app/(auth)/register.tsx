@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import {
   Text,
   View,
@@ -29,8 +29,8 @@ type RegisterFormValues = {
   birthdate: string;
 };
 
-const Register: FC = () => {
-  const { createAccount, signIn } = useAuth();
+const Register = () => {
+  const { createAccount } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -54,11 +54,13 @@ const Register: FC = () => {
 
   const handleCreateAccount = async (data: RegisterFormValues) => {
     setLoading(true);
-    setError(""); // Clear any previous errors
+    setError("");
     try {
       await createAccount(data.name, data.email, data.password, data.birthdate);
-      await signIn(data.email, data.password);
-      router.replace("/");
+      router.replace({
+        pathname: "/verify",
+        params: { email: data.email, password: data.password },
+      });
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import { Text, View, TextInput, Pressable } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -37,8 +37,8 @@ const socialMediaProviders = [
   },
 ];
 
-const Login: FC = () => {
-  const { signIn } = useAuth();
+const Login = () => {
+  const { signIn, resendVerificationCode } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -65,7 +65,15 @@ const Login: FC = () => {
         const errorMessage =
           error.response.data.message ||
           "Failed to create account. Please try again.";
-        setError(errorMessage);
+        if (error.response.status === 428) {
+          await resendVerificationCode(data.email);
+          router.replace({
+            pathname: "/verify",
+            params: { email: data.email, password: data.password },
+          });
+        } else {
+          setError(errorMessage);
+        }
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
