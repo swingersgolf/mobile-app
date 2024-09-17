@@ -3,73 +3,54 @@ import Spinner from "@/components/Spinner";
 import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
 import { useAuth } from "@/contexts/AuthContext";
-import { verifyEmailSchema } from "@/schemas/verifyEmailSchema";
+import { forgotPasswordSchema } from "@/schemas/forgotPasswordSchema";
 import authStyles from "@/styles/authStyles";
 import formStyles from "@/styles/FormStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { View, Text, TextInput } from "react-native";
 
-type VerifyEmailFormValues = {
-  code: string;
+type ForgotPasswordFormValues = {
+  email: string;
 };
 
-const Verify = () => {
+const Forgot = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { signIn, verifyEmail, resendVerificationCode } = useAuth();
-  const { email, password } = useLocalSearchParams(); // Retrieve the email
+  const { forgotPassword } = useAuth();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<VerifyEmailFormValues>({
-    resolver: yupResolver(verifyEmailSchema),
+  } = useForm<ForgotPasswordFormValues>({
+    resolver: yupResolver(forgotPasswordSchema),
     defaultValues: {
-      code: "",
+      email: "",
     },
   });
 
-  const handleVerifyEmail = async (data: VerifyEmailFormValues) => {
+  const handleForgotPassword = async (data: ForgotPasswordFormValues) => {
     setLoading(true);
     setError("");
     try {
-      await verifyEmail(email as string, data.code);
-      await signIn(email as string, password as string);
-      router.replace("/");
+      await forgotPassword(data.email);
+      router.push({
+        pathname: "/reset",
+        params: { email: data.email },
+      });
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
           error.response.data.message ||
-          "Failed to verify email. Please try again.";
+          "Failed to send code to email. Please try again.";
         setError(errorMessage);
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendVerificationCode = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      await resendVerificationCode(email as string);
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response) {
-        const errorMessage =
-          error.response.data.message ||
-          "Failed to resend code. Please try again.";
-        setError(errorMessage);
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -84,16 +65,16 @@ const Verify = () => {
       ) : (
         <>
           <View>
-            <Text style={authStyles.title}>Enter your code</Text>
+            <Text style={authStyles.title}>Enter your email</Text>
             <Text style={authStyles.privacy}>
-              We have sent a 6-digit verification code to your email.
+              We will send you a 6-digit code to verify your identity.
             </Text>
           </View>
           <View id="login-form" style={formStyles.form}>
             <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}
-                name="code"
+                name="email"
                 render={({
                   field: { onChange, onBlur, value },
                 }: {
@@ -108,28 +89,30 @@ const Verify = () => {
                       <Text
                         style={[
                           formStyles.formInputTitle,
-                          errors.code && formStyles.formInputTitleError,
+                          errors.email && formStyles.formInputTitleError,
                         ]}
                       >
-                        Code
+                        Email
                       </Text>
                     )}
                     <TextInput
-                      placeholder="6-digit code"
-                      autoComplete="off"
-                      textContentType="oneTimeCode"
-                      keyboardType="number-pad"
+                      placeholder="Email"
+                      keyboardType="email-address"
+                      autoComplete="email"
+                      textContentType="emailAddress"
+                      autoCapitalize="none"
                       style={[
                         formStyles.formInput,
-                        errors.code && formStyles.invalidInput,
+                        errors.email && formStyles.invalidInput,
                       ]}
-                      maxLength={6}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
                       placeholderTextColor={colors.neutral.medium}
                     />
-                    {errors.code && <InFormAlert error={errors.code.message} />}
+                    {errors.email && (
+                      <InFormAlert error={errors.email.message} />
+                    )}
                   </>
                 )}
               />
@@ -137,17 +120,10 @@ const Verify = () => {
             {error && <Alert error={error} />}
             <View style={authStyles.buttonContainer}>
               <TextButton
-                text="Verify"
-                onPress={handleSubmit(handleVerifyEmail)}
+                text="Send code"
+                onPress={handleSubmit(handleForgotPassword)}
                 textColor={colors.neutral.light}
                 backgroundColor={colors.primary.default}
-              />
-              <TextButton
-                text={"Resend code"}
-                onPress={handleResendVerificationCode}
-                textColor={colors.primary.default}
-                backgroundColor={colors.primary.default}
-                outline
               />
             </View>
           </View>
@@ -157,4 +133,4 @@ const Verify = () => {
   );
 };
 
-export default Verify;
+export default Forgot;

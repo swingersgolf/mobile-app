@@ -1,78 +1,55 @@
-import { useState } from "react";
-import { Text, View, TextInput } from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { loginSchema } from "@/schemas/loginSchema";
+import Alert, { InFormAlert } from "@/components/Alert";
+import Spinner from "@/components/Spinner";
 import TextButton from "@/components/TextButton";
-import { router } from "expo-router";
 import { colors } from "@/constants/Colors";
 import { useAuth } from "@/contexts/AuthContext";
-import axios from "axios";
-import Spinner from "@/components/Spinner";
+import { resetPasswordSchema } from "@/schemas/resetPasswordSchema";
 import authStyles from "@/styles/authStyles";
 import formStyles from "@/styles/FormStyles";
-import Alert, { InFormAlert } from "@/components/Alert";
+import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
+import { router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { View, Text, TextInput } from "react-native";
 
-type LoginFormValues = {
+type ResetPasswordFormValues = {
   email: string;
+  code: string;
   password: string;
 };
 
-// const socialMediaProviders = [
-//   {
-//     name: "Google",
-//     icon: <AntDesign name="google" size={24} color="black" />,
-//     signInMethod: "signInWithGoogle",
-//   },
-//   {
-//     name: "Facebook",
-//     icon: <AntDesign name="facebook-square" size={24} color="black" />,
-//     signInMethod: "signInWithFacebook",
-//   },
-//   {
-//     name: "Twitter",
-//     icon: <AntDesign name="twitter" size={24} color="black" />,
-//     signInMethod: "signInWithTwitter",
-//   },
-// ];
-
-const Login = () => {
-  const { signIn, resendVerificationCode } = useAuth();
-  const [error, setError] = useState("");
+const Reset = () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { resetPassword, signIn } = useAuth();
+  const { email } = useLocalSearchParams(); // Retrieve the email
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: yupResolver(loginSchema),
+  } = useForm<ResetPasswordFormValues>({
+    resolver: yupResolver(resetPasswordSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: (email as string) ?? "",
     },
   });
 
-  const handleSignIn = async (data: LoginFormValues) => {
+  const handleResetPassword = async (data: ResetPasswordFormValues) => {
     setLoading(true);
-    setError(""); // Clear any previous errors
+    setError("");
     try {
+      await resetPassword(data.email, data.code, data.password);
       await signIn(data.email, data.password);
+      router.dismissAll();
       router.replace("/");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
           error.response.data.message ||
-          "Failed to create account. Please try again.";
-        if (error.response.status === 428) {
-          await resendVerificationCode(data.email);
-          router.replace({
-            pathname: "/verify",
-            params: { email: data.email, password: data.password },
-          });
-        } else {
-          setError(errorMessage);
-        }
+          "Failed to reset password. Please try again.";
+        setError(errorMessage);
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
@@ -82,14 +59,19 @@ const Login = () => {
   };
 
   return (
-    <View id="login" testID="login" style={authStyles.container}>
+    <View id="verify-email" testID="verify-email" style={authStyles.container}>
       {loading ? (
         <View style={authStyles.spinnerContainer}>
           <Spinner />
         </View>
       ) : (
         <>
-          <Text style={authStyles.title}>Sign in to your account</Text>
+          <View>
+            <Text style={authStyles.title}>Enter your credentials</Text>
+            <Text style={authStyles.privacy}>
+              We have sent a 6-digit verification code to your email.
+            </Text>
+          </View>
           <View id="login-form" style={formStyles.form}>
             <View style={formStyles.inputWrapper}>
               <Controller
@@ -110,7 +92,6 @@ const Login = () => {
                         style={[
                           formStyles.formInputTitle,
                           errors.email && formStyles.formInputTitleError,
-                          ,
                         ]}
                       >
                         Email
@@ -163,7 +144,7 @@ const Login = () => {
                       </Text>
                     )}
                     <TextInput
-                      placeholder="Password"
+                      placeholder="New Password"
                       autoComplete="password"
                       textContentType="password"
                       secureTextEntry={true}
@@ -183,45 +164,64 @@ const Login = () => {
                 )}
               />
             </View>
+            <View style={formStyles.inputWrapper}>
+              <Controller
+                control={control}
+                name="code"
+                render={({
+                  field: { onChange, onBlur, value },
+                }: {
+                  field: {
+                    onChange: (value: string) => void;
+                    onBlur: () => void;
+                    value: string;
+                  };
+                }) => (
+                  <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.code && formStyles.formInputTitleError,
+                        ]}
+                      >
+                        Code
+                      </Text>
+                    )}
+                    <TextInput
+                      placeholder="6-digit code"
+                      autoComplete="off"
+                      textContentType="oneTimeCode"
+                      keyboardType="number-pad"
+                      style={[
+                        formStyles.formInput,
+                        errors.code && formStyles.invalidInput,
+                      ]}
+                      maxLength={6}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholderTextColor={colors.neutral.medium}
+                    />
+                    {errors.code && <InFormAlert error={errors.code.message} />}
+                  </>
+                )}
+              />
+            </View>
             {error && <Alert error={error} />}
-            <TextButton
-              text="Sign in"
-              onPress={handleSubmit(handleSignIn)}
-              textColor={colors.neutral.light}
-              backgroundColor={colors.primary.default}
-            />
-            <Text style={authStyles.privacy}>
-              If you forgot your password&nbsp;
-              <Text
-                style={authStyles.link}
-                onPress={() => router.push("/forgot")}
-              >
-                click here
-              </Text>
-              .
-            </Text>
+            <View style={authStyles.buttonContainer}>
+              <TextButton
+                text="Confirm"
+                onPress={handleSubmit(handleResetPassword)}
+                textColor={colors.neutral.light}
+                backgroundColor={colors.primary.default}
+              />
+            </View>
           </View>
-          {/* <View
-            id="social-media-platforms"
-            style={authStyles.socialMediaContainer}
-          >
-            {socialMediaProviders.map((provider, index) => (
-              <Pressable key={index}>{provider.icon}</Pressable>
-            ))}
-          </View> */}
-          <Text style={authStyles.authLink}>
-            New to Swingers?&nbsp;
-            <Text
-              style={authStyles.link}
-              onPress={() => router.push("/register")}
-            >
-              Create an account
-            </Text>
-          </Text>
         </>
       )}
     </View>
   );
 };
 
-export default Login;
+export default Reset;

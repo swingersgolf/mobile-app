@@ -3,11 +3,11 @@ import { colors } from "@/constants/Colors";
 
 const accountStyles = StyleSheet.create({
   container: {
-    flex: 1,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
+    width: "100%",
+    rowGap: 20,
+    flex: 1,
   },
   spinnerContainer: {
     width: "100%",
@@ -74,6 +74,14 @@ const accountStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.neutral.medium,
     color: colors.neutral.dark,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "left",
+  },
+  subtitle: {
+    textAlign: "left",
   },
 });
 
