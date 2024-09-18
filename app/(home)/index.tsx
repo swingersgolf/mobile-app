@@ -9,7 +9,7 @@ interface Posting {
 
 const Home = () => {
   const postings: Posting[] = [];
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   return (
     <View style={styles.container}>

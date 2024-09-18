@@ -53,6 +53,7 @@ const accountStyles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     padding: 20,
+    rowGap: 5,
     borderBottomColor: colors.neutral.light,
     borderBottomWidth: 5,
   },
@@ -66,6 +67,12 @@ const accountStyles = StyleSheet.create({
     paddingBottom: 10,
   },
   info: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  infoText: {
     color: colors.neutral.dark,
     fontSize: 16,
   },

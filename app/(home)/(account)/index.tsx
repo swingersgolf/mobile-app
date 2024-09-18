@@ -45,18 +45,24 @@ const Account = () => {
                   <Text style={accountStyles.infoTitle}>User</Text>
                   {user &&
                     Object.entries(user).map(([key, value]) => (
-                      <Text key={key} style={accountStyles.info}>
-                        {convertCamelCaseToLabel(key)}: {value}
-                      </Text>
+                      <View key={key} style={accountStyles.info}>
+                        <Text style={accountStyles.infoText}>
+                          {convertCamelCaseToLabel(key)}
+                        </Text>
+                        <Text style={accountStyles.infoText}>{value}</Text>
+                      </View>
                     ))}
                 </View>
                 <View style={accountStyles.infoContainer}>
                   <Text style={accountStyles.infoTitle}>Profile</Text>
                   {profile &&
                     Object.entries(profile).map(([key, value]) => (
-                      <Text key={key} style={accountStyles.info}>
-                        {convertCamelCaseToLabel(key)}: {value}
-                      </Text>
+                      <View key={key} style={accountStyles.info}>
+                        <Text style={accountStyles.infoText}>
+                          {convertCamelCaseToLabel(key)}
+                        </Text>
+                        <Text style={accountStyles.infoText}>{value}</Text>
+                      </View>
                     ))}
                 </View>
               </View>

@@ -4,7 +4,7 @@ import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
 import { useAuth } from "@/contexts/AuthContext";
 import { resetPasswordSchema } from "@/schemas/resetPasswordSchema";
-import authStyles from "@/styles/authStyles";
+import accountStyles from "@/styles/accountStyles";
 import formStyles from "@/styles/FormStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
@@ -59,16 +59,20 @@ const Reset = () => {
   };
 
   return (
-    <View id="verify-email" testID="verify-email" style={authStyles.container}>
+    <View
+      id="verify-email"
+      testID="verify-email"
+      style={(accountStyles.container, accountStyles.accountFormContainer)}
+    >
       {loading ? (
-        <View style={authStyles.spinnerContainer}>
+        <View style={accountStyles.spinnerContainer}>
           <Spinner />
         </View>
       ) : (
         <>
           <View>
-            <Text style={authStyles.title}>Enter your credentials</Text>
-            <Text style={authStyles.privacy}>
+            <Text style={accountStyles.title}>Enter your credentials</Text>
+            <Text style={accountStyles.privacy}>
               We have sent a 6-digit verification code to your email.
             </Text>
           </View>
@@ -209,7 +213,7 @@ const Reset = () => {
               />
             </View>
             {error && <Alert error={error} />}
-            <View style={authStyles.buttonContainer}>
+            <View style={accountStyles.buttonContainer}>
               <TextButton
                 text="Confirm"
                 onPress={handleSubmit(handleResetPassword)}

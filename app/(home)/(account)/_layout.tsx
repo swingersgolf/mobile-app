@@ -1,4 +1,4 @@
-import { Pressable, Keyboard } from "react-native";
+import { Pressable } from "react-native";
 import { Stack, router } from "expo-router";
 import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
