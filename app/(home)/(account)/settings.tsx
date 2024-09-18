@@ -25,7 +25,7 @@ const Settings = () => {
 
   return (
     <View style={accountStyles.container}>
-      <View style={accountStyles.buttonContainer}>
+      <View style={accountStyles.paddedButtonContainer}>
         {user && (
           <TextButton
             text={"Reset password"}

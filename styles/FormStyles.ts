@@ -6,7 +6,7 @@ const formStyles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    rowGap: 15,
+    rowGap: 20,
   },
   inputWrapper: {
     position: "relative",

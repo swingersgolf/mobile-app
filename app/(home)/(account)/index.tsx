@@ -2,59 +2,86 @@ import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
 import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
-import { Text, View } from "react-native";
+import { Text, View, ScrollView, Image } from "react-native";
 import accountStyles from "@/styles/accountStyles";
 import { convertCamelCaseToLabel } from "@/utils/text";
 import Spinner from "@/components/Spinner";
+import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 
 const Account = () => {
   const { user, profile } = useAuth();
+
   return (
-    <View style={accountStyles.container}>
-      {!user || !profile ? (
-        <View style={accountStyles.spinnerContainer}>
-          <Spinner />
-        </View>
-      ) : (
-        <>
-          <View style={accountStyles.accountContainer}>
-            <View style={accountStyles.profilePicture}>
-              <Text>Profile picture</Text>
-            </View>
-            <View style={accountStyles.accountContent}>
-              <View style={accountStyles.infoContainer}>
-                <Text style={accountStyles.infoTitle}>User</Text>
-                {user &&
-                  Object.entries(user).map(([key, value]) => (
-                    <Text key={key} style={accountStyles.info}>
-                      {convertCamelCaseToLabel(key)}: {value}
-                    </Text>
-                  ))}
-              </View>
-              <View style={accountStyles.infoContainer}>
-                <Text style={accountStyles.infoTitle}>Profile</Text>
-                {profile &&
-                  Object.entries(profile).map(([key, value]) => (
-                    <Text key={key} style={accountStyles.info}>
-                      {convertCamelCaseToLabel(key)}: {value}
-                    </Text>
-                  ))}
-              </View>
-            </View>
+    <ScrollView>
+      <View style={accountStyles.container}>
+        {!user || !profile ? (
+          <View style={accountStyles.spinnerContainer}>
+            <Spinner />
           </View>
-        </>
-      )}
-      <View style={accountStyles.buttonContainer}>
-        {user && profile && (
-          <TextButton
-            text={"Edit profile"}
-            onPress={() => router.push("edit")}
-            textColor={colors.neutral.light}
-            backgroundColor={colors.primary.default}
-          />
+        ) : (
+          <>
+            <View style={accountStyles.accountContainer}>
+              <View
+                style={[
+                  accountStyles.infoContainer,
+                  accountStyles.pictureContainer,
+                ]}
+              >
+                <View style={accountStyles.profilePicture}>
+                  {/* <Text>Profile picture</Text> */}
+                  <Image
+                    source={SampleProfilePicture}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: 9999,
+                    }}
+                    resizeMode="cover"
+                  />
+                </View>
+              </View>
+              <View style={accountStyles.accountContent}>
+                <View style={accountStyles.infoContainer}>
+                  <Text style={accountStyles.infoTitle}>User</Text>
+                  {user &&
+                    Object.entries(user).map(([key, value]) => (
+                      <View key={key} style={accountStyles.info}>
+                        <Text style={accountStyles.infoText}>
+                          {convertCamelCaseToLabel(key)}
+                        </Text>
+                        <Text style={accountStyles.infoText}>{value}</Text>
+                      </View>
+                    ))}
+                </View>
+                <View style={accountStyles.infoContainer}>
+                  <Text style={accountStyles.infoTitle}>Profile</Text>
+                  {profile &&
+                    Object.entries(profile).map(([key, value]) => (
+                      <View key={key} style={accountStyles.info}>
+                        <Text style={accountStyles.infoText}>
+                          {convertCamelCaseToLabel(key)}
+                        </Text>
+                        <Text style={accountStyles.infoText}>{value}</Text>
+                      </View>
+                    ))}
+                </View>
+              </View>
+              <View style={accountStyles.paddedButtonContainer}>
+                {user && profile && (
+                  <TextButton
+                    text={"Edit profile"}
+                    onPress={() => router.push("edit")}
+                    textColor={colors.neutral.light}
+                    backgroundColor={colors.primary.default}
+                    fontSize={16}
+                  />
+                )}
+              </View>
+            </View>
+          </>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
