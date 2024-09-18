@@ -191,12 +191,12 @@ const Login = () => {
               backgroundColor={colors.primary.default}
             />
             <Text style={authStyles.privacy}>
-              If you forgot your password&nbsp;
+              If you forgot your password you can reset by&nbsp;
               <Text
                 style={authStyles.link}
                 onPress={() => router.push("/forgot")}
               >
-                click here
+                clicking here
               </Text>
               .
             </Text>

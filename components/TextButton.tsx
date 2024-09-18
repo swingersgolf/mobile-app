@@ -8,6 +8,7 @@ type ButtonProps = {
   textColor: string;
   backgroundColor: string;
   width?: DimensionValue | undefined;
+  fontSize?: number | undefined;
 };
 
 const TextButton = ({
@@ -17,6 +18,7 @@ const TextButton = ({
   textColor,
   backgroundColor,
   width,
+  fontSize,
 }: ButtonProps) => {
   return (
     <Pressable
@@ -44,7 +46,7 @@ const TextButton = ({
       <Text
         style={{
           color: textColor,
-          fontSize: 20,
+          fontSize: fontSize ? fontSize : 16,
           fontWeight: "bold",
         }}
       >

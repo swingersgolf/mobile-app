@@ -15,17 +15,26 @@ const accountStyles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
+  editContent: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    padding: 20,
+  },
+  accountFormContainer: {
+    padding: 20,
+    rowGap: 20,
+    flex: 1,
+  },
   accountContainer: {
     display: "flex",
     flexDirection: "column",
     width: "100%",
     alignItems: "center",
-    rowGap: 30,
   },
   accountContent: {
     display: "flex",
     flexDirection: "column",
-    rowGap: 20,
     width: "100%",
   },
   profilePicture: {
@@ -35,7 +44,6 @@ const accountStyles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 9999,
-    backgroundColor: colors.neutral.medium,
   },
   user: {
     fontSize: 24,
@@ -44,13 +52,21 @@ const accountStyles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     width: "100%",
+    padding: 20,
+    borderBottomColor: colors.neutral.light,
+    borderBottomWidth: 5,
+  },
+  pictureContainer: {
+    alignItems: "center",
   },
   infoTitle: {
-    fontSize: 20,
-    color: colors.neutral.dark,
+    fontSize: 16,
+    color: colors.neutral.medium,
+    fontWeight: "bold",
+    paddingBottom: 10,
   },
   info: {
-    color: colors.neutral.medium,
+    color: colors.neutral.dark,
     fontSize: 16,
   },
   buttonContainer: {
@@ -59,6 +75,14 @@ const accountStyles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     rowGap: 10,
+  },
+  paddedButtonContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+    rowGap: 10,
+    padding: 20,
   },
   formContainer: {
     display: "flex",

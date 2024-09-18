@@ -1,4 +1,4 @@
-import { Keyboard, Pressable, View } from "react-native";
+import { View } from "react-native";
 import { Redirect, Tabs } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { colors } from "@/constants/Colors";
@@ -28,35 +28,37 @@ const HomeLayout = () => {
   }
 
   return (
-    <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: colors.primary.default,
-          headerShown: false,
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: colors.primary.default,
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: colors.background.primary,
+          borderTopWidth: 0,
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "Home",
+          tabBarLabel: () => null,
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Feather name="home" size={24} color={color} />
+          ),
         }}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "Home",
-            tabBarLabel: () => null,
-            tabBarIcon: ({ color }: { color: string }) => (
-              <Feather name="home" size={24} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="(account)"
-          options={{
-            title: "Account",
-            tabBarLabel: () => null,
-            tabBarIcon: ({ color }: { color: string }) => (
-              <Feather name="user" size={24} color={color} />
-            ),
-          }}
-        />
-      </Tabs>
-    </Pressable>
+      />
+      <Tabs.Screen
+        name="(account)"
+        options={{
+          title: "Account",
+          tabBarLabel: () => null,
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Feather name="user" size={24} color={color} />
+          ),
+        }}
+      />
+    </Tabs>
   );
 };
 

@@ -16,6 +16,7 @@ const authStyles = StyleSheet.create({
   },
   privacy: {
     textAlign: "left",
+    width: "100%",
   },
   link: {
     color: colors.primary.light,

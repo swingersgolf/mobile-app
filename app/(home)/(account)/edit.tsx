@@ -66,7 +66,7 @@ const EditAccount = () => {
   });
 
   return (
-    <View style={accountStyles.container}>
+    <View style={(accountStyles.container, accountStyles.accountFormContainer)}>
       {!profile || loading ? (
         <View style={accountStyles.spinnerContainer}>
           <Spinner />
