@@ -8,7 +8,7 @@ import { convertCamelCaseToLabel } from "@/utils/text";
 import Spinner from "@/components/Spinner";
 
 const Account = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile } = useAuth();
   return (
     <View style={accountStyles.container}>
       {!user || !profile ? (
@@ -53,13 +53,6 @@ const Account = () => {
             backgroundColor={colors.primary.default}
           />
         )}
-        <TextButton
-          text={"Sign out"}
-          onPress={signOut}
-          textColor={colors.primary.default}
-          backgroundColor={colors.primary.default}
-          outline
-        />
       </View>
     </View>
   );

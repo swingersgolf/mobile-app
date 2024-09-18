@@ -1,9 +1,9 @@
 import { Keyboard, Pressable, View } from "react-native";
 import { Redirect, Tabs } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { useAuth } from "@/contexts/AuthContext";
 import { colors } from "@/constants/Colors";
 import Spinner from "@/components/Spinner";
+import { Feather } from "@expo/vector-icons";
 
 const HomeLayout = () => {
   const { token, isLoading } = useAuth();
@@ -41,7 +41,7 @@ const HomeLayout = () => {
             title: "Home",
             tabBarLabel: () => null,
             tabBarIcon: ({ color }: { color: string }) => (
-              <AntDesign name="home" size={24} color={color} />
+              <Feather name="home" size={24} color={color} />
             ),
           }}
         />
@@ -51,7 +51,7 @@ const HomeLayout = () => {
             title: "Account",
             tabBarLabel: () => null,
             tabBarIcon: ({ color }: { color: string }) => (
-              <AntDesign name="user" size={24} color={color} />
+              <Feather name="user" size={24} color={color} />
             ),
           }}
         />

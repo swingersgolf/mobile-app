@@ -73,99 +73,100 @@ const EditAccount = () => {
         </View>
       ) : (
         <>
-          <View style={accountStyles.formContainer}>
-            <View id="login-form" style={formStyles.form}>
-              <View style={formStyles.inputWrapper}>
-                <Controller
-                  control={control}
-                  name="handicap"
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <>
-                      {value && (
-                        <Text
-                          style={[
-                            formStyles.formInputTitle,
-                            errors.handicap && formStyles.formInputTitleError,
-                          ]}
-                        >
-                          Handicap
-                        </Text>
-                      )}
-                      <TextInput
-                        placeholder="Enter handicap (e.g., 10.5)"
-                        keyboardType="decimal-pad"
-                        autoComplete="off"
+          <View>
+            <Text style={accountStyles.title}>Edit your profile</Text>
+          </View>
+          <View id="login-form" style={formStyles.form}>
+            <View style={formStyles.inputWrapper}>
+              <Controller
+                control={control}
+                name="handicap"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    {value && (
+                      <Text
                         style={[
-                          formStyles.formInput,
-                          errors.handicap && formStyles.invalidInput,
+                          formStyles.formInputTitle,
+                          errors.handicap && formStyles.formInputTitleError,
                         ]}
-                        onBlur={onBlur}
-                        onChangeText={(val) => {
-                          onChange(val === "" ? null : val); // Set null if the input is cleared
-                        }}
-                        value={value?.toString()}
-                        placeholderTextColor={colors.neutral.medium}
-                      />
-                      {errors.handicap && (
-                        <InFormAlert error={errors.handicap.message} />
-                      )}
-                    </>
-                  )}
-                />
-              </View>
-              <View style={formStyles.inputWrapper}>
-                <Controller
-                  control={control}
-                  name="postalCode"
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <>
-                      {value && (
-                        <Text
-                          style={[
-                            formStyles.formInputTitle,
-                            errors.postalCode && formStyles.formInputTitleError,
-                          ]}
-                        >
-                          Postal Code
-                        </Text>
-                      )}
-                      <TextInput
-                        placeholder="Enter postal code (e.g., A1A1A1)"
-                        keyboardType="default"
-                        autoComplete="postal-code"
-                        textContentType="postalCode"
+                      >
+                        Handicap
+                      </Text>
+                    )}
+                    <TextInput
+                      placeholder="Enter handicap (e.g., 10.5)"
+                      keyboardType="decimal-pad"
+                      autoComplete="off"
+                      style={[
+                        formStyles.formInput,
+                        errors.handicap && formStyles.invalidInput,
+                      ]}
+                      onBlur={onBlur}
+                      onChangeText={(val) => {
+                        onChange(val === "" ? null : val); // Set null if the input is cleared
+                      }}
+                      value={value?.toString()}
+                      placeholderTextColor={colors.neutral.medium}
+                    />
+                    {errors.handicap && (
+                      <InFormAlert error={errors.handicap.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+            <View style={formStyles.inputWrapper}>
+              <Controller
+                control={control}
+                name="postalCode"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    {value && (
+                      <Text
                         style={[
-                          formStyles.formInput,
-                          errors.postalCode && formStyles.invalidInput,
+                          formStyles.formInputTitle,
+                          errors.postalCode && formStyles.formInputTitleError,
                         ]}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        value={value}
-                        placeholderTextColor={colors.neutral.medium}
-                      />
-                      {errors.postalCode && (
-                        <InFormAlert error={errors.postalCode.message} />
-                      )}
-                    </>
-                  )}
-                />
-              </View>
-              {error && <Alert error={error} />}
-              <View style={accountStyles.buttonContainer}>
-                <TextButton
-                  text={"Save changes"}
-                  onPress={handleSubmit(handleSaveChanges)}
-                  textColor={colors.neutral.light}
-                  backgroundColor={colors.primary.default}
-                />
-                <TextButton
-                  text={"Cancel"}
-                  onPress={handleCancel}
-                  textColor={colors.primary.default}
-                  backgroundColor={colors.primary.default}
-                  outline
-                />
-              </View>
+                      >
+                        Postal Code
+                      </Text>
+                    )}
+                    <TextInput
+                      placeholder="Enter postal code (e.g., A1A1A1)"
+                      keyboardType="default"
+                      autoComplete="postal-code"
+                      textContentType="postalCode"
+                      style={[
+                        formStyles.formInput,
+                        errors.postalCode && formStyles.invalidInput,
+                      ]}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholderTextColor={colors.neutral.medium}
+                    />
+                    {errors.postalCode && (
+                      <InFormAlert error={errors.postalCode.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+            {error && <Alert error={error} />}
+            <View style={accountStyles.buttonContainer}>
+              <TextButton
+                text={"Save changes"}
+                onPress={handleSubmit(handleSaveChanges)}
+                textColor={colors.neutral.light}
+                backgroundColor={colors.primary.default}
+              />
+              <TextButton
+                text={"Cancel"}
+                onPress={handleCancel}
+                textColor={colors.primary.default}
+                backgroundColor={colors.primary.default}
+                outline
+              />
             </View>
           </View>
         </>

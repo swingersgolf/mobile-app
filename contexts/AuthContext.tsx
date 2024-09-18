@@ -31,6 +31,12 @@ interface AuthContextType {
   updateProfile: (updatedProfile: ProfileType) => Promise<void>;
   verifyEmail: (email: string, code: string) => Promise<void>;
   resendVerificationCode: (email: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (
+    email: string,
+    code: string,
+    password: string,
+  ) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -182,6 +188,36 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const forgotPassword = async (email: string) => {
+    try {
+      await axios.post(`${apiUrl}/v1/forgot`, {
+        email,
+      });
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error sending forgot password email:", error);
+      return Promise.reject(error);
+    }
+  };
+
+  const resetPassword = async (
+    email: string,
+    code: string,
+    password: string,
+  ) => {
+    try {
+      await axios.post(`${apiUrl}/v1/reset`, {
+        email,
+        code,
+        password,
+      });
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      return Promise.reject(error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -196,6 +232,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         updateProfile,
         verifyEmail,
         resendVerificationCode,
+        forgotPassword,
+        resetPassword,
         isLoading,
       }}
     >
