@@ -32,7 +32,9 @@ const EditAccount = () => {
 
     try {
       await updateProfile(filteredData);
-      router.back();
+      if (router.canGoBack()) {
+        router.back();
+      }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
