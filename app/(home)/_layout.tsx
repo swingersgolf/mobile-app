@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { colors } from "@/constants/Colors";
 import Spinner from "@/components/Spinner";
 import { Feather } from "@expo/vector-icons";
+import Icon from "@/assets/branding/Icon.svg";
 
 const HomeLayout = () => {
   const { token, isLoading } = useAuth();
@@ -45,6 +46,15 @@ const HomeLayout = () => {
           tabBarLabel: () => null,
           tabBarIcon: ({ color }: { color: string }) => (
             <Feather name="home" size={24} color={color} />
+          ),
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTintColor: colors.neutral.dark,
+          headerStyle: {
+            backgroundColor: colors.background.primary,
+          },
+          headerTitle: () => (
+            <Icon id="icon" testID="icon" height={30} width={30} />
           ),
         }}
       />

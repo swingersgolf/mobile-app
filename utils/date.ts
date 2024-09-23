@@ -36,3 +36,22 @@ export const getAgeFromDateYYY_MM_DD = (dateString: string): number => {
 
   return age;
 };
+
+export const parseRoundDate = (when: string) => {
+  const date = new Date(when);
+
+  // Get day of the week (3 characters)
+  const dayOfWeek = date.toLocaleString("en-US", { weekday: "short" });
+
+  // Get day of the month
+  const dayNumber = date.getDate();
+
+  // Get month (3 characters)
+  const month = date.toLocaleString("en-US", { month: "short" });
+
+  return {
+    dayOfWeek, // E.g., "Mon"
+    dayNumber: dayNumber.toString(), // E.g., "17"
+    month, // E.g., "Oct"
+  };
+};
