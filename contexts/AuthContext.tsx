@@ -55,22 +55,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [profile, setProfile] = useState<ProfileType | null>(null);
 
-  useEffect(() => {
-    const syncStorage = async () => {
-      if (token) {
-        await setStorageItemAsync("token", token);
-        await fetchUser();
-        await fetchProfile();
-      } else {
-        await setStorageItemAsync("token", null);
-        setUser(null);
-        setProfile(null);
-      }
-    };
-    syncStorage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
-
   const signIn = async (email: string, password: string) => {
     try {
       const response = await axios.post(`${apiUrl}/v1/login`, {
@@ -85,9 +69,27 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const signOut = useCallback(() => {
-    setToken(null);
-  }, [setToken]);
+  const signOut = useCallback(async () => {
+    try {
+      console.log("Signing out user with token:", token);
+      if (token) {
+        await axios.post(
+          `${apiUrl}/v1/logout`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        setToken(null);
+      }
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error logging in:", error);
+      return Promise.reject(error);
+    }
+  }, [apiUrl, setToken, token]);
 
   const createAccount = async (
     name: string,
@@ -109,7 +111,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     try {
       if (token) {
         const response = await axios.get(`${apiUrl}/v1/user`, {
@@ -124,9 +126,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       console.error("Error fetching user:", error);
       return Promise.reject(error);
     }
-  };
+  }, [apiUrl, token]);
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     try {
       if (token) {
         const response = await axios.get(`${apiUrl}/v1/user-profile`, {
@@ -141,7 +143,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       console.error("Error fetching profile:", error);
       return Promise.reject(error);
     }
-  };
+  }, [apiUrl, token]);
 
   const updateProfile = async (updatedProfile: ProfileType) => {
     try {
@@ -217,6 +219,27 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       return Promise.reject(error);
     }
   };
+
+  useEffect(() => {
+    const syncStorage = async () => {
+      if (token) {
+        try {
+          await setStorageItemAsync("token", token);
+          await fetchUser();
+          await fetchProfile();
+        } catch {
+          setToken(null);
+          setUser(null);
+          setProfile(null);
+        }
+      } else {
+        await setStorageItemAsync("token", null);
+        setUser(null);
+        setProfile(null);
+      }
+    };
+    syncStorage();
+  }, [fetchProfile, fetchUser, setToken, token]);
 
   return (
     <AuthContext.Provider
