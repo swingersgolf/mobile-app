@@ -71,7 +71,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const signOut = useCallback(async () => {
     try {
-      console.log("Signing out user with token:", token);
       if (token) {
         await axios.post(
           `${apiUrl}/v1/logout`,
@@ -169,7 +168,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         email,
         code,
       });
-      console.log(response);
       setToken(response.data.token);
       return Promise.resolve();
     } catch (error) {
