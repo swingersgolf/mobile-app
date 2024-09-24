@@ -43,7 +43,7 @@ const Reset = () => {
       await resetPassword(data.email, data.code, data.password);
       await signIn(data.email, data.password);
       router.dismissAll();
-      router.replace("/");
+      router.replace("/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =

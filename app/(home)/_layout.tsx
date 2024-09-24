@@ -40,21 +40,12 @@ const HomeLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(round)"
         options={{
-          title: "Home",
+          title: "Round",
           tabBarLabel: () => null,
           tabBarIcon: ({ color }: { color: string }) => (
             <Feather name="home" size={24} color={color} />
-          ),
-          headerShown: true,
-          headerShadowVisible: false,
-          headerTintColor: colors.neutral.dark,
-          headerStyle: {
-            backgroundColor: colors.background.primary,
-          },
-          headerTitle: () => (
-            <Icon id="icon" testID="icon" height={30} width={30} />
           ),
         }}
       />

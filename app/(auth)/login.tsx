@@ -58,7 +58,7 @@ const Login = () => {
     setError(""); // Clear any previous errors
     try {
       await signIn(data.email, data.password);
-      router.replace("/");
+      router.replace("/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =

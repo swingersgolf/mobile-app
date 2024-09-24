@@ -40,7 +40,7 @@ const Verify = () => {
     try {
       await verifyEmail(email as string, data.code);
       await signIn(email as string, password as string);
-      router.replace("/");
+      router.replace("/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
