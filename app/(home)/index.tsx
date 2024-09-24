@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import axios, { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
-import Round, { User, Atrribute } from "@/types/roundTypes";
+import Round, { User, Attribute } from "@/types/roundTypes";
 import { parseRoundDate } from "@/utils/date";
 import { Feather } from "@expo/vector-icons";
 
@@ -66,12 +66,15 @@ const Home = () => {
             return (
               <View key={index} style={styles.roundContainer}>
                 <View style={styles.whenConatiner}>
-                  <Text>{dayOfWeek}</Text>
-                  <Text>{dayNumber}</Text>
-                  <Text>{month}</Text>
+                  <Text style={styles.roundDay}>{dayOfWeek}</Text>
+                  <Text style={styles.roundDayNumber}>{dayNumber}</Text>
+                  <Text style={styles.roundMonth}>{month}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                  <Text>{round.course}</Text>
+                  <View style={styles.roundCreatedTime}>
+                    <Text>1s*</Text>
+                  </View>
+                  <Text style={styles.roundTitle}>{round.course}</Text>
                   <View style={styles.memberContainer}>
                     {round.users.map((user: User) => (
                       <Feather
@@ -83,7 +86,7 @@ const Home = () => {
                     ))}
                   </View>
                   <View style={styles.attributeContainer}>
-                    {round.attributes.map((attribute: Atrribute) => (
+                    {round.attributes.map((attribute: Attribute) => (
                       <View key={attribute.id} style={styles.attribute}>
                         <Text style={styles.attributeText}>
                           {attribute.name}
@@ -138,6 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     rowGap: 10,
+    flex: 1,
   },
   memberContainer: {
     display: "flex",
@@ -154,14 +158,35 @@ const styles = StyleSheet.create({
     columnGap: 10,
   },
   attribute: {
-    padding: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     backgroundColor: colors.primary.default,
+    borderRadius: 5,
   },
   attributeText: {
     color: colors.neutral.light,
   },
   scrollStyle: {
     width: "100%",
+    backgroundColor: colors.background.primary,
+  },
+  roundCreatedTime: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+  },
+  roundTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  roundDay: {
+    fontSize: 16,
+  },
+  roundDayNumber: {
+    fontSize: 24,
+  },
+  roundMonth: {
+    fontSize: 16,
   },
 });
 
