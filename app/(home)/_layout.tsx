@@ -4,7 +4,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { colors } from "@/constants/Colors";
 import Spinner from "@/components/Spinner";
 import { Feather } from "@expo/vector-icons";
-import Icon from "@/assets/branding/Icon.svg";
 
 const HomeLayout = () => {
   const { token, isLoading } = useAuth();
