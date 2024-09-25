@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { resetPasswordSchema } from "@/schemas/resetPasswordSchema";
 import accountStyles from "@/styles/accountStyles";
 import formStyles from "@/styles/FormStyles";
+import GlobalStyles from "@/styles/GlobalStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { router, useLocalSearchParams } from "expo-router";
@@ -71,8 +72,8 @@ const Reset = () => {
       ) : (
         <>
           <View>
-            <Text style={accountStyles.title}>Enter your credentials</Text>
-            <Text style={accountStyles.privacy}>
+            <Text style={GlobalStyles.h1}>Enter your credentials</Text>
+            <Text style={GlobalStyles.h2}>
               We have sent a 6-digit verification code to your email.
             </Text>
           </View>

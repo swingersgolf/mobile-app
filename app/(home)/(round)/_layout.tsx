@@ -21,7 +21,7 @@ const RoundLayout = () => {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="round-details" />
+      <Stack.Screen name="details" />
     </Stack>
   );
 };

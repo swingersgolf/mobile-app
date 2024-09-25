@@ -43,9 +43,12 @@ export const HomeStyles = StyleSheet.create({
   memberContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "flex-end",
     alignItems: "flex-start",
-    columnGap: 10,
+    columnGap: 5,
+    rowGap: 5,
+    flexWrap: "wrap",
+    width: 46,
   },
   attributeContainer: {
     display: "flex",
@@ -53,36 +56,31 @@ export const HomeStyles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     columnGap: 10,
+    rowGap: 10,
+    flexWrap: "wrap",
   },
   attribute: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    backgroundColor: colors.primary.default,
-    borderRadius: 5,
-  },
-  attributeText: {
-    color: colors.neutral.light,
+    paddingVertical: 1,
+    paddingHorizontal: 2,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.primary.default,
   },
   scrollStyle: {
     width: "100%",
     backgroundColor: colors.background.primary,
   },
-  roundCreatedTime: {
+  filterOverlayContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     position: "absolute",
-    top: 0,
-    right: 0,
-  },
-  roundTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  roundDay: {
-    fontSize: 16,
-  },
-  roundDayNumber: {
-    fontSize: 24,
-  },
-  roundMonth: {
-    fontSize: 16,
+    bottom: 10,
+    right: 10,
+    width: 50,
+    height: 50,
+    backgroundColor: colors.secondary.blue,
+    borderRadius: 9999,
   },
 });

@@ -13,6 +13,7 @@ import { profileSchema } from "@/schemas/profileSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import { ProfileType } from "@/types/authTypes";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 const EditAccount = () => {
   const { profile, updateProfile } = useAuth();
@@ -76,7 +77,7 @@ const EditAccount = () => {
       ) : (
         <>
           <View>
-            <Text style={accountStyles.title}>Edit your profile</Text>
+            <Text style={GlobalStyles.h1}>Edit your profile</Text>
           </View>
           <View id="login-form" style={formStyles.form}>
             <View style={formStyles.inputWrapper}>

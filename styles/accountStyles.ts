@@ -45,9 +45,6 @@ const accountStyles = StyleSheet.create({
     height: 150,
     borderRadius: 9999,
   },
-  user: {
-    fontSize: 24,
-  },
   infoContainer: {
     display: "flex",
     flexDirection: "column",
@@ -60,21 +57,11 @@ const accountStyles = StyleSheet.create({
   pictureContainer: {
     alignItems: "center",
   },
-  infoTitle: {
-    fontSize: 16,
-    color: colors.neutral.medium,
-    fontWeight: "bold",
-    paddingBottom: 10,
-  },
   info: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-  },
-  infoText: {
-    color: colors.neutral.dark,
-    fontSize: 16,
   },
   buttonContainer: {
     display: "flex",
@@ -105,14 +92,6 @@ const accountStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.neutral.medium,
     color: colors.neutral.dark,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "left",
-  },
-  subtitle: {
-    textAlign: "left",
   },
 });
 

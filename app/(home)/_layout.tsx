@@ -29,6 +29,7 @@ const HomeLayout = () => {
 
   return (
     <Tabs
+      initialRouteName="(round)/index.tsx"
       screenOptions={{
         tabBarActiveTintColor: colors.primary.default,
         headerShown: false,

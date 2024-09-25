@@ -49,9 +49,16 @@ export const parseRoundDate = (when: string) => {
   // Get month (3 characters)
   const month = date.toLocaleString("en-US", { month: "short" });
 
+  // Get time (HH:MM)
+  const time = date.toLocaleString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return {
     dayOfWeek, // E.g., "Mon"
     dayNumber: dayNumber.toString(), // E.g., "17"
     month, // E.g., "Oct"
+    time, // E.g., "10:00"
   };
 };
