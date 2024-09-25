@@ -107,13 +107,24 @@ const Home = () => {
               </View>
               <View style={HomeStyles.memberContainer}>
                 {round.users.map((user: User) => (
-                  <Feather
-                    name="user"
-                    size={20}
-                    color={colors.primary.default}
-                    key={user.id}
-                  />
+                  <View key={user.id} style={HomeStyles.memberIconContainer}>
+                    <Feather
+                      name="user"
+                      size={20}
+                      color={colors.primary.default}
+                    />
+                  </View>
                 ))}
+                {/* Scuffed solution for empty icon */}
+                {/* {round.users.length < 4 && (
+                  <View style={HomeStyles.memberIconContainer}>
+                    <Feather
+                      name="circle"
+                      size={20}
+                      color={colors.background.primary}
+                    />
+                  </View>
+                )} */}
               </View>
             </TouchableOpacity>
           );

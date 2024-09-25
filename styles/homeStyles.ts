@@ -48,7 +48,7 @@ export const HomeStyles = StyleSheet.create({
     columnGap: 5,
     rowGap: 5,
     flexWrap: "wrap",
-    width: 46,
+    width: 50,
   },
   attributeContainer: {
     display: "flex",
@@ -82,5 +82,13 @@ export const HomeStyles = StyleSheet.create({
     height: 50,
     backgroundColor: colors.secondary.blue,
     borderRadius: 9999,
+  },
+  memberIconContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 9999,
+    borderWidth: 1,
+    borderColor: colors.primary.default,
   },
 });
