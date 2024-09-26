@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { View } from "react-native";
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, Tabs, useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { colors } from "@/constants/Colors";
 import Spinner from "@/components/Spinner";
@@ -7,6 +8,14 @@ import { Feather } from "@expo/vector-icons";
 
 const HomeLayout = () => {
   const { token, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && token) {
+      // Navigate to the (round) tab if authenticated
+      router.replace("/(round)");
+    }
+  }, [isLoading, token, router]);
 
   if (isLoading) {
     return (
@@ -39,9 +48,9 @@ const HomeLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(round)"
         options={{
-          title: "Home",
+          title: "Round",
           tabBarLabel: () => null,
           tabBarIcon: ({ color }: { color: string }) => (
             <Feather name="home" size={24} color={color} />

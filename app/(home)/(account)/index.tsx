@@ -7,6 +7,7 @@ import accountStyles from "@/styles/accountStyles";
 import { convertCamelCaseToLabel } from "@/utils/text";
 import Spinner from "@/components/Spinner";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 const Account = () => {
   const { user, profile } = useAuth();
@@ -42,26 +43,26 @@ const Account = () => {
               </View>
               <View style={accountStyles.accountContent}>
                 <View style={accountStyles.infoContainer}>
-                  <Text style={accountStyles.infoTitle}>User</Text>
+                  <Text style={GlobalStyles.h2}>User</Text>
                   {user &&
                     Object.entries(user).map(([key, value]) => (
                       <View key={key} style={accountStyles.info}>
-                        <Text style={accountStyles.infoText}>
+                        <Text style={GlobalStyles.body}>
                           {convertCamelCaseToLabel(key)}
                         </Text>
-                        <Text style={accountStyles.infoText}>{value}</Text>
+                        <Text style={GlobalStyles.body}>{value}</Text>
                       </View>
                     ))}
                 </View>
                 <View style={accountStyles.infoContainer}>
-                  <Text style={accountStyles.infoTitle}>Profile</Text>
+                  <Text style={GlobalStyles.h2}>Profile</Text>
                   {profile &&
                     Object.entries(profile).map(([key, value]) => (
                       <View key={key} style={accountStyles.info}>
-                        <Text style={accountStyles.infoText}>
+                        <Text style={GlobalStyles.body}>
                           {convertCamelCaseToLabel(key)}
                         </Text>
-                        <Text style={accountStyles.infoText}>{value}</Text>
+                        <Text style={GlobalStyles.body}>{value}</Text>
                       </View>
                     ))}
                 </View>

@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { forgotPasswordSchema } from "@/schemas/forgotPasswordSchema";
 import authStyles from "@/styles/authStyles";
 import formStyles from "@/styles/FormStyles";
+import GlobalStyles from "@/styles/GlobalStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { router } from "expo-router";
@@ -65,8 +66,8 @@ const Forgot = () => {
       ) : (
         <>
           <View>
-            <Text style={authStyles.title}>Enter your email</Text>
-            <Text style={authStyles.privacy}>
+            <Text style={GlobalStyles.h1}>Enter your email</Text>
+            <Text style={GlobalStyles.body}>
               We will send you a 6-digit code to verify your identity.
             </Text>
           </View>

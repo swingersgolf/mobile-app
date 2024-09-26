@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { verifyEmailSchema } from "@/schemas/verifyEmailSchema";
 import authStyles from "@/styles/authStyles";
 import formStyles from "@/styles/FormStyles";
+import GlobalStyles from "@/styles/GlobalStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { router, useLocalSearchParams } from "expo-router";
@@ -40,7 +41,7 @@ const Verify = () => {
     try {
       await verifyEmail(email as string, data.code);
       await signIn(email as string, password as string);
-      router.replace("/");
+      router.replace("/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
@@ -84,8 +85,8 @@ const Verify = () => {
       ) : (
         <>
           <View>
-            <Text style={authStyles.title}>Enter your code</Text>
-            <Text style={authStyles.privacy}>
+            <Text style={GlobalStyles.h1}>Enter your code</Text>
+            <Text style={GlobalStyles.body}>
               We have sent a 6-digit verification code to your email.
             </Text>
           </View>

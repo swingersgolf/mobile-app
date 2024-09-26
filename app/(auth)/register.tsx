@@ -21,6 +21,7 @@ import { formatDateYYYY_MM_DD } from "@/utils/date";
 import authStyles from "@/styles/authStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
 import formStyles from "@/styles/FormStyles";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 type RegisterFormValues = {
   email: string;
@@ -106,7 +107,7 @@ const Register = () => {
         </View>
       ) : (
         <>
-          <Text style={authStyles.title}>Create your account</Text>
+          <Text style={GlobalStyles.h1}>Create your account</Text>
           <View id="create-account-form" style={formStyles.form}>
             <View style={formStyles.inputWrapper}>
               <Controller
@@ -302,10 +303,10 @@ const Register = () => {
               textColor={colors.neutral.light}
               backgroundColor={colors.primary.default}
             />
-            <Text style={authStyles.privacy}>
+            <Text style={GlobalStyles.body}>
               By clicking create account you are agreeing to follow our&nbsp;
               <Text
-                style={authStyles.link}
+                style={GlobalStyles.link}
                 onPress={() => handleLinkPress("https://google.com")}
               >
                 privacy & terms
@@ -313,9 +314,12 @@ const Register = () => {
               .
             </Text>
           </View>
-          <Text style={authStyles.authLink}>
+          <Text style={(GlobalStyles.body, { textAlign: "center" })}>
             Already have an account?&nbsp;
-            <Text style={authStyles.link} onPress={() => router.push("/login")}>
+            <Text
+              style={GlobalStyles.link}
+              onPress={() => router.push("/login")}
+            >
               Login
             </Text>
           </Text>

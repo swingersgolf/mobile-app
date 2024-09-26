@@ -1,4 +1,3 @@
-import { colors } from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
 const authStyles = StyleSheet.create({
@@ -9,26 +8,11 @@ const authStyles = StyleSheet.create({
     rowGap: 20,
     flex: 1,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "left",
-  },
-  privacy: {
-    textAlign: "left",
-    width: "100%",
-  },
-  link: {
-    color: colors.primary.light,
-  },
   spinnerContainer: {
     flex: 1,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-  },
-  authLink: {
-    textAlign: "center",
   },
   socialMediaContainer: {
     display: "flex",

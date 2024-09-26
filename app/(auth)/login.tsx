@@ -12,6 +12,7 @@ import Spinner from "@/components/Spinner";
 import authStyles from "@/styles/authStyles";
 import formStyles from "@/styles/FormStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 type LoginFormValues = {
   email: string;
@@ -58,7 +59,7 @@ const Login = () => {
     setError(""); // Clear any previous errors
     try {
       await signIn(data.email, data.password);
-      router.replace("/");
+      router.replace("/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
@@ -89,7 +90,7 @@ const Login = () => {
         </View>
       ) : (
         <>
-          <Text style={authStyles.title}>Sign in to your account</Text>
+          <Text style={GlobalStyles.h1}>Sign in to your account</Text>
           <View id="login-form" style={formStyles.form}>
             <View style={formStyles.inputWrapper}>
               <Controller
@@ -190,10 +191,10 @@ const Login = () => {
               textColor={colors.neutral.light}
               backgroundColor={colors.primary.default}
             />
-            <Text style={authStyles.privacy}>
+            <Text style={GlobalStyles.body}>
               If you forgot your password you can reset by&nbsp;
               <Text
-                style={authStyles.link}
+                style={GlobalStyles.link}
                 onPress={() => router.push("/forgot")}
               >
                 clicking here
@@ -209,10 +210,10 @@ const Login = () => {
               <Pressable key={index}>{provider.icon}</Pressable>
             ))}
           </View> */}
-          <Text style={authStyles.authLink}>
+          <Text style={(GlobalStyles.body, { textAlign: "center" })}>
             New to Swingers?&nbsp;
             <Text
-              style={authStyles.link}
+              style={GlobalStyles.link}
               onPress={() => router.push("/register")}
             >
               Create an account
