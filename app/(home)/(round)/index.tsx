@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Round } from "@/types/roundTypes";
 import { parseRoundDate } from "@/utils/date";
-import { Feather, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
 import { router } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
