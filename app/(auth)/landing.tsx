@@ -4,7 +4,7 @@ import TextButton from "@/components/TextButton";
 import BannerLogoLight from "@/assets/branding/BannerLogoLight.svg";
 import { colors } from "@/constants/Colors";
 
-const Landing = () => {
+const LandingScreen = () => {
   const router = useRouter();
 
   return (
@@ -29,7 +29,7 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export default LandingScreen;
 
 const styles = StyleSheet.create({
   landing: {

@@ -9,14 +9,14 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
-import Round, { User, Attribute } from "@/types/roundTypes";
+import { Round } from "@/types/roundTypes";
 import { parseRoundDate } from "@/utils/date";
 import { Feather } from "@expo/vector-icons";
-import { HomeStyles } from "@/styles/homeStyles";
+import { RoundStyles } from "@/styles/roundStyles";
 import { router } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 
-const Home = () => {
+const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
 
@@ -58,16 +58,16 @@ const Home = () => {
 
   if (error) {
     return (
-      <View style={HomeStyles.container}>
+      <View style={RoundStyles.container}>
         <Text>{error}</Text>
       </View>
     );
   }
 
   return (
-    <View style={HomeStyles.container}>
+    <View style={RoundStyles.container}>
       <ScrollView
-        style={HomeStyles.scrollStyle}
+        style={RoundStyles.scrollStyle}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -76,65 +76,61 @@ const Home = () => {
           />
         }
       >
-        {rounds.map((round, index) => {
-          const { dayOfWeek, dayNumber, month } = parseRoundDate(round.when);
-          return (
-            <TouchableOpacity
-              key={index}
-              style={HomeStyles.roundContainer}
-              onPress={() =>
-                router.push({
-                  pathname: "/details",
-                  params: { roundId: round.id }, // Pass correct roundId
-                })
-              }
-            >
-              <View style={HomeStyles.whenConatiner}>
-                <Text style={GlobalStyles.h3}>{dayOfWeek}</Text>
-                <Text style={GlobalStyles.h3}>{dayNumber}</Text>
-                <Text style={GlobalStyles.h3}>{month}</Text>
-                {/* <Text style={HomeStyles.roundDateText}>{time}</Text> */}
-              </View>
-              <View style={HomeStyles.infoContainer}>
-                <Text style={GlobalStyles.h2}>{round.course}</Text>
-                <View style={HomeStyles.attributeContainer}>
-                  {round.attributes.map((attribute: Attribute) => (
-                    <View key={attribute.id} style={HomeStyles.attribute}>
-                      <Text style={GlobalStyles.body}>{attribute.name}</Text>
-                    </View>
-                  ))}
+        {rounds &&
+          rounds.map((round) => {
+            const { dayOfWeek, dayNumber, month } = parseRoundDate(round.when);
+            return (
+              <TouchableOpacity
+                key={round.id}
+                style={RoundStyles.roundContainer}
+                onPress={() =>
+                  router.push({
+                    pathname: "/details",
+                    params: { roundId: round.id }, // Pass correct roundId
+                  })
+                }
+              >
+                <View style={RoundStyles.whenConatiner}>
+                  <Text style={GlobalStyles.h3}>{dayOfWeek}</Text>
+                  <Text style={GlobalStyles.h3}>{dayNumber}</Text>
+                  <Text style={GlobalStyles.h3}>{month}</Text>
                 </View>
-              </View>
-              <View style={HomeStyles.memberContainer}>
-                {round.users.map((user: User) => (
-                  <View key={user.id} style={HomeStyles.memberIconContainer}>
-                    <Feather
-                      name="user"
-                      size={20}
-                      color={colors.primary.default}
-                    />
-                  </View>
-                ))}
-                {/* Scuffed solution for empty icon */}
-                {/* {round.users.length < 4 && (
-                  <View style={HomeStyles.memberIconContainer}>
-                    <Feather
-                      name="circle"
-                      size={20}
-                      color={colors.background.primary}
-                    />
-                  </View>
-                )} */}
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+                <View style={RoundStyles.infoContainer}>
+                  <Text style={GlobalStyles.h2}>{round.course}</Text>
+                  {/* <View style={RoundStyles.attributeContainer}>
+                    {round.preferred.map((preferred: Attribute) => (
+                      <View key={preferred.id} style={(RoundStyles.attribute)}>
+                        <Text style={GlobalStyles.body}>{preferred.name}</Text>
+                      </View>
+                    ))}
+                  </View> */}
+                </View>
+                <View style={RoundStyles.memberContainer}>
+                  {[...Array(round.spots)].map((_, index) => {
+                    return (
+                      <View key={index} style={RoundStyles.memberIconContainer}>
+                        <Feather
+                          name="user"
+                          size={20}
+                          color={
+                            index < round.golfer_count
+                              ? colors.primary.default
+                              : colors.background.primary
+                          }
+                        />
+                      </View>
+                    );
+                  })}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
       </ScrollView>
-      {/* <TouchableOpacity style={HomeStyles.filterOverlayContainer}>
+      {/* <TouchableOpacity style={RoundStyles.filterOverlayContainer}>
         <Feather name="filter" size={30} color={colors.neutral.light} />
       </TouchableOpacity> */}
     </View>
   );
 };
 
-export default Home;
+export default RoundScreen;

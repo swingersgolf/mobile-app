@@ -1,7 +1,7 @@
 import { colors } from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
-export const HomeStyles = StyleSheet.create({
+export const RoundStyles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -43,7 +43,7 @@ export const HomeStyles = StyleSheet.create({
   memberContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     alignItems: "flex-start",
     columnGap: 5,
     rowGap: 5,
@@ -91,4 +91,50 @@ export const HomeStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.primary.default,
   },
+  roundDetailsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    padding: 20,
+    rowGap: 20,
+  },
+  memberList: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    rowGap: 10,
+    width: "100%",
+  },
+  memberListItem: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    columnGap: 20,
+    height: 50,
+    padding: 10,
+    width: "100%",
+    backgroundColor: colors.neutral.light,
+  },
+  memberProfilePicture: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 9999,
+    width: 40,
+    height: 40,
+  },
+  actionButtonContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  }
 });

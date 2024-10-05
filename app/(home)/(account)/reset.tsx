@@ -20,7 +20,7 @@ type ResetPasswordFormValues = {
   password: string;
 };
 
-const Reset = () => {
+const ResetPasswordScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { resetPassword, signIn } = useAuth();
@@ -229,4 +229,4 @@ const Reset = () => {
   );
 };
 
-export default Reset;
+export default ResetPasswordScreen;

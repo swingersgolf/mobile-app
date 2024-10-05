@@ -3,16 +3,34 @@ interface Attribute {
   name: string;
 }
 
-interface User {
+interface Golfer {
   id: string;
   name: string;
 }
 
-export default interface Round {
-  course: string;
+interface RoundDetails {
+  id: number;
   when: string;
-  attributes: Attribute[];
-  users: User[];
+  course: string;
+  preferred: Attribute[];
+  disliked: Attribute[];
+  indifferent: Attribute[];
+  golfers: Golfer[];
+  golfer_count: number;
+  spots: number;
+  user: Golfer;
 }
 
-export type { Attribute, User };
+interface Round {
+  id: number;
+  when: string;
+  course: string;
+  preferred: Attribute[];
+  disliked: Attribute[];
+  indifferent: Attribute[];
+  golfers: Golfer[];
+  golfer_count: number;
+  spots: number;
+}
+
+export type { Round, RoundDetails, Attribute, Golfer };

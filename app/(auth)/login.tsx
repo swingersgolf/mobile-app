@@ -37,7 +37,7 @@ type LoginFormValues = {
 //   },
 // ];
 
-const Login = () => {
+const LoginScreen = () => {
   const { signIn, resendVerificationCode } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -225,4 +225,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginScreen;

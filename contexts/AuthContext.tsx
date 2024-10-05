@@ -11,12 +11,12 @@ import {
   setStorageItemAsync,
   useStorageState,
 } from "@/storage/useStorageState";
-import { UserType, ProfileType } from "@/types/authTypes";
+import { User, Profile } from "@/types/authTypes";
 
 interface AuthContextType {
   token: string | null;
-  user: UserType | null;
-  profile: ProfileType | null;
+  user: User | null;
+  profile: Profile | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   createAccount: (
@@ -28,7 +28,7 @@ interface AuthContextType {
   isLoading: boolean;
   fetchUser: () => Promise<void>;
   fetchProfile: () => Promise<void>;
-  updateProfile: (updatedProfile: ProfileType) => Promise<void>;
+  updateProfile: (updatedProfile: Profile) => Promise<void>;
   verifyEmail: (email: string, code: string) => Promise<void>;
   resendVerificationCode: (email: string) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
@@ -52,8 +52,8 @@ export const useAuth = (): AuthContextType => {
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const [[isLoading, token], setToken] = useStorageState("token");
-  const [user, setUser] = useState<UserType | null>(null);
-  const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -144,7 +144,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   }, [apiUrl, token]);
 
-  const updateProfile = async (updatedProfile: ProfileType) => {
+  const updateProfile = async (updatedProfile: Profile) => {
     try {
       if (token) {
         await axios.patch(`${apiUrl}/v1/user-profile`, updatedProfile, {

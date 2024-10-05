@@ -22,6 +22,11 @@ const GlobalStyles = StyleSheet.create({
     fontWeight: "500" as TextStyle["fontWeight"],
     color: colors.neutral.dark as TextStyle["color"],
   },
+  h4: {
+    fontSize: 14 as TextStyle["fontSize"],
+    fontWeight: "500" as TextStyle["fontWeight"],
+    color: colors.neutral.medium as TextStyle["color"],
+  },
   body: {
     fontSize: 14 as TextStyle["fontSize"],
     fontWeight: "500" as TextStyle["fontWeight"],

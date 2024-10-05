@@ -1,10 +1,15 @@
-import { Pressable, Text, ViewStyle } from "react-native";
+import {
+  GestureResponderEvent,
+  Pressable,
+  Text,
+  ViewStyle,
+} from "react-native";
 import { DimensionValue } from "react-native";
 
 type ButtonProps = {
   text: string;
   outline?: boolean;
-  onPress: (() => void) | ((data: Record<string, unknown>) => Promise<void>);
+  onPress: ((event: GestureResponderEvent) => void) | null | undefined;
   textColor: string;
   backgroundColor: string;
   width?: DimensionValue | undefined;

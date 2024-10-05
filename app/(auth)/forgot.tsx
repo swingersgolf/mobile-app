@@ -18,7 +18,7 @@ type ForgotPasswordFormValues = {
   email: string;
 };
 
-const Forgot = () => {
+const ForgotPasswordScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { forgotPassword } = useAuth();
@@ -134,4 +134,4 @@ const Forgot = () => {
   );
 };
 
-export default Forgot;
+export default ForgotPasswordScreen;

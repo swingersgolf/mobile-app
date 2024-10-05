@@ -12,15 +12,15 @@ import formStyles from "@/styles/FormStyles";
 import { profileSchema } from "@/schemas/profileSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
-import { ProfileType } from "@/types/authTypes";
+import { Profile } from "@/types/authTypes";
 import GlobalStyles from "@/styles/GlobalStyles";
 
-const EditAccount = () => {
+const EditAccountScreen = () => {
   const { profile, updateProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSaveChanges = async (data: ProfileType) => {
+  const handleSaveChanges = async (data: Profile) => {
     setLoading(true);
     setError("");
 
@@ -178,4 +178,4 @@ const EditAccount = () => {
   );
 };
 
-export default EditAccount;
+export default EditAccountScreen;

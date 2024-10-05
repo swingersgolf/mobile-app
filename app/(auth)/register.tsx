@@ -30,7 +30,7 @@ type RegisterFormValues = {
   birthdate: string;
 };
 
-const Register = () => {
+const RegisterScreen = () => {
   const { createAccount } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -329,4 +329,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterScreen;

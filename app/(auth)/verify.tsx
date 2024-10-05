@@ -18,7 +18,7 @@ type VerifyEmailFormValues = {
   code: string;
 };
 
-const Verify = () => {
+const VerifyEmailScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { signIn, verifyEmail, resendVerificationCode } = useAuth();
@@ -158,4 +158,4 @@ const Verify = () => {
   );
 };
 
-export default Verify;
+export default VerifyEmailScreen;

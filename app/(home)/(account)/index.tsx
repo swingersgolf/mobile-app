@@ -9,7 +9,7 @@ import Spinner from "@/components/Spinner";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import GlobalStyles from "@/styles/GlobalStyles";
 
-const Account = () => {
+const AccountScreen = () => {
   const { user, profile } = useAuth();
 
   return (
@@ -86,4 +86,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default AccountScreen;

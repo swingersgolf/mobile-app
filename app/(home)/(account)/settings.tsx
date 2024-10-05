@@ -5,7 +5,7 @@ import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
 import { router } from "expo-router";
 
-const Settings = () => {
+const AccountSettingsScreen = () => {
   const { signOut } = useAuth();
   const { user, forgotPassword } = useAuth();
 
@@ -47,4 +47,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default AccountSettingsScreen;

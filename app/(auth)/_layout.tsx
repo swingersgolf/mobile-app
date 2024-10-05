@@ -3,7 +3,7 @@ import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
 import { Stack } from "expo-router";
 
-const UnauthorizedLayout = () => {
+const AuthLayout = () => {
   return (
     <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
       <Stack
@@ -37,4 +37,4 @@ const UnauthorizedLayout = () => {
   );
 };
 
-export default UnauthorizedLayout;
+export default AuthLayout;
