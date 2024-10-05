@@ -136,5 +136,5 @@ export const RoundStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-  }
+  },
 });
