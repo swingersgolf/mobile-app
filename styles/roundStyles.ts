@@ -83,13 +83,27 @@ export const RoundStyles = StyleSheet.create({
     backgroundColor: colors.secondary.blue,
     borderRadius: 9999,
   },
-  memberIconContainer: {
+  memberIconFilled: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 9999,
-    borderWidth: 1,
+    borderWidth: 2,
+    height: 20,
+    width: 20,
     borderColor: colors.primary.default,
+    backgroundColor: colors.primary.default,
+  },
+  memberIconEmpty: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 9999,
+    borderWidth: 2,
+    height: 20,
+    width: 20,
+    borderColor: colors.neutral.medium,
+    backgroundColor: colors.neutral.light,
   },
   roundDetailsContainer: {
     display: "flex",
@@ -136,5 +150,17 @@ export const RoundStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+  },
+  hostIndicator: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: 0,
+    height: 0,
+    borderRightWidth: 15, // Width of the left border
+    borderTopWidth: 15, // Height of the bottom border
+    borderRightColor: "transparent", // Left border color (transparent)
+    borderTopColor: colors.primary.default, // Bottom border color (color of the triangle)
+    borderStyle: "solid",
   },
 });

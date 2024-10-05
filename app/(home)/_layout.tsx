@@ -4,7 +4,7 @@ import { Redirect, Tabs, useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { colors } from "@/constants/Colors";
 import Spinner from "@/components/Spinner";
-import { Feather } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const HomeLayout = () => {
   const { token, isLoading } = useAuth();
@@ -40,6 +40,7 @@ const HomeLayout = () => {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: colors.primary.default,
+        tabBarInactiveTintColor: colors.neutral.dark,
         headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.background.primary,
@@ -53,7 +54,7 @@ const HomeLayout = () => {
           title: "Round",
           tabBarLabel: () => null,
           tabBarIcon: ({ color }: { color: string }) => (
-            <Feather name="home" size={24} color={color} />
+            <MaterialIcons name="home" size={28} color={color} />
           ),
         }}
       />
@@ -63,7 +64,7 @@ const HomeLayout = () => {
           title: "Account",
           tabBarLabel: () => null,
           tabBarIcon: ({ color }: { color: string }) => (
-            <Feather name="user" size={24} color={color} />
+            <MaterialIcons name="person" size={28} color={color} />
           ),
         }}
       />

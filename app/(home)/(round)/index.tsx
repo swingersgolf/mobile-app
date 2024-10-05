@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Round } from "@/types/roundTypes";
 import { parseRoundDate } from "@/utils/date";
-import { Feather } from "@expo/vector-icons";
+import { Feather, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
 import { router } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
@@ -107,18 +107,23 @@ const RoundScreen = () => {
                 </View>
                 <View style={RoundStyles.memberContainer}>
                   {[...Array(round.spots)].map((_, index) => {
+                    if (index < round.golfers.length) {
+                      return (
+                        <View style={RoundStyles.memberIconFilled} key={index}>
+                          <MaterialIcons
+                            key={index}
+                            name="person"
+                            size={16}
+                            color={colors.neutral.light}
+                          />
+                        </View>
+                      );
+                    }
                     return (
-                      <View key={index} style={RoundStyles.memberIconContainer}>
-                        <Feather
-                          name="user"
-                          size={20}
-                          color={
-                            index < round.golfer_count
-                              ? colors.primary.default
-                              : colors.background.primary
-                          }
-                        />
-                      </View>
+                      <View
+                        style={RoundStyles.memberIconEmpty}
+                        key={index}
+                      ></View>
                     );
                   })}
                 </View>

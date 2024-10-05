@@ -95,12 +95,13 @@ const RoundDetailsScreen = () => {
             </View>
             <View style={RoundStyles.memberList}>
               {Array.from({ length: RoundDetails.spots }).map((_, index) => {
-                const golfer = RoundDetails.golfers[index]; // Get golfer at the current index
-
+                const golfer = RoundDetails.golfers[index];
                 return (
                   <View key={index} style={RoundStyles.memberListItem}>
                     {golfer && index < RoundDetails.golfers.length ? (
                       <>
+                        {/* { golfer.is_host && <View style={RoundStyles.hostIndicator} /> } */}
+                        {/* <View style={RoundStyles.hostIndicator} /> */}
                         <Image
                           style={RoundStyles.memberProfilePicture}
                           source={SampleProfilePicture}

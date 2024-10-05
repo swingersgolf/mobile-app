@@ -2,7 +2,7 @@ import { Pressable } from "react-native";
 import { Stack, router } from "expo-router";
 import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
-import { Feather } from "@expo/vector-icons"; // Import vector icons
+import { MaterialIcons } from "@expo/vector-icons"; // Import vector icons
 
 const AccountLayout = () => {
   return (
@@ -36,9 +36,9 @@ const AccountLayout = () => {
                 router.push("/settings");
               }}
             >
-              <Feather
+              <MaterialIcons
                 name="settings" // Gear icon name from MaterialIcons
-                size={24}
+                size={28}
                 color={colors.neutral.dark}
               />
             </Pressable>
