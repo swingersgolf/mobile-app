@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
-import { Round } from "@/types/roundTypes";
+import { Attribute, Round } from "@/types/roundTypes";
 import { parseRoundDate } from "@/utils/date";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
@@ -78,7 +78,16 @@ const RoundScreen = () => {
       >
         {rounds &&
           rounds.map((round) => {
-            const { dayOfWeek, dayNumber, month } = parseRoundDate(round.when);
+            const { dayOfWeek, dayNumber, month, TimeIcon } = parseRoundDate(
+              round.when,
+            );
+
+            const statusStyles: { [key in Attribute["status"]]: unknown } = {
+              preferred: RoundStyles.preferredAttribute,
+              disliked: undefined,
+              indifferent: RoundStyles.indifferentAttribute,
+            };
+
             return (
               <TouchableOpacity
                 key={round.id}
@@ -86,24 +95,40 @@ const RoundScreen = () => {
                 onPress={() =>
                   router.push({
                     pathname: "/details",
-                    params: { roundId: round.id }, // Pass correct roundId
+                    params: { roundId: round.id },
                   })
                 }
               >
                 <View style={RoundStyles.whenConatiner}>
+                  <TimeIcon />
                   <Text style={GlobalStyles.h3}>{dayOfWeek}</Text>
-                  <Text style={GlobalStyles.h3}>{dayNumber}</Text>
                   <Text style={GlobalStyles.h3}>{month}</Text>
+                  <Text style={GlobalStyles.h3}>{dayNumber}</Text>
                 </View>
                 <View style={RoundStyles.infoContainer}>
                   <Text style={GlobalStyles.h2}>{round.course}</Text>
-                  {/* <View style={RoundStyles.attributeContainer}>
-                    {round.preferred.map((preferred: Attribute) => (
-                      <View key={preferred.id} style={(RoundStyles.attribute)}>
-                        <Text style={GlobalStyles.body}>{preferred.name}</Text>
-                      </View>
-                    ))}
-                  </View> */}
+                  <View style={RoundStyles.attributeContainer}>
+                    {round.preferences
+                      .filter(
+                        (preferred: Attribute) =>
+                          preferred.status !== "disliked",
+                      ) // Filter out 'disliked' attributes
+                      .map((preferred: Attribute) => (
+                        <View
+                          key={preferred.id}
+                          style={[statusStyles[preferred.status] || {}]}
+                        >
+                          <Text
+                            style={
+                              (GlobalStyles.body,
+                              { color: colors.neutral.light })
+                            }
+                          >
+                            {preferred.name}
+                          </Text>
+                        </View>
+                      ))}
+                  </View>
                 </View>
                 <View style={RoundStyles.memberContainer}>
                   {[...Array(round.spots)].map((_, index) => {
