@@ -59,13 +59,6 @@ export const RoundStyles = StyleSheet.create({
     rowGap: 10,
     flexWrap: "wrap",
   },
-  attribute: {
-    paddingVertical: 1,
-    paddingHorizontal: 2,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: colors.primary.default,
-  },
   scrollStyle: {
     width: "100%",
     backgroundColor: colors.background.primary,
@@ -162,5 +155,29 @@ export const RoundStyles = StyleSheet.create({
     borderRightColor: "transparent", // Left border color (transparent)
     borderTopColor: colors.primary.default, // Bottom border color (color of the triangle)
     borderStyle: "solid",
+  },
+  preferredAttribute: {
+    backgroundColor: colors.primary.default,
+    borderColor: colors.primary.default,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    borderRadius: 4,
+    borderWidth: 1,
+  },
+  indifferentAttribute: {
+    backgroundColor: colors.neutral.medium,
+    borderColor: colors.neutral.medium,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    borderRadius: 4,
+    borderWidth: 1,
+  },
+  dislikedAttribute: {
+    backgroundColor: colors.alert.error,
+    borderColor: colors.alert.error,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    borderRadius: 4,
+    borderWidth: 1,
   },
 });

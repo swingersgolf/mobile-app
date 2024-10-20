@@ -1,6 +1,7 @@
 interface Attribute {
   id: number;
   name: string;
+  status: "preferred" | "disliked" | "indifferent";
 }
 
 interface Golfer {
@@ -12,9 +13,7 @@ interface RoundDetails {
   id: number;
   when: string;
   course: string;
-  preferred: Attribute[];
-  disliked: Attribute[];
-  indifferent: Attribute[];
+  preferences: Attribute[];
   golfers: Golfer[];
   golfer_count: number;
   spots: number;
@@ -25,9 +24,7 @@ interface Round {
   id: number;
   when: string;
   course: string;
-  preferred: Attribute[];
-  disliked: Attribute[];
-  indifferent: Attribute[];
+  preferences: Attribute[];
   golfers: Golfer[];
   golfer_count: number;
   spots: number;

@@ -4,7 +4,7 @@ import axios, { isAxiosError } from "axios";
 import { useLocalSearchParams } from "expo-router";
 import { useState, useCallback, useEffect } from "react";
 import { View, Text, RefreshControl, ScrollView, Image } from "react-native";
-import { RoundDetails } from "@/types/roundTypes";
+import { Attribute, RoundDetails } from "@/types/roundTypes";
 import { colors } from "@/constants/Colors";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { parseRoundDate } from "@/utils/date";
@@ -75,6 +75,24 @@ const RoundDetailsScreen = () => {
     return null; // Handle the case where RoundDetails is null
   };
 
+  const statusStyles: { [key in Attribute["status"]]: unknown } = {
+    preferred: RoundStyles.preferredAttribute,
+    disliked: RoundStyles.dislikedAttribute,
+    indifferent: RoundStyles.indifferentAttribute,
+  };
+
+  // Define the order of the statuses
+  const statusOrder: { [key in Attribute["status"]]: number } = {
+    preferred: 1,
+    indifferent: 2,
+    disliked: 3,
+  };
+
+  // Sort the preferences based on the defined order
+  const sortedPreferences = RoundDetails?.preferences.sort((a, b) => {
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
+
   return (
     <View style={RoundStyles.container}>
       <ScrollView
@@ -92,6 +110,20 @@ const RoundDetailsScreen = () => {
             <View>
               {renderRoundDate()}
               <Text style={GlobalStyles.h1}>{RoundDetails.course}</Text>
+            </View>
+            <View style={RoundStyles.attributeContainer}>
+              {sortedPreferences?.map((preferred: Attribute) => (
+                <View
+                  key={preferred.id}
+                  style={[statusStyles[preferred.status] || {}]}
+                >
+                  <Text
+                    style={(GlobalStyles.body, { color: colors.neutral.light })}
+                  >
+                    {preferred.name}
+                  </Text>
+                </View>
+              ))}
             </View>
             <View style={RoundStyles.memberList}>
               {Array.from({ length: RoundDetails.spots }).map((_, index) => {
