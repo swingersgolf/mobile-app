@@ -17,7 +17,7 @@ const RoundDetailsScreen: React.FC = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
 
-  const { roundCache, setRoundCache } = useRoundCache(); // Use the cache context
+  const { roundCache, setRoundCache } = useRoundCache();
 
   const [roundDetails, setRoundDetails] = useState<RoundDetails | null>(null);
   const [error, setError] = useState<string>("");
@@ -41,7 +41,9 @@ const RoundDetailsScreen: React.FC = () => {
       const fetchedRoundDetails = response.data.data;
 
       setRoundDetails(fetchedRoundDetails);
-      setRoundCache((prevCache) => new Map(prevCache).set(roundId as string, fetchedRoundDetails)); // Update the cache
+      setRoundCache((prevCache) =>
+        new Map(prevCache).set(roundId as string, fetchedRoundDetails),
+      ); // Update the cache
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
         const errorMessage =
@@ -57,6 +59,11 @@ const RoundDetailsScreen: React.FC = () => {
   const onRefresh = async () => {
     setRefreshing(true);
     await fetchRoundDetails();
+    setRoundCache((prevCache) => {
+      const updatedCache = new Map(prevCache);
+      updatedCache.delete(roundId as string); // Remove the specific round details from cache
+      return updatedCache;
+    });
     setRefreshing(false);
   };
 
@@ -74,9 +81,13 @@ const RoundDetailsScreen: React.FC = () => {
 
   const renderRoundDate = () => {
     if (roundDetails) {
-      const { dayOfWeek, dayNumber, month, time } = parseRoundDate(roundDetails.when);
+      const { dayOfWeek, dayNumber, month, time } = parseRoundDate(
+        roundDetails.when,
+      );
       return (
-        <Text style={GlobalStyles.h2}>{`${dayOfWeek}, ${dayNumber} ${month}, ${time}`}</Text>
+        <Text
+          style={GlobalStyles.h2}
+        >{`${dayOfWeek}, ${dayNumber} ${month}, ${time}`}</Text>
       );
     }
     return null;
@@ -118,8 +129,13 @@ const RoundDetailsScreen: React.FC = () => {
             </View>
             <View style={RoundStyles.attributeContainer}>
               {sortedPreferences?.map((preferred: Attribute) => (
-                <View key={preferred.id} style={[statusStyles[preferred.status] || {}]}>
-                  <Text style={[GlobalStyles.body, { color: colors.neutral.light }]}>
+                <View
+                  key={preferred.id}
+                  style={[statusStyles[preferred.status] || {}]}
+                >
+                  <Text
+                    style={[GlobalStyles.body, { color: colors.neutral.light }]}
+                  >
                     {preferred.name}
                   </Text>
                 </View>

@@ -15,10 +15,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
 import { router } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
+import { useRoundCache } from "@/contexts/RoundCacheContext";
 
 const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
+  const { setRoundCache } = useRoundCache();
 
   const [rounds, setRounds] = useState<Round[]>([]);
   const [error, setError] = useState("");
@@ -49,6 +51,7 @@ const RoundScreen = () => {
   const onRefresh = async () => {
     setRefreshing(true);
     await fetchRounds();
+    setRoundCache(new Map()); // Clear the cache
     setRefreshing(false);
   };
 
