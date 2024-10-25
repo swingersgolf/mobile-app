@@ -109,6 +109,29 @@ const RoundDetailsScreen: React.FC = () => {
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
+  const requestToJoinRound = async () => {
+    try {
+      await axios.post(
+        `${apiUrl}/v1/round/${roundId}/join`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+    } catch (error: unknown) {
+      if (isAxiosError(error) && error.response) {
+        const errorMessage =
+          error.response.data.message ||
+          "Failed to join round. Please try again.";
+        setError(errorMessage);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
+
   return (
     <View style={RoundStyles.container}>
       <ScrollView
@@ -175,7 +198,7 @@ const RoundDetailsScreen: React.FC = () => {
                 : "Request to join"
             }
             disabled={roundDetails.golfers.length === roundDetails.spots}
-            onPress={() => {}}
+            onPress={requestToJoinRound}
             textColor={colors.neutral.light}
             backgroundColor={colors.primary.default}
           />
