@@ -1,5 +1,4 @@
 import { Stack } from "expo-router";
-import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
 
 const CreateLayout = () => {
