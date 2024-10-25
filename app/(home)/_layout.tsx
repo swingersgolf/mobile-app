@@ -59,6 +59,16 @@ const HomeLayout = () => {
         }}
       />
       <Tabs.Screen
+        name="(create)"
+        options={{
+          title: "Create",
+          tabBarLabel: () => null,
+          tabBarIcon: ({ color }: { color: string }) => (
+            <MaterialIcons name="add-box" size={28} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="(account)"
         options={{
           title: "Account",
