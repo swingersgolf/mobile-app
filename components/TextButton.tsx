@@ -1,3 +1,4 @@
+import { colors } from "@/constants/Colors";
 import {
   GestureResponderEvent,
   Pressable,
@@ -14,6 +15,7 @@ type ButtonProps = {
   backgroundColor: string;
   width?: DimensionValue | undefined;
   fontSize?: number | undefined;
+  disabled?: boolean | undefined;
 };
 
 const TextButton = ({
@@ -24,9 +26,11 @@ const TextButton = ({
   backgroundColor,
   width,
   fontSize,
+  disabled,
 }: ButtonProps) => {
   return (
     <Pressable
+      disabled={disabled}
       onPress={onPress}
       style={({ pressed }: { pressed: boolean }) => {
         const buttonStyle: ViewStyle = {
@@ -34,13 +38,19 @@ const TextButton = ({
           borderRadius: 5,
           width: width ? width : "100%",
           alignItems: "center",
-          backgroundColor: outline
-            ? "transparent"
-            : pressed
-              ? "lighten"
-              : backgroundColor,
+          backgroundColor: disabled
+            ? colors.neutral.medium
+            : outline
+              ? "transparent"
+              : pressed
+                ? "lighten"
+                : backgroundColor,
           borderWidth: 1,
-          borderColor: outline ? textColor : backgroundColor,
+          borderColor: disabled
+            ? colors.neutral.medium
+            : outline
+              ? textColor
+              : backgroundColor,
           opacity: pressed ? 0.7 : 1, // Adjust opacity when pressed
         };
 
