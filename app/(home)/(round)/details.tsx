@@ -10,26 +10,38 @@ import GlobalStyles from "@/styles/GlobalStyles";
 import { parseRoundDate } from "@/utils/date";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import TextButton from "@/components/TextButton";
+import { useRoundCache } from "@/contexts/RoundCacheContext"; // Import the context
 
-const RoundDetailsScreen = () => {
+const RoundDetailsScreen: React.FC = () => {
   const { roundId } = useLocalSearchParams();
-
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
 
-  const [RoundDetails, setRoundDetails] = useState<RoundDetails | null>(null);
-  const [error, setError] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
+  const { roundCache, setRoundCache } = useRoundCache(); // Use the cache context
+
+  const [roundDetails, setRoundDetails] = useState<RoundDetails | null>(null);
+  const [error, setError] = useState<string>("");
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const fetchRoundDetails = useCallback(async () => {
     setError("");
+
+    // Check if the details are already in cache
+    if (roundCache.has(roundId as string)) {
+      setRoundDetails(roundCache.get(roundId as string)!);
+      return;
+    }
+
     try {
       const response = await axios.get(`${apiUrl}/v1/round/${roundId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setRoundDetails(response.data.data);
+      const fetchedRoundDetails = response.data.data;
+
+      setRoundDetails(fetchedRoundDetails);
+      setRoundCache((prevCache) => new Map(prevCache).set(roundId as string, fetchedRoundDetails)); // Update the cache
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
         const errorMessage =
@@ -39,9 +51,8 @@ const RoundDetailsScreen = () => {
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
-    } finally {
     }
-  }, [apiUrl, roundId, token]);
+  }, [apiUrl, roundId, token, roundCache, setRoundCache]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -51,7 +62,7 @@ const RoundDetailsScreen = () => {
 
   useEffect(() => {
     fetchRoundDetails();
-  }, [apiUrl, fetchRoundDetails, token]);
+  }, [fetchRoundDetails]);
 
   if (error) {
     return (
@@ -62,17 +73,13 @@ const RoundDetailsScreen = () => {
   }
 
   const renderRoundDate = () => {
-    if (RoundDetails) {
-      const { dayOfWeek, dayNumber, month, time } = parseRoundDate(
-        RoundDetails.when,
-      );
+    if (roundDetails) {
+      const { dayOfWeek, dayNumber, month, time } = parseRoundDate(roundDetails.when);
       return (
-        <Text
-          style={GlobalStyles.h2}
-        >{`${dayOfWeek}, ${dayNumber} ${month}, ${time}`}</Text>
+        <Text style={GlobalStyles.h2}>{`${dayOfWeek}, ${dayNumber} ${month}, ${time}`}</Text>
       );
     }
-    return null; // Handle the case where RoundDetails is null
+    return null;
   };
 
   const statusStyles: { [key in Attribute["status"]]: unknown } = {
@@ -81,15 +88,13 @@ const RoundDetailsScreen = () => {
     indifferent: RoundStyles.indifferentAttribute,
   };
 
-  // Define the order of the statuses
   const statusOrder: { [key in Attribute["status"]]: number } = {
     preferred: 1,
     indifferent: 2,
     disliked: 3,
   };
 
-  // Sort the preferences based on the defined order
-  const sortedPreferences = RoundDetails?.preferences.sort((a, b) => {
+  const sortedPreferences = roundDetails?.preferences.sort((a, b) => {
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
@@ -105,35 +110,28 @@ const RoundDetailsScreen = () => {
           />
         }
       >
-        {RoundDetails && (
+        {roundDetails && (
           <View style={RoundStyles.roundDetailsContainer}>
             <View>
               {renderRoundDate()}
-              <Text style={GlobalStyles.h1}>{RoundDetails.course}</Text>
+              <Text style={GlobalStyles.h1}>{roundDetails.course}</Text>
             </View>
             <View style={RoundStyles.attributeContainer}>
               {sortedPreferences?.map((preferred: Attribute) => (
-                <View
-                  key={preferred.id}
-                  style={[statusStyles[preferred.status] || {}]}
-                >
-                  <Text
-                    style={(GlobalStyles.body, { color: colors.neutral.light })}
-                  >
+                <View key={preferred.id} style={[statusStyles[preferred.status] || {}]}>
+                  <Text style={[GlobalStyles.body, { color: colors.neutral.light }]}>
                     {preferred.name}
                   </Text>
                 </View>
               ))}
             </View>
             <View style={RoundStyles.memberList}>
-              {Array.from({ length: RoundDetails.spots }).map((_, index) => {
-                const golfer = RoundDetails.golfers[index];
+              {Array.from({ length: roundDetails.spots }).map((_, index) => {
+                const golfer = roundDetails.golfers[index];
                 return (
                   <View key={index} style={RoundStyles.memberListItem}>
-                    {golfer && index < RoundDetails.golfers.length ? (
+                    {golfer && index < roundDetails.golfers.length ? (
                       <>
-                        {/* { golfer.is_host && <View style={RoundStyles.hostIndicator} /> } */}
-                        {/* <View style={RoundStyles.hostIndicator} /> */}
                         <Image
                           style={RoundStyles.memberProfilePicture}
                           source={SampleProfilePicture}
@@ -149,16 +147,18 @@ const RoundDetailsScreen = () => {
                 );
               })}
             </View>
-            {RoundDetails.golfers.length === RoundDetails.spots && (
-              <Text style={GlobalStyles.h4}>This round is full</Text>
-            )}
           </View>
         )}
       </ScrollView>
-      {RoundDetails && RoundDetails.golfers.length < RoundDetails.spots && (
+      {roundDetails && (
         <View style={RoundStyles.actionButtonContainer}>
           <TextButton
-            text="Request to join"
+            text={
+              roundDetails.golfers.length === roundDetails.spots
+                ? "Round full"
+                : "Request to join"
+            }
+            disabled={roundDetails.golfers.length === roundDetails.spots}
             onPress={() => {}}
             textColor={colors.neutral.light}
             backgroundColor={colors.primary.default}
