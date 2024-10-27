@@ -4,7 +4,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  FlatList,
   Keyboard,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
@@ -16,9 +15,10 @@ import axios from "axios";
 import Spinner from "@/components/Spinner";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDateYYYY_MM_DD } from "@/utils/date";
-import authStyles from "@/styles/authStyles";
+import createStyles from "@/styles/createStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
 import formStyles from "@/styles/FormStyles";
+import { Dropdown } from "react-native-element-dropdown";
 
 type CreatePostValues = {
   golfCourse: string;
@@ -31,14 +31,12 @@ const CreateScreen = () => {
   const [loading, setLoading] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedSlot, setSelectedSlot] = useState<1 | 2 | 3>(1); // Initialize slot state
+  const [selectedSlot, setSelectedSlot] = useState<1 | 2 | 3>(1);
   const [golfCourses] = useState<string[]>([
     "Golf Course A",
     "Golf Course B",
     "Golf Course C",
   ]);
-  const [filteredCourses, setFilteredCourses] = useState<string[]>(golfCourses);
-  const [showDropdown, setShowDropdown] = useState(false);
 
   const {
     control,
@@ -92,25 +90,15 @@ const CreateScreen = () => {
     hideDatePicker();
   };
 
-  const handleCourseSearch = (text: string) => {
-    setValue("golfCourse", text);
-    setFilteredCourses(
-      golfCourses.filter((course) =>
-        course.toLowerCase().includes(text.toLowerCase()),
-      ),
-    );
-    setShowDropdown(text.length > 0);
-  };
-
   const handleSlotSelection = (slot: 1 | 2 | 3) => {
     setSelectedSlot(slot);
     setValue("slots", slot);
   };
 
   return (
-    <View style={authStyles.container}>
+    <View style={createStyles.container}>
       {loading ? (
-        <View style={authStyles.spinnerContainer}>
+        <View style={createStyles.spinnerContainer}>
           <Spinner />
         </View>
       ) : (
@@ -132,39 +120,27 @@ const CreateScreen = () => {
                         Golf Course
                       </Text>
                     )}
-                    <TextInput
-                      placeholder="Search Golf Course"
+                    <Dropdown
                       style={[
                         formStyles.formInput,
                         errors.golfCourse && formStyles.invalidInput,
                       ]}
-                      onBlur={onBlur}
-                      onChangeText={(text) => {
-                        onChange(text);
-                        handleCourseSearch(text);
+                      data={golfCourses.map((course) => ({
+                        label: course,
+                        value: course,
+                      }))}
+                      labelField="label"
+                      valueField="value"
+                      placeholder="Search Golf Course"
+                      placeholderStyle={{ color: colors.neutral.medium }}
+                      search
+                      searchPlaceholder="Search Golf Course"
+                      value={value}
+                      onChange={(item) => {
+                        onChange(item.value);
                       }}
-                      value={value || ""}
-                      placeholderTextColor={colors.neutral.medium}
-                      onFocus={() => setShowDropdown(true)}
+                      onFocus={() => Keyboard.dismiss()}
                     />
-                    {showDropdown && (
-                      <FlatList
-                        data={filteredCourses}
-                        keyExtractor={(item) => item}
-                        renderItem={({ item }) => (
-                          <TouchableOpacity
-                            onPress={() => {
-                              onChange(item);
-                              setShowDropdown(false);
-                            }}
-                            style={formStyles.dropdownItem}
-                          >
-                            <Text>{item}</Text>
-                          </TouchableOpacity>
-                        )}
-                        style={formStyles.dropdown}
-                      />
-                    )}
                     {errors.golfCourse && (
                       <InFormAlert error={errors.golfCourse.message} />
                     )}
@@ -174,8 +150,8 @@ const CreateScreen = () => {
             </View>
 
             {/* Slots Section */}
-            <Text style={formStyles.formInputTitle}>Select Slots</Text>
             <View style={formStyles.slotSelectionContainer}>
+              <Text style={formStyles.formInputTitle}>Select Slots</Text>
               {[1, 2, 3].map((slot) => (
                 <TouchableOpacity
                   key={slot}
@@ -188,7 +164,8 @@ const CreateScreen = () => {
                   <Text
                     style={[
                       formStyles.slotButtonText,
-                      selectedSlot === slot && formStyles.selectedSlotButtonText,
+                      selectedSlot === slot &&
+                        formStyles.selectedSlotButtonText,
                     ]}
                   >
                     {slot}
@@ -211,7 +188,7 @@ const CreateScreen = () => {
                           errors.datetime && formStyles.formInputTitleError,
                         ]}
                       >
-                        Datetime of Round
+                        Date and time of Round
                       </Text>
                     )}
                     <TouchableOpacity
@@ -230,7 +207,7 @@ const CreateScreen = () => {
                       >
                         {selectedDate
                           ? formatDateYYYY_MM_DD(selectedDate)
-                          : "Datetime of Round"}
+                          : "Date and time of round"}
                       </Text>
                     </TouchableOpacity>
                     <DateTimePickerModal
@@ -250,7 +227,7 @@ const CreateScreen = () => {
 
             {error && <Alert error={error} />}
             <TextButton
-              text="Create Account"
+              text="Create Post"
               onPress={handleSubmit(handleCreateAccount)}
               textColor={colors.neutral.light}
               backgroundColor={colors.primary.default}

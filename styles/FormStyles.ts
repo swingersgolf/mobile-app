@@ -53,6 +53,27 @@ const formStyles = StyleSheet.create({
     backgroundColor: colors.background.primary,
     width: "100%",
   },
+  slotSelectionContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
+  },
+  slotButton: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: colors.background.primary,
+  },
+  selectedSlotButton: {
+    backgroundColor: colors.primary.default,
+  },
+  slotButtonText: {
+    color: colors.neutral.dark,
+  },
+  selectedSlotButtonText: {
+    color: colors.background.primary,
+  },
 });
 
 export default formStyles;

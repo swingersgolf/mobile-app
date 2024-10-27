@@ -8,6 +8,13 @@ const accountStyles = StyleSheet.create({
     width: "100%",
     rowGap: 20,
     flex: 1,
+    padding: 20,
+  },
+  spinnerContainer: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
