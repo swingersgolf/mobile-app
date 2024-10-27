@@ -23,6 +23,31 @@ export const formatDateYYYY_MM_DD = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
+export const formatDateYYYY_MM_DD_HH_MM_MM = (date: Date): string => {
+  // format date as yyyy-mm-dd hh:mm AM/PM
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 || 12;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  return `${year}-${month}-${day} ${formattedHours}:${formattedMinutes} ${ampm}`;
+};
+
+export const formatDateDayMonthTime = (date: Date): string => {
+  const dayOfWeek = date.toLocaleString("en-US", { weekday: "short" });
+  const dayNumber = date.getDate();
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 || 12;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  return `${dayOfWeek} ${dayNumber} ${month} ${formattedHours}:${formattedMinutes} ${ampm}`;
+};
+
 export const getAgeFromDateYYY_MM_DD = (dateString: string): number => {
   const birthDate = new Date(dateString);
   const today = new Date();

@@ -22,7 +22,7 @@ const CreateLayout = () => {
         <Stack.Screen
           name="index"
           options={{
-            headerTitle: "New post",
+            headerTitle: "New Round",
           }}
         />
       </Stack>

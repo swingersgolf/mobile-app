@@ -1,12 +1,7 @@
-import { useState } from "react";
-import {
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Keyboard,
-} from "react-native";
+import { useState, useCallback } from "react";
+import { Text, View, TouchableOpacity, Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
+import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createPostSchema } from "@/schemas/createPostSchema";
 import TextButton from "@/components/TextButton";
@@ -14,11 +9,12 @@ import { colors } from "@/constants/Colors";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDateYYYY_MM_DD } from "@/utils/date";
+import { formatDateDayMonthTime, formatDateYYYY_MM_DD } from "@/utils/date";
 import createStyles from "@/styles/createStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
 import formStyles from "@/styles/FormStyles";
 import { Dropdown } from "react-native-element-dropdown";
+import { MaterialIcons } from "@expo/vector-icons";
 
 type CreatePostValues = {
   golfCourse: string;
@@ -44,6 +40,7 @@ const CreateScreen = () => {
     formState: { errors },
     setValue,
     trigger,
+    reset, // Reset function from useForm
   } = useForm<CreatePostValues>({
     resolver: yupResolver(createPostSchema),
     defaultValues: {
@@ -52,6 +49,19 @@ const CreateScreen = () => {
       slots: 1,
     },
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      // This will be called when the screen is focused
+      return () => {
+        // This will be called when the screen is unfocused
+        reset(); // Reset form values
+        setSelectedDate(undefined); // Clear selected date state
+        setSelectedSlot(1); // Reset slot selection
+        setError(""); // Clear any errors
+      };
+    }, [reset]),
+  );
 
   const handleCreateAccount = async (data: CreatePostValues) => {
     setLoading(true);
@@ -134,12 +144,21 @@ const CreateScreen = () => {
                       placeholder="Search Golf Course"
                       placeholderStyle={{ color: colors.neutral.medium }}
                       search
-                      searchPlaceholder="Search Golf Course"
+                      searchPlaceholder="Type to search..."
                       value={value}
                       onChange={(item) => {
                         onChange(item.value);
                       }}
                       onFocus={() => Keyboard.dismiss()}
+                      renderRightIcon={() =>
+                        errors.golfCourse ? null : (
+                          <MaterialIcons
+                            name="arrow-drop-down"
+                            size={18}
+                            color={colors.neutral.medium}
+                          />
+                        )
+                      }
                     />
                     {errors.golfCourse && (
                       <InFormAlert error={errors.golfCourse.message} />
@@ -150,28 +169,40 @@ const CreateScreen = () => {
             </View>
 
             {/* Slots Section */}
-            <View style={formStyles.slotSelectionContainer}>
-              <Text style={formStyles.formInputTitle}>Select Slots</Text>
-              {[1, 2, 3].map((slot) => (
-                <TouchableOpacity
-                  key={slot}
+            <View style={formStyles.inputWrapper}>
+              {selectedSlot && (
+                <Text
                   style={[
-                    formStyles.slotButton,
-                    selectedSlot === slot && formStyles.selectedSlotButton,
+                    formStyles.formInputTitle,
+                    errors.slots && formStyles.formInputTitleError,
                   ]}
-                  onPress={() => handleSlotSelection(slot as 1 | 2 | 3)}
                 >
-                  <Text
+                  Golfers
+                </Text>
+              )}
+              <View style={formStyles.slotSelectionContainer}>
+                {[1, 2, 3].map((slot) => (
+                  <TouchableOpacity
+                    key={slot}
                     style={[
-                      formStyles.slotButtonText,
-                      selectedSlot === slot &&
-                        formStyles.selectedSlotButtonText,
+                      formStyles.slotButton,
+                      selectedSlot === slot && formStyles.selectedSlotButton,
                     ]}
+                    onPress={() => handleSlotSelection(slot as 1 | 2 | 3)}
                   >
-                    {slot}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={[
+                        formStyles.slotButtonText,
+                        selectedSlot === slot &&
+                          formStyles.selectedSlotButtonText,
+                      ]}
+                    >
+                      {slot}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              {errors.slots && <InFormAlert error={errors.slots.message} />}
             </View>
 
             {/* DateTime Picker */}
@@ -188,7 +219,7 @@ const CreateScreen = () => {
                           errors.datetime && formStyles.formInputTitleError,
                         ]}
                       >
-                        Date and time of Round
+                        Date and time
                       </Text>
                     )}
                     <TouchableOpacity
@@ -206,8 +237,8 @@ const CreateScreen = () => {
                         }}
                       >
                         {selectedDate
-                          ? formatDateYYYY_MM_DD(selectedDate)
-                          : "Date and time of round"}
+                          ? formatDateDayMonthTime(selectedDate)
+                          : "Date and time"}
                       </Text>
                     </TouchableOpacity>
                     <DateTimePickerModal
