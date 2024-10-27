@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import BannerLogo from "@/assets/branding/BannerLogo.svg";
 import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
@@ -10,7 +10,9 @@ const RoundLayout = () => {
       screenOptions={{
         headerShown: true,
         headerBackTitleVisible: false,
-        headerTitle: () => "",
+        headerTitle: () => (
+          <Icon id="icon" testID="icon" height={30} width={30} />
+        ),
         headerTintColor: colors.neutral.dark,
         contentStyle: {
           backgroundColor: colors.background.primary,
@@ -23,6 +25,7 @@ const RoundLayout = () => {
       <Stack.Screen
         name="index"
         options={{
+          headerTitle: "",
           headerLeft: () => (
             <BannerLogo id="icon" testID="icon" height={30} width={180} />
           ),
@@ -31,18 +34,15 @@ const RoundLayout = () => {
               name="notifications-none"
               size={28}
               color={colors.primary.default}
+              onPress={() => {
+                router.push("notifications");
+              }}
             />
           ),
         }}
       />
-      <Stack.Screen
-        name="details"
-        options={{
-          headerTitle: () => (
-            <Icon id="icon" testID="icon" height={30} width={30} />
-          ),
-        }}
-      />
+      <Stack.Screen name="details" />
+      <Stack.Screen name="notifications" />
     </Stack>
   );
 };
