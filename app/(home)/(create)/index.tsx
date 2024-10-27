@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import { Text, View, TouchableOpacity, Keyboard } from "react-native";
+import { Text, View, Keyboard, TouchableOpacity } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect
+import { useFocusEffect } from "@react-navigation/native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createPostSchema } from "@/schemas/createPostSchema";
 import TextButton from "@/components/TextButton";
@@ -19,7 +19,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 type CreatePostValues = {
   golfCourse: string;
   datetime: string;
-  slots: 1 | 2 | 3;
+  slots: string;
 };
 
 const CreateScreen = () => {
@@ -27,12 +27,12 @@ const CreateScreen = () => {
   const [loading, setLoading] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedSlot, setSelectedSlot] = useState<1 | 2 | 3>(1);
   const [golfCourses] = useState<string[]>([
     "Golf Course A",
     "Golf Course B",
     "Golf Course C",
   ]);
+  const golfers = ["1", "2", "3"];
 
   const {
     control,
@@ -40,25 +40,22 @@ const CreateScreen = () => {
     formState: { errors },
     setValue,
     trigger,
-    reset, // Reset function from useForm
+    reset,
   } = useForm<CreatePostValues>({
     resolver: yupResolver(createPostSchema),
     defaultValues: {
       golfCourse: "",
       datetime: "",
-      slots: 1,
+      slots: "",
     },
   });
 
   useFocusEffect(
     useCallback(() => {
-      // This will be called when the screen is focused
       return () => {
-        // This will be called when the screen is unfocused
-        reset(); // Reset form values
-        setSelectedDate(undefined); // Clear selected date state
-        setSelectedSlot(1); // Reset slot selection
-        setError(""); // Clear any errors
+        reset();
+        setSelectedDate(undefined);
+        setError("");
       };
     }, [reset]),
   );
@@ -100,11 +97,6 @@ const CreateScreen = () => {
     hideDatePicker();
   };
 
-  const handleSlotSelection = (slot: 1 | 2 | 3) => {
-    setSelectedSlot(slot);
-    setValue("slots", slot);
-  };
-
   return (
     <View style={createStyles.container}>
       {loading ? (
@@ -142,9 +134,20 @@ const CreateScreen = () => {
                       labelField="label"
                       valueField="value"
                       placeholder="Search Golf Course"
-                      placeholderStyle={{ color: colors.neutral.medium }}
-                      search
-                      searchPlaceholder="Type to search..."
+                      placeholderStyle={{
+                        color: value
+                          ? colors.neutral.dark
+                          : colors.neutral.medium,
+                        fontSize: 14,
+                      }}
+                      selectedTextStyle={{
+                        color: colors.neutral.dark,
+                        fontSize: 14,
+                      }}
+                      itemTextStyle={{
+                        color: colors.neutral.dark,
+                        fontSize: 14,
+                      }}
                       value={value}
                       onChange={(item) => {
                         onChange(item.value);
@@ -154,7 +157,7 @@ const CreateScreen = () => {
                         errors.golfCourse ? null : (
                           <MaterialIcons
                             name="arrow-drop-down"
-                            size={18}
+                            size={14}
                             color={colors.neutral.medium}
                           />
                         )
@@ -168,41 +171,67 @@ const CreateScreen = () => {
               />
             </View>
 
-            {/* Slots Section */}
+            {/* Slots Dropdown */}
             <View style={formStyles.inputWrapper}>
-              {selectedSlot && (
-                <Text
-                  style={[
-                    formStyles.formInputTitle,
-                    errors.slots && formStyles.formInputTitleError,
-                  ]}
-                >
-                  Golfers
-                </Text>
-              )}
-              <View style={formStyles.slotSelectionContainer}>
-                {[1, 2, 3].map((slot) => (
-                  <TouchableOpacity
-                    key={slot}
-                    style={[
-                      formStyles.slotButton,
-                      selectedSlot === slot && formStyles.selectedSlotButton,
-                    ]}
-                    onPress={() => handleSlotSelection(slot as 1 | 2 | 3)}
-                  >
-                    <Text
+              <Controller
+                control={control}
+                name="slots"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.slots && formStyles.formInputTitleError,
+                        ]}
+                      >
+                        Golfers
+                      </Text>
+                    )}
+                    <Dropdown
                       style={[
-                        formStyles.slotButtonText,
-                        selectedSlot === slot &&
-                          formStyles.selectedSlotButtonText,
+                        formStyles.formInput,
+                        errors.slots && formStyles.invalidInput,
                       ]}
-                    >
-                      {slot}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-              {errors.slots && <InFormAlert error={errors.slots.message} />}
+                      data={golfers.map((course) => ({
+                        label: course,
+                        value: course,
+                      }))}
+                      labelField="label"
+                      valueField="value"
+                      placeholder="Select number of golfers"
+                      placeholderStyle={{
+                        color: value
+                          ? colors.neutral.dark
+                          : colors.neutral.medium,
+                        fontSize: 14,
+                      }}
+                      selectedTextStyle={{
+                        color: colors.neutral.dark,
+                        fontSize: 14,
+                      }}
+                      itemTextStyle={{
+                        color: colors.neutral.dark,
+                        fontSize: 14,
+                      }}
+                      value={value}
+                      onChange={(item) => onChange(item.value)}
+                      renderRightIcon={() =>
+                        errors.slots ? null : (
+                          <MaterialIcons
+                            name="arrow-drop-down"
+                            size={14}
+                            color={colors.neutral.medium}
+                          />
+                        )
+                      }
+                    />
+                    {errors.slots && (
+                      <InFormAlert error={errors.slots.message} />
+                    )}
+                  </>
+                )}
+              />
             </View>
 
             {/* DateTime Picker */}
@@ -234,6 +263,7 @@ const CreateScreen = () => {
                           color: value
                             ? colors.neutral.dark
                             : colors.neutral.medium,
+                          fontSize: 14,
                         }}
                       >
                         {selectedDate
