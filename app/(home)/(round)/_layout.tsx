@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import BannerLogo from "@/assets/branding/BannerLogo.svg";
 import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const RoundLayout = () => {
   return (
@@ -25,27 +26,13 @@ const RoundLayout = () => {
           headerLeft: () => (
             <BannerLogo id="icon" testID="icon" height={30} width={180} />
           ),
-          // headerRight: () => (
-          //   <View
-          //     style={{
-          //       display: "flex",
-          //       flexDirection: "row",
-          //       alignItems: "center",
-          //       columnGap: 20,
-          //     }}
-          //   >
-          //     <MaterialIcons
-          //       name="notifications"
-          //       size={28}
-          //       color={colors.primary.default}
-          //     />
-          //     <MaterialIcons
-          //       name="message"
-          //       size={28}
-          //       color={colors.primary.default}
-          //     />
-          //   </View>
-          // ),
+          headerRight: () => (
+            <MaterialIcons
+              name="notifications-none"
+              size={28}
+              color={colors.primary.default}
+            />
+          ),
         }}
       />
       <Stack.Screen
