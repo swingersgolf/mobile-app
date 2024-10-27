@@ -38,6 +38,21 @@ const formStyles = StyleSheet.create({
   invalidInput: {
     borderColor: colors.alert.error,
   },
+  dropdown: {
+    position: "absolute",
+    top: 40,
+    width: "100%",
+    maxHeight: 200,
+    borderWidth: 1,
+    borderColor: colors.neutral.light,
+  },
+  dropdownItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.neutral.light,
+    backgroundColor: colors.background.primary,
+    width: "100%",
+  },
 });
 
 export default formStyles;

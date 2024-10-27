@@ -2,18 +2,32 @@ import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
 import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
-import { Text, View, ScrollView, Image } from "react-native";
+import { Text, View, ScrollView, Image, RefreshControl } from "react-native";
 import accountStyles from "@/styles/accountStyles";
 import { convertCamelCaseToLabel } from "@/utils/text";
 import Spinner from "@/components/Spinner";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import GlobalStyles from "@/styles/GlobalStyles";
+import { useState } from "react";
 
 const AccountScreen = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, fetchProfile, fetchUser } = useAuth();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchUser();
+    await fetchProfile();
+    setRefreshing(false);
+  };
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
+    >
       <View style={accountStyles.container}>
         {!user || !profile ? (
           <View style={accountStyles.spinnerContainer}>
