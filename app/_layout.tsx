@@ -1,7 +1,7 @@
 import { Slot } from "expo-router";
-import { AuthProvider } from "../contexts/AuthContext";
-import { NotificationProvider } from "../contexts/NotificationContext";
-import { RoundCacheProvider } from "../contexts/RoundCacheContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
+import { RoundCacheProvider } from "@/contexts/RoundCacheContext";
 
 export default function Root() {
   return (

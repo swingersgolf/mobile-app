@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useRef,
   useState,
+  useCallback,
 } from "react";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
@@ -46,7 +47,7 @@ export const NotificationProvider = ({ children }: PropsWithChildren) => {
     throw new Error(errorMessage);
   };
 
-  const registerForPushNotificationsAsync = async () => {
+  const registerForPushNotificationsAsync = useCallback(async () => {
     if (Platform.OS === "android") {
       await Notifications.setNotificationChannelAsync("default", {
         name: "default",
@@ -90,7 +91,7 @@ export const NotificationProvider = ({ children }: PropsWithChildren) => {
         "Must use physical device for push notifications",
       );
     }
-  };
+  }, []);
 
   const sendPushNotification = async (expoPushToken: string) => {
     const message = {
@@ -133,7 +134,7 @@ export const NotificationProvider = ({ children }: PropsWithChildren) => {
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, []);
+  }, [registerForPushNotificationsAsync]);
 
   return (
     <NotificationContext.Provider
