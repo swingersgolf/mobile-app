@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { RoundStyles } from "@/styles/roundStyles";
 import axios, { isAxiosError } from "axios";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState, useCallback, useEffect } from "react";
 import {
   View,
@@ -230,7 +230,7 @@ const RoundDetailsScreen: React.FC = () => {
             //     ? "No requests to join"
             //     : "View requests"
             // }
-            onPress={() => console.log("View requests")}
+            onPress={() => router.push("requests")}
             textColor={colors.neutral.light}
             backgroundColor={colors.primary.default}
           />
