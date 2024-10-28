@@ -225,11 +225,6 @@ const RoundDetailsScreen: React.FC = () => {
         <View style={RoundStyles.actionButtonContainer}>
           <TextButton
             text="View requests"
-            // text={
-            //   roundCache.requests.length === 0
-            //     ? "No requests to join"
-            //     : "View requests"
-            // }
             onPress={() => router.push("requests")}
             textColor={colors.neutral.light}
             backgroundColor={colors.primary.default}
