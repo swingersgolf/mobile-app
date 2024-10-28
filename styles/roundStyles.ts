@@ -14,6 +14,18 @@ export const RoundStyles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
+  roundRequestContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    columnGap: 20,
+    rowGap: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: "100%",
+    height: "100%",
+  },
   roundContainer: {
     display: "flex",
     flexDirection: "row",
@@ -186,5 +198,12 @@ export const RoundStyles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 4,
     borderWidth: 1,
+  },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    columnGap: 10,
   },
 });

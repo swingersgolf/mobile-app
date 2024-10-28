@@ -117,6 +117,19 @@ const RoundDetailsScreen: React.FC = () => {
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
+  const countPendingRequests = () => {
+    if (!roundDetails) return 0;
+    return roundDetails.golfers.filter((golfer) => golfer.status === "pending")
+      .length;
+  };
+
+  const getPendingGolfers = () => {
+    if (!roundDetails) return [];
+    return roundDetails.golfers
+      .filter((golfer) => golfer.status === "pending")
+      .map((golfer) => ({ id: golfer.id, name: golfer.name })); // Adjust this according to what you want to pass
+  };
+
   const requestToJoinRound = async () => {
     try {
       await axios.post(
@@ -184,6 +197,7 @@ const RoundDetailsScreen: React.FC = () => {
             <View style={RoundStyles.memberList}>
               {/* Sort golfers first */}
               {roundDetails.golfers
+                .filter((golfer) => golfer.status === "accepted") // Filter to only include accepted golfers
                 .slice()
                 .sort((a, b) => {
                   if (a.id === roundDetails.host_id) return -1; // a is host
@@ -192,9 +206,13 @@ const RoundDetailsScreen: React.FC = () => {
                 })
                 .concat(
                   Array.from({
-                    length: roundDetails.spots - roundDetails.golfers.length,
-                  }).fill(undefined) as Golfer[],
-                ) // Fill empty slots
+                    length:
+                      roundDetails.spots -
+                      roundDetails.golfers.filter(
+                        (golfer) => golfer.status === "accepted",
+                      ).length,
+                  }).fill(undefined) as Golfer[], // Fill empty slots based on accepted golfers count
+                )
                 .map((golfer, index) => (
                   <View key={index} style={RoundStyles.memberListItem}>
                     {golfer ? (
@@ -224,10 +242,21 @@ const RoundDetailsScreen: React.FC = () => {
       {roundDetails && roundDetails.host_id === user?.id ? (
         <View style={RoundStyles.actionButtonContainer}>
           <TextButton
-            text="View requests"
-            onPress={() => router.push("requests")}
+            text={countPendingRequests() > 0 ? "View requests" : "No requests"}
+            onPress={
+              countPendingRequests() > 0
+                ? () => {
+                    const pendingGolfers = JSON.stringify(getPendingGolfers());
+                    router.push({
+                      pathname: "/requests",
+                      params: { roundId: roundId, requests: pendingGolfers },
+                    });
+                  }
+                : undefined
+            }
             textColor={colors.neutral.light}
             backgroundColor={colors.primary.default}
+            disabled={countPendingRequests() === 0}
           />
         </View>
       ) : (

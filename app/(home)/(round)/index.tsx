@@ -44,7 +44,6 @@ const RoundScreen = () => {
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
-    } finally {
     }
   }, [apiUrl, token]);
 
@@ -122,10 +121,9 @@ const RoundScreen = () => {
                           style={[statusStyles[preferred.status] || {}]}
                         >
                           <Text
-                            style={
-                              (GlobalStyles.body,
-                              { color: colors.neutral.light })
-                            }
+                            style={{
+                              color: colors.neutral.light,
+                            }}
                           >
                             {preferred.name}
                           </Text>
@@ -135,11 +133,11 @@ const RoundScreen = () => {
                 </View>
                 <View style={RoundStyles.memberContainer}>
                   {[...Array(round.spots)].map((_, index) => {
-                    if (index < round.golfers.length) {
+                    const golfer = round.golfers[index];
+                    if (golfer && golfer.status === "accepted") { // Only show if status is "accepted"
                       return (
                         <View style={RoundStyles.memberIconFilled} key={index}>
                           <MaterialIcons
-                            key={index}
                             name="person"
                             size={16}
                             color={colors.neutral.light}
