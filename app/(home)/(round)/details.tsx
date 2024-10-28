@@ -199,11 +199,13 @@ const RoundDetailsScreen: React.FC = () => {
                   <View key={index} style={RoundStyles.memberListItem}>
                     {golfer ? (
                       <>
-                        <Image
-                          style={RoundStyles.memberProfilePicture}
-                          source={SampleProfilePicture} // Replace with actual golfer image if available
-                        />
-                        <Text style={GlobalStyles.h3}>{golfer.name}</Text>
+                        <View style={RoundStyles.memberListItemContent}>
+                          <Image
+                            style={RoundStyles.memberProfilePicture}
+                            source={SampleProfilePicture} // Replace with actual golfer image if available
+                          />
+                          <Text style={GlobalStyles.h3}>{golfer.name}</Text>
+                        </View>
                         {golfer.id === roundDetails.host_id && (
                           <Text>Host</Text>
                         )}

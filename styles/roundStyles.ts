@@ -117,7 +117,7 @@ export const RoundStyles = StyleSheet.create({
   memberListItem: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "center",
     columnGap: 20,
     height: 50,
@@ -133,6 +133,13 @@ export const RoundStyles = StyleSheet.create({
     borderRadius: 9999,
     width: 40,
     height: 40,
+  },
+  memberListItemContent: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    columnGap: 10,
   },
   actionButtonContainer: {
     position: "absolute",
