@@ -3,19 +3,27 @@ import { RoundStyles } from "@/styles/roundStyles";
 import axios, { isAxiosError } from "axios";
 import { useLocalSearchParams } from "expo-router";
 import { useState, useCallback, useEffect } from "react";
-import { View, Text, RefreshControl, ScrollView, Image } from "react-native";
-import { Attribute, RoundDetails } from "@/types/roundTypes";
+import {
+  View,
+  Text,
+  RefreshControl,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { Attribute, Golfer, RoundDetails } from "@/types/roundTypes";
 import { colors } from "@/constants/Colors";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { parseRoundDate } from "@/utils/date";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import TextButton from "@/components/TextButton";
 import { useRoundCache } from "@/contexts/RoundCacheContext"; // Import the context
+import { MaterialIcons } from "@expo/vector-icons";
 
 const RoundDetailsScreen: React.FC = () => {
   const { roundId } = useLocalSearchParams();
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const { roundCache, setRoundCache } = useRoundCache();
 
@@ -146,6 +154,15 @@ const RoundDetailsScreen: React.FC = () => {
       >
         {roundDetails && (
           <View style={RoundStyles.roundDetailsContainer}>
+            {roundDetails.host_id === user?.id && (
+              <TouchableOpacity
+                onPress={() => console.log("Edit round")}
+                style={{ position: "absolute", top: 20, right: 20 }}
+              >
+                <MaterialIcons name="edit" size={24} color="black" />
+              </TouchableOpacity>
+            )}
+
             <View>
               {renderRoundDate()}
               <Text style={GlobalStyles.h1}>{roundDetails.course}</Text>
@@ -165,17 +182,31 @@ const RoundDetailsScreen: React.FC = () => {
               ))}
             </View>
             <View style={RoundStyles.memberList}>
-              {Array.from({ length: roundDetails.spots }).map((_, index) => {
-                const golfer = roundDetails.golfers[index];
-                return (
+              {/* Sort golfers first */}
+              {roundDetails.golfers
+                .slice()
+                .sort((a, b) => {
+                  if (a.id === roundDetails.host_id) return -1; // a is host
+                  if (b.id === roundDetails.host_id) return 1; // b is host
+                  return 0; // No change in order
+                })
+                .concat(
+                  Array.from({
+                    length: roundDetails.spots - roundDetails.golfers.length,
+                  }).fill(undefined) as Golfer[],
+                ) // Fill empty slots
+                .map((golfer, index) => (
                   <View key={index} style={RoundStyles.memberListItem}>
-                    {golfer && index < roundDetails.golfers.length ? (
+                    {golfer ? (
                       <>
                         <Image
                           style={RoundStyles.memberProfilePicture}
-                          source={SampleProfilePicture}
+                          source={SampleProfilePicture} // Replace with actual golfer image if available
                         />
                         <Text style={GlobalStyles.h3}>{golfer.name}</Text>
+                        {golfer.id === roundDetails.host_id && (
+                          <Text>Host</Text>
+                        )}
                       </>
                     ) : (
                       <Text style={[GlobalStyles.h4]}>
@@ -183,26 +214,41 @@ const RoundDetailsScreen: React.FC = () => {
                       </Text>
                     )}
                   </View>
-                );
-              })}
+                ))}
             </View>
           </View>
         )}
       </ScrollView>
-      {roundDetails && (
+      {roundDetails && roundDetails.host_id === user?.id ? (
         <View style={RoundStyles.actionButtonContainer}>
           <TextButton
-            text={
-              roundDetails.golfers.length === roundDetails.spots
-                ? "Round full"
-                : "Request to join"
-            }
-            disabled={roundDetails.golfers.length === roundDetails.spots}
-            onPress={requestToJoinRound}
+            text="View requests"
+            // text={
+            //   roundCache.requests.length === 0
+            //     ? "No requests to join"
+            //     : "View requests"
+            // }
+            onPress={() => console.log("View requests")}
             textColor={colors.neutral.light}
             backgroundColor={colors.primary.default}
           />
         </View>
+      ) : (
+        roundDetails && (
+          <View style={RoundStyles.actionButtonContainer}>
+            <TextButton
+              text={
+                roundDetails?.golfers.length === roundDetails?.spots
+                  ? "Round full"
+                  : "Request to join"
+              }
+              disabled={roundDetails?.golfers.length === roundDetails?.spots}
+              onPress={requestToJoinRound}
+              textColor={colors.neutral.light}
+              backgroundColor={colors.primary.default}
+            />
+          </View>
+        )
       )}
     </View>
   );

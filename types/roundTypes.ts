@@ -18,6 +18,7 @@ interface RoundDetails {
   golfer_count: number;
   spots: number;
   user: Golfer;
+  host_id: string;
 }
 
 interface Round {
