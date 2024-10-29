@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { RoundStyles } from "@/styles/roundStyles";
 import axios, { isAxiosError } from "axios";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -75,14 +75,10 @@ const RoundDetailsScreen: React.FC = () => {
     setRefreshing(false);
   };
 
-  useEffect(() => {
-    fetchRoundDetails();
-  }, [fetchRoundDetails]);
-
   useFocusEffect(
     useCallback(() => {
       fetchRoundDetails();
-    }, []),
+    }, [fetchRoundDetails]),
   );
 
   if (error) {

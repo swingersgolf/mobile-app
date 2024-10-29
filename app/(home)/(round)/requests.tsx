@@ -20,7 +20,7 @@ const Requests = () => {
   const router = useRouter(); // Initialize router for navigation
 
   // Access the round cache
-  const { roundCache, setRoundCache } = useRoundCache();
+  const { setRoundCache } = useRoundCache();
 
   const updateRoundCache = (
     requestId: string,

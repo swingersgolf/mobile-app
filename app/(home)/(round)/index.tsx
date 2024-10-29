@@ -20,8 +20,7 @@ import { useRoundCache } from "@/contexts/RoundCacheContext";
 const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
-  const { roundCache, setRoundCache, clearCache, refreshCache } =
-    useRoundCache();
+  const { roundCache, setRoundCache } = useRoundCache();
 
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false); // For pull-to-refresh
