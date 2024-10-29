@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { RoundStyles } from "@/styles/roundStyles";
 import axios, { isAxiosError } from "axios";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useState, useCallback, useEffect } from "react";
 import {
   View,
@@ -79,6 +79,12 @@ const RoundDetailsScreen: React.FC = () => {
     fetchRoundDetails();
   }, [fetchRoundDetails]);
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchRoundDetails();
+    }, []),
+  );
+
   if (error) {
     return (
       <View style={RoundStyles.container}>
@@ -117,13 +123,21 @@ const RoundDetailsScreen: React.FC = () => {
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
-  const countPendingRequests = () => {
+  const countRequests = ({
+    status,
+  }: {
+    status: "pending" | "accepted" | "rejected";
+  }) => {
     if (!roundDetails) return 0;
-    return roundDetails.golfers.filter((golfer) => golfer.status === "pending")
+    return roundDetails.golfers.filter((golfer) => golfer.status === status)
       .length;
   };
 
-  const getPendingGolfers = () => {
+  const getGolfers = ({
+    status,
+  }: {
+    status: "pending" | "accepted" | "rejected";
+  }) => {
     if (!roundDetails) return [];
     return roundDetails.golfers
       .filter((golfer) => golfer.status === "pending")
@@ -242,11 +256,17 @@ const RoundDetailsScreen: React.FC = () => {
       {roundDetails && roundDetails.host_id === user?.id ? (
         <View style={RoundStyles.actionButtonContainer}>
           <TextButton
-            text={countPendingRequests() > 0 ? "View requests" : "No requests"}
+            text={
+              countRequests({ status: "pending" }) > 0
+                ? "View requests"
+                : "No requests"
+            }
             onPress={
-              countPendingRequests() > 0
+              countRequests({ status: "pending" }) > 0
                 ? () => {
-                    const pendingGolfers = JSON.stringify(getPendingGolfers());
+                    const pendingGolfers = JSON.stringify(
+                      getGolfers({ status: "pending" }),
+                    );
                     router.push({
                       pathname: "/requests",
                       params: { roundId: roundId, requests: pendingGolfers },
@@ -256,7 +276,7 @@ const RoundDetailsScreen: React.FC = () => {
             }
             textColor={colors.neutral.light}
             backgroundColor={colors.primary.default}
-            disabled={countPendingRequests() === 0}
+            disabled={countRequests({ status: "pending" }) === 0}
           />
         </View>
       ) : (
@@ -264,11 +284,13 @@ const RoundDetailsScreen: React.FC = () => {
           <View style={RoundStyles.actionButtonContainer}>
             <TextButton
               text={
-                roundDetails?.golfers.length === roundDetails?.spots
+                countRequests({ status: "accepted" }) === roundDetails?.spots
                   ? "Round full"
                   : "Request to join"
               }
-              disabled={roundDetails?.golfers.length === roundDetails?.spots}
+              disabled={
+                countRequests({ status: "accepted" }) === roundDetails?.spots
+              }
               onPress={requestToJoinRound}
               textColor={colors.neutral.light}
               backgroundColor={colors.primary.default}

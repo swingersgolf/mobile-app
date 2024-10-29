@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import axios, { isAxiosError } from "axios";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Key, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -9,28 +9,65 @@ import { RoundStyles } from "@/styles/roundStyles";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import alertStyles from "@/styles/AlertStyles";
 import { Golfer } from "@/types/roundTypes";
+import { useRoundCache } from "@/contexts/RoundCacheContext"; // Import the context
 
 const Requests = () => {
   const { roundId, requests } = useLocalSearchParams();
-  const parsedRequests = requests ? JSON.parse(requests) : [];
+  const parsedRequests = requests ? JSON.parse(requests as string) : [];
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
   const [error, setError] = useState<string>("");
+  const router = useRouter(); // Initialize router for navigation
+
+  // Access the round cache
+  const { roundCache, setRoundCache } = useRoundCache();
+
+  const updateRoundCache = (
+    requestId: string,
+    status: "accepted" | "rejected",
+  ) => {
+    setRoundCache((prevCache) => {
+      const updatedCache = new Map(prevCache);
+      const roundDetails = updatedCache.get(roundId as string);
+
+      if (roundDetails) {
+        // Update the golfer's status based on the requestId
+        const updatedGolfers = roundDetails.golfers.map((golfer) =>
+          golfer.id === requestId ? { ...golfer, status } : golfer,
+        );
+
+        // Update the round details in the cache
+        updatedCache.set(roundId as string, {
+          ...roundDetails,
+          golfers: updatedGolfers,
+        });
+      }
+
+      // Check if there are no pending golfers left
+      const hasPendingGolfers = updatedCache
+        .get(roundId as string)
+        ?.golfers.some((golfer) => golfer.status === "pending");
+
+      // If no pending golfers, navigate to the round details screen
+      if (!hasPendingGolfers) {
+        console.log("All golfers have been accepted or rejected");
+        router.back();
+      }
+
+      return updatedCache;
+    });
+  };
 
   const acceptRequest = async (requestId: string) => {
     try {
       await axios.post(
         `${apiUrl}/v1/round/${roundId}/accept`,
-        {
-          user_id: requestId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        { user_id: requestId },
+        { headers: { Authorization: `Bearer ${token}` } },
       );
-      // Optionally, refresh the request list after accepting
+
+      // Update cache to update the user status to accepted
+      updateRoundCache(requestId, "accepted");
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
         const errorMessage =
@@ -47,16 +84,12 @@ const Requests = () => {
     try {
       await axios.post(
         `${apiUrl}/v1/round/${roundId}/reject`,
-        {
-          user_id: requestId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        { user_id: requestId },
+        { headers: { Authorization: `Bearer ${token}` } },
       );
-      // Optionally, refresh the request list after rejecting
+
+      // Update cache to update the user status to rejected
+      updateRoundCache(requestId, "rejected");
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
         const errorMessage =
@@ -74,7 +107,6 @@ const Requests = () => {
       <Text style={GlobalStyles.h1}>Round requests</Text>
       {error ? <Text style={alertStyles.errorText}>{error}</Text> : null}
       <View style={RoundStyles.memberList}>
-        {/* Sort golfers first */}
         {parsedRequests.map(
           (request: Golfer, index: Key | null | undefined) => (
             <View key={index} style={RoundStyles.memberListItem}>

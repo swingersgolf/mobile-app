@@ -42,7 +42,12 @@ const RoundLayout = () => {
         }}
       />
       <Stack.Screen name="details" />
-      <Stack.Screen name="requests" options={{ presentation: "modal" }} />
+      <Stack.Screen
+        name="requests"
+        options={{
+          presentation: "modal",
+        }}
+      />
       <Stack.Screen name="notifications" />
     </Stack>
   );
