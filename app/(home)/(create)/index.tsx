@@ -15,6 +15,7 @@ import Alert, { InFormAlert } from "@/components/Alert";
 import formStyles from "@/styles/FormStyles";
 import { Dropdown } from "react-native-element-dropdown";
 import { MaterialIcons } from "@expo/vector-icons";
+import { RoundStyles } from "@/styles/roundStyles";
 
 type CreatePostValues = {
   golfCourse: string;
@@ -49,16 +50,6 @@ const CreateScreen = () => {
       slots: "",
     },
   });
-
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        reset();
-        setSelectedDate(undefined);
-        setError("");
-      };
-    }, [reset]),
-  );
 
   const handleCreateAccount = async (data: CreatePostValues) => {
     setLoading(true);
@@ -96,6 +87,12 @@ const CreateScreen = () => {
     trigger("datetime");
     hideDatePicker();
   };
+
+  const handleClear = () => {
+    reset();
+    setSelectedDate(undefined);
+    setError("");
+  }
 
   return (
     <View style={createStyles.container}>
@@ -287,12 +284,21 @@ const CreateScreen = () => {
             </View>
 
             {error && <Alert error={error} />}
-            <TextButton
-              text="Create Post"
-              onPress={handleSubmit(handleCreateAccount)}
-              textColor={colors.neutral.light}
-              backgroundColor={colors.primary.default}
-            />
+            <View style={RoundStyles.textButtonContainer}>
+              <TextButton
+                text="Create Post"
+                onPress={handleSubmit(handleCreateAccount)}
+                textColor={colors.neutral.light}
+                backgroundColor={colors.primary.default}
+              />
+              <TextButton
+                text="Clear"
+                onPress={handleClear}
+                textColor={colors.primary.default}
+                backgroundColor={colors.primary.default}
+                outline
+              />
+            </View>
           </View>
         </>
       )}
