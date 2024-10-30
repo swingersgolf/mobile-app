@@ -7,6 +7,7 @@ interface Attribute {
 interface Golfer {
   id: string;
   name: string;
+  status: "accepted" | "pending" | "rejected";
 }
 
 interface RoundDetails {
@@ -18,6 +19,7 @@ interface RoundDetails {
   golfer_count: number;
   spots: number;
   user: Golfer;
+  host_id: string;
 }
 
 interface Round {

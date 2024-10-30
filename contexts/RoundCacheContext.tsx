@@ -11,8 +11,9 @@ import { RoundDetails } from "@/types/roundTypes";
 interface RoundCacheContextType {
   roundCache: Map<string, RoundDetails>;
   setRoundCache: Dispatch<SetStateAction<Map<string, RoundDetails>>>;
-  clearCache: () => void; // Method to clear the entire cache
-  resetRound: (roundId: string) => void; // Method to reset a specific round
+  clearCache: () => void;
+  resetRound: (roundId: string) => void;
+  refreshCache: (fetchedRounds: RoundDetails[]) => void; // Add refreshCache
 }
 
 const RoundCacheContext = createContext<RoundCacheContextType | undefined>(
@@ -24,23 +25,38 @@ export const RoundCacheProvider = ({ children }: { children: ReactNode }) => {
     new Map(),
   );
 
-  // Function to clear the entire cache
   const clearCache = () => {
     setRoundCache(new Map());
   };
 
-  // Function to reset a specific round's cache
   const resetRound = (roundId: string) => {
     setRoundCache((prevCache) => {
       const updatedCache = new Map(prevCache);
-      updatedCache.delete(roundId); // Remove specific round from cache
+      updatedCache.delete(roundId);
+      return updatedCache;
+    });
+  };
+
+  // Add refreshCache method to update only changed or new rounds
+  const refreshCache = (fetchedRounds: RoundDetails[]) => {
+    setRoundCache((prevCache) => {
+      const updatedCache = new Map(prevCache);
+      fetchedRounds.forEach((round) => {
+        updatedCache.set(round.id.toString(), round);
+      });
       return updatedCache;
     });
   };
 
   return (
     <RoundCacheContext.Provider
-      value={{ roundCache, setRoundCache, clearCache, resetRound }}
+      value={{
+        roundCache,
+        setRoundCache,
+        clearCache,
+        resetRound,
+        refreshCache,
+      }}
     >
       {children}
     </RoundCacheContext.Provider>

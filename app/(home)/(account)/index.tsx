@@ -59,14 +59,16 @@ const AccountScreen = () => {
                 <View style={accountStyles.infoContainer}>
                   <Text style={GlobalStyles.h2}>User</Text>
                   {user &&
-                    Object.entries(user).map(([key, value]) => (
-                      <View key={key} style={accountStyles.info}>
-                        <Text style={GlobalStyles.body}>
-                          {convertCamelCaseToLabel(key)}
-                        </Text>
-                        <Text style={GlobalStyles.body}>{value}</Text>
-                      </View>
-                    ))}
+                    Object.entries(user)
+                      .filter(([key]) => key !== "id")
+                      .map(([key, value]) => (
+                        <View key={key} style={accountStyles.info}>
+                          <Text style={GlobalStyles.body}>
+                            {convertCamelCaseToLabel(key)}
+                          </Text>
+                          <Text style={GlobalStyles.body}>{value}</Text>
+                        </View>
+                      ))}
                 </View>
                 <View style={accountStyles.infoContainer}>
                   <Text style={GlobalStyles.h2}>Profile</Text>
