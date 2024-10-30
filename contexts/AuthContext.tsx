@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         console.error("Error registering for push notifications:", error);
       }
     },
-    [token, updatePushTokenInBackend],
+    [updatePushTokenInBackend],
   );
 
   const signIn = async (email: string, password: string) => {
