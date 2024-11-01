@@ -9,13 +9,15 @@ import { colors } from "@/constants/Colors";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDateDayMonthTime, formatDateYYYY_MM_DD } from "@/utils/date";
+import { formatDateDayMonthTime } from "@/utils/date";
 import createStyles from "@/styles/createStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
 import formStyles from "@/styles/FormStyles";
 import { Dropdown } from "react-native-element-dropdown";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
+import { useAuth } from "@/contexts/AuthContext";
+import { router } from "expo-router";
 
 type CreatePostValues = {
   golfCourse: string;
@@ -24,15 +26,15 @@ type CreatePostValues = {
 };
 
 const CreateScreen = () => {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+  const { token } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [golfCourses] = useState<string[]>([
-    "Golf Course A",
-    "Golf Course B",
-    "Golf Course C",
-  ]);
+  const [golfCourses, setGolfCourses] = useState<
+    { id: string; name: string }[]
+  >([]);
   const golfers = ["1", "2", "3"];
 
   const {
@@ -51,12 +53,52 @@ const CreateScreen = () => {
     },
   });
 
-  const handleCreateAccount = async (data: CreatePostValues) => {
+  const fetchGolfCourses = useCallback(async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/v1/course`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setGolfCourses(response.data.data);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage =
+          error.response.data.message || "Failed to fetch golf courses.";
+        setError(errorMessage);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
+  }, [apiUrl, token]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchGolfCourses();
+      reset();
+      setSelectedDate(undefined);
+      setError("");
+    }, [fetchGolfCourses, reset]),
+  );
+
+  const handleCreateRound = async (data: CreatePostValues) => {
     setLoading(true);
     setError("");
     try {
-      console.log(data);
-      // Your API call here
+      await axios.post(
+        `${apiUrl}/v1/round`,
+        {
+          when: selectedDate,
+          spots: data.slots,
+          course_id: data.golfCourse,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      router.replace("/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
@@ -82,17 +124,10 @@ const CreateScreen = () => {
 
   const handleConfirm = (date: Date) => {
     setSelectedDate(date);
-    const formattedDate = formatDateYYYY_MM_DD(date);
-    setValue("datetime", formattedDate);
+    setValue("datetime", date.toISOString());
     trigger("datetime");
     hideDatePicker();
   };
-
-  const handleClear = () => {
-    reset();
-    setSelectedDate(undefined);
-    setError("");
-  }
 
   return (
     <View style={createStyles.container}>
@@ -125,8 +160,8 @@ const CreateScreen = () => {
                         errors.golfCourse && formStyles.invalidInput,
                       ]}
                       data={golfCourses.map((course) => ({
-                        label: course,
-                        value: course,
+                        label: course.name, // Set label to the course name
+                        value: course.id, // Set value to the course id
                       }))}
                       labelField="label"
                       valueField="value"
@@ -147,7 +182,7 @@ const CreateScreen = () => {
                       }}
                       value={value}
                       onChange={(item) => {
-                        onChange(item.value);
+                        onChange(item.value); // Now this will be the course id
                       }}
                       onFocus={() => Keyboard.dismiss()}
                       renderRightIcon={() =>
@@ -196,7 +231,7 @@ const CreateScreen = () => {
                       }))}
                       labelField="label"
                       valueField="value"
-                      placeholder="Select number of golfers"
+                      placeholder="Looking for.. number of golfers"
                       placeholderStyle={{
                         color: value
                           ? colors.neutral.dark
@@ -287,16 +322,9 @@ const CreateScreen = () => {
             <View style={RoundStyles.textButtonContainer}>
               <TextButton
                 text="Create Post"
-                onPress={handleSubmit(handleCreateAccount)}
+                onPress={handleSubmit(handleCreateRound)}
                 textColor={colors.neutral.light}
                 backgroundColor={colors.primary.default}
-              />
-              <TextButton
-                text="Clear"
-                onPress={handleClear}
-                textColor={colors.primary.default}
-                backgroundColor={colors.primary.default}
-                outline
               />
             </View>
           </View>

@@ -84,6 +84,14 @@ async function registerForPushNotificationsAsync() {
   }
 }
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const [[isLoading, token], setToken] = useStorageState("token");

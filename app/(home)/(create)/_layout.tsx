@@ -1,6 +1,7 @@
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { colors } from "@/constants/Colors";
-import { Pressable, Keyboard } from "react-native";
+import { Pressable, Keyboard, TouchableOpacity } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const CreateLayout = () => {
   return (
@@ -17,6 +18,15 @@ const CreateLayout = () => {
           headerStyle: {
             backgroundColor: colors.background.primary,
           },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.replace("/(round)")}>
+              <MaterialIcons
+                name="close"
+                size={28}
+                color={colors.neutral.dark}
+              />
+            </TouchableOpacity>
+          ),
         }}
       >
         <Stack.Screen

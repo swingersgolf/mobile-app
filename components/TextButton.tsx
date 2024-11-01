@@ -1,7 +1,7 @@
 import { colors } from "@/constants/Colors";
 import {
   GestureResponderEvent,
-  Pressable,
+  TouchableOpacity,
   Text,
   ViewStyle,
 } from "react-native";
@@ -10,12 +10,12 @@ import { DimensionValue } from "react-native";
 type ButtonProps = {
   text: string;
   outline?: boolean;
-  onPress: ((event: GestureResponderEvent) => void) | null | undefined;
+  onPress?: (event: GestureResponderEvent) => void; // No need for null as a type here
   textColor: string;
   backgroundColor: string;
-  width?: DimensionValue | undefined;
-  fontSize?: number | undefined;
-  disabled?: boolean | undefined;
+  width?: DimensionValue;
+  fontSize?: number;
+  disabled?: boolean;
 };
 
 const TextButton = ({
@@ -28,34 +28,33 @@ const TextButton = ({
   fontSize,
   disabled,
 }: ButtonProps) => {
+  // Define the button style outside to apply directly in TouchableOpacity
+  const buttonStyle: ViewStyle = {
+    paddingVertical: 15,
+    borderRadius: 5,
+    width: width ? width : "100%",
+    alignItems: "center",
+    backgroundColor: disabled
+      ? colors.neutral.medium
+      : outline
+        ? "transparent"
+        : backgroundColor,
+    borderWidth: 1,
+    borderColor: disabled
+      ? colors.neutral.medium
+      : outline
+        ? textColor
+        : backgroundColor,
+  };
+
   return (
-    <Pressable
+    <TouchableOpacity
       disabled={disabled}
       onPress={onPress}
-      style={({ pressed }: { pressed: boolean }) => {
-        const buttonStyle: ViewStyle = {
-          paddingVertical: 15,
-          borderRadius: 5,
-          width: width ? width : "100%",
-          alignItems: "center",
-          backgroundColor: disabled
-            ? colors.neutral.medium
-            : outline
-              ? "transparent"
-              : pressed
-                ? "lighten"
-                : backgroundColor,
-          borderWidth: 1,
-          borderColor: disabled
-            ? colors.neutral.medium
-            : outline
-              ? textColor
-              : backgroundColor,
-          opacity: pressed ? 0.7 : 1, // Adjust opacity when pressed
-        };
-
-        return buttonStyle;
-      }}
+      style={[
+        buttonStyle,
+        { opacity: disabled ? 0.5 : 1 }, // Optional opacity for disabled state
+      ]}
       testID="text-button"
     >
       <Text
@@ -67,7 +66,7 @@ const TextButton = ({
       >
         {text}
       </Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

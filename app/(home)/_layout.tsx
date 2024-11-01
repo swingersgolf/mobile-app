@@ -62,6 +62,9 @@ const HomeLayout = () => {
         name="(create)"
         options={{
           title: "Create",
+          tabBarStyle: {
+            display: "none",
+          },
           tabBarLabel: () => null,
           tabBarIcon: ({ color }: { color: string }) => (
             <MaterialIcons name="add-box" size={28} color={color} />
