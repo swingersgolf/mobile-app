@@ -206,4 +206,23 @@ export const RoundStyles = StyleSheet.create({
     alignItems: "center",
     columnGap: 10,
   },
+  myRoundsButton: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: colors.primary.default,
+  },
+  myRoundsButtonText: {
+    color: colors.neutral.light,
+  },
+  textButtonContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+    rowGap: 10,
+  },
 });

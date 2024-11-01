@@ -60,7 +60,9 @@ const AccountScreen = () => {
                   <Text style={GlobalStyles.h2}>User</Text>
                   {user &&
                     Object.entries(user)
-                      .filter(([key]) => key !== "id")
+                      .filter(
+                        ([key]) => key !== "id" && key !== "expo_push_token",
+                      )
                       .map(([key, value]) => (
                         <View key={key} style={accountStyles.info}>
                           <Text style={GlobalStyles.body}>

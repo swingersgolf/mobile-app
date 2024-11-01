@@ -1,4 +1,4 @@
-import { Pressable } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { Stack, router } from "expo-router";
 import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
@@ -30,7 +30,7 @@ const AccountLayout = () => {
           },
           // Adding the gear icon to the top right
           headerRight: () => (
-            <Pressable
+            <TouchableOpacity
               onPress={() => {
                 // Handle gear icon press, e.g., navigate to settings
                 router.push("/settings");
@@ -41,7 +41,7 @@ const AccountLayout = () => {
                 size={28}
                 color={colors.neutral.dark}
               />
-            </Pressable>
+            </TouchableOpacity>
           ),
         }}
       />

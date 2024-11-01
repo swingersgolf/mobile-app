@@ -170,6 +170,10 @@ const RoundScreen = () => {
           );
         })}
       </ScrollView>
+      {/* TODO: If user has rounds which they are the host of then display button to view filtered round list of only their rounds */}
+      {/* <TouchableOpacity style={RoundStyles.myRoundsButton}>
+        <Text style={RoundStyles.myRoundsButtonText}>View my rounds</Text>
+      </TouchableOpacity> */}
     </View>
   );
 };

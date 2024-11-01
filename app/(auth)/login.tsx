@@ -207,7 +207,7 @@ const LoginScreen = () => {
             style={authStyles.socialMediaContainer}
           >
             {socialMediaProviders.map((provider, index) => (
-              <Pressable key={index}>{provider.icon}</Pressable>
+              <TouchableOpacity key={index}>{provider.icon}</TouchableOpacity>
             ))}
           </View> */}
           <Text style={(GlobalStyles.body, { textAlign: "center" })}>

@@ -12,11 +12,16 @@ import {
   useStorageState,
 } from "@/storage/useStorageState";
 import { User, Profile } from "@/types/authTypes";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+import Constants from "expo-constants";
+import { Platform } from "react-native";
 
 interface AuthContextType {
   token: string | null;
   user: User | null;
   profile: Profile | null;
+  expoPushToken: string | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   createAccount: (
@@ -37,6 +42,7 @@ interface AuthContextType {
     code: string,
     password: string,
   ) => Promise<void>;
+  requestPushNotificationPermission: (authToken: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -49,11 +55,79 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
+async function registerForPushNotificationsAsync() {
+  if (Platform.OS === "android") {
+    await Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      throw new Error("Push notification permission not granted");
+    }
+    const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+    const pushTokenString = (
+      await Notifications.getExpoPushTokenAsync({ projectId })
+    ).data;
+    return pushTokenString;
+  } else {
+    throw new Error("Must use a physical device for push notifications");
+  }
+}
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const [[isLoading, token], setToken] = useStorageState("token");
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
+
+  const updatePushTokenInBackend = useCallback(
+    async (pushToken: string, authToken: string) => {
+      if (!pushToken || !authToken) return;
+      await axios.patch(
+        `${apiUrl}/v1/user`,
+        { expo_push_token: pushToken },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+    },
+    [apiUrl],
+  );
+
+  const requestPushNotificationPermission = useCallback(
+    async (authToken: string) => {
+      try {
+        const pushToken = await registerForPushNotificationsAsync();
+        setExpoPushToken(pushToken);
+        await updatePushTokenInBackend(pushToken, authToken); // Update the backend
+      } catch (error) {
+        console.error("Error registering for push notifications:", error);
+      }
+    },
+    [updatePushTokenInBackend],
+  );
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -82,6 +156,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           },
         );
         setToken(null);
+        setExpoPushToken(null);
       }
       return Promise.resolve();
     } catch (error) {
@@ -89,6 +164,18 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       return Promise.reject(error);
     }
   }, [apiUrl, setToken, token]);
+
+  useEffect(() => {
+    const syncStorage = async () => {
+      if (token) {
+        await setStorageItemAsync("token", token);
+        await requestPushNotificationPermission(token); // Prompt for push notification on sign-in
+      } else {
+        await setStorageItemAsync("token", null);
+      }
+    };
+    syncStorage();
+  }, [requestPushNotificationPermission, token]);
 
   const createAccount = async (
     name: string,
@@ -245,6 +332,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         token,
         user,
         profile,
+        expoPushToken,
         signIn,
         signOut,
         createAccount,
@@ -256,6 +344,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         forgotPassword,
         resetPassword,
         isLoading,
+        requestPushNotificationPermission,
       }}
     >
       {children}
