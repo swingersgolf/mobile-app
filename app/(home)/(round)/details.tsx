@@ -217,7 +217,7 @@ const RoundDetailsScreen: React.FC = () => {
                 .concat(
                   Array.from({
                     length:
-                      roundDetails.spots -
+                      roundDetails.group_size -
                       roundDetails.golfers.filter(
                         (golfer) => golfer.status === "accepted",
                       ).length,
@@ -280,12 +280,12 @@ const RoundDetailsScreen: React.FC = () => {
           <View style={RoundStyles.actionButtonContainer}>
             <TextButton
               text={
-                countRequests({ status: "accepted" }) === roundDetails?.spots
+                countRequests({ status: "accepted" }) === roundDetails?.group_size
                   ? "Round full"
                   : "Request to join"
               }
               disabled={
-                countRequests({ status: "accepted" }) === roundDetails?.spots
+                countRequests({ status: "accepted" }) === roundDetails?.group_size
               }
               onPress={requestToJoinRound}
               textColor={colors.neutral.light}

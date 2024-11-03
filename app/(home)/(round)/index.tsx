@@ -144,7 +144,7 @@ const RoundScreen = () => {
                 </View>
               </View>
               <View style={RoundStyles.memberContainer}>
-                {[...Array(round.spots)].map((_, index) => {
+                {[...Array(round.group_size)].map((_, index) => {
                   const golfer = round.golfers[index];
                   if (golfer && golfer.status === "accepted") {
                     // Only show if status is "accepted"

@@ -17,7 +17,7 @@ interface RoundDetails {
   preferences: Attribute[];
   golfers: Golfer[];
   golfer_count: number;
-  spots: number;
+  group_size: number;
   user: Golfer;
   host_id: string;
 }
@@ -29,7 +29,7 @@ interface Round {
   preferences: Attribute[];
   golfers: Golfer[];
   golfer_count: number;
-  spots: number;
+  group_size: number;
 }
 
 export type { Round, RoundDetails, Attribute, Golfer };

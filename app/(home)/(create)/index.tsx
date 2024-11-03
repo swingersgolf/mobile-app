@@ -89,7 +89,7 @@ const CreateScreen = () => {
         `${apiUrl}/v1/round`,
         {
           when: selectedDate,
-          spots: data.slots,
+          group_size: data.slots,
           course_id: data.golfCourse,
         },
         {

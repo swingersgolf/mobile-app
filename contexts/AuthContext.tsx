@@ -169,7 +169,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const syncStorage = async () => {
       if (token) {
         await setStorageItemAsync("token", token);
-        await requestPushNotificationPermission(token); // Prompt for push notification on sign-in
+        const { status: existingStatus } =
+          await Notifications.getPermissionsAsync();
+        if (existingStatus === "undetermined")
+          await requestPushNotificationPermission(token); // Prompt for push notification on sign-in
       } else {
         await setStorageItemAsync("token", null);
       }
