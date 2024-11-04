@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import {
   Text,
   View,
-  ScrollView,
+  FlatList,
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
@@ -23,7 +23,7 @@ const RoundScreen = () => {
   const { roundCache, setRoundCache } = useRoundCache();
 
   const [error, setError] = useState("");
-  const [refreshing, setRefreshing] = useState(false); // For pull-to-refresh
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchRounds = useCallback(async () => {
     setError("");
@@ -82,17 +82,17 @@ const RoundScreen = () => {
 
   return (
     <View style={RoundStyles.container}>
-      <ScrollView
+      <FlatList
         style={RoundStyles.scrollStyle}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={[colors.primary.default]} // Customize the spinner color
+            colors={[colors.primary.default]}
           />
         }
-      >
-        {Array.from(roundCache.values()).map((round) => {
+        data={Array.from(roundCache.values())}
+        renderItem={({ item: round }) => {
           const { dayOfWeek, dayNumber, month, TimeIcon } = parseRoundDate(
             round.when,
           );
@@ -127,6 +127,14 @@ const RoundScreen = () => {
                     .filter(
                       (preferred: Attribute) => preferred.status !== "disliked",
                     ) // Filter out 'disliked' attributes
+                    .sort((a: Attribute, b: Attribute) => {
+                      // Sort by "preferred" first, then "indifferent"
+                      if (a.status === "preferred" && b.status !== "preferred")
+                        return -1;
+                      if (a.status !== "preferred" && b.status === "preferred")
+                        return 1;
+                      return 0;
+                    })
                     .map((preferred: Attribute) => (
                       <View
                         key={preferred.id}
@@ -168,8 +176,9 @@ const RoundScreen = () => {
               </View>
             </TouchableOpacity>
           );
-        })}
-      </ScrollView>
+        }}
+        keyExtractor={(item) => item.id.toString()}
+      />
       {/* TODO: If user has rounds which they are the host of then display button to view filtered round list of only their rounds */}
       {/* <TouchableOpacity style={RoundStyles.myRoundsButton}>
         <Text style={RoundStyles.myRoundsButtonText}>View my rounds</Text>

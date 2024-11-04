@@ -151,6 +151,14 @@ const RoundDetailsScreen: React.FC = () => {
           },
         },
       );
+      setRefreshing(true);
+      await fetchRoundDetails();
+      setRoundCache((prevCache) => {
+        const updatedCache = new Map(prevCache);
+        updatedCache.delete(roundId as string); // Remove the specific round details from cache
+        return updatedCache;
+      });
+      setRefreshing(false);
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
         const errorMessage =
@@ -161,6 +169,47 @@ const RoundDetailsScreen: React.FC = () => {
         setError("An unexpected error occurred. Please try again.");
       }
     }
+  };
+
+  const deleteRequest = async () => {
+    try {
+      await axios.delete(`${apiUrl}/v1/round/${roundId}/leave`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setRefreshing(true);
+      await fetchRoundDetails();
+      setRoundCache((prevCache) => {
+        const updatedCache = new Map(prevCache);
+        updatedCache.delete(roundId as string); // Remove the specific round details from cache
+        return updatedCache;
+      });
+      setRefreshing(false);
+    } catch (error: unknown) {
+      if (isAxiosError(error) && error.response) {
+        const errorMessage =
+          error.response.data.message ||
+          "Failed to cancel join request. Please try again.";
+        setError(errorMessage);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
+
+  const hasUserRequestedToJoin = () => {
+    if (!roundDetails) return false;
+    return roundDetails.golfers.some(
+      (golfer) => golfer.id === user?.id && golfer.status === "pending",
+    );
+  };
+
+  const isUserInRound = () => {
+    if (!roundDetails) return false;
+    return roundDetails.golfers.some(
+      (golfer) => golfer.id === user?.id && golfer.status === "accepted",
+    );
   };
 
   return (
@@ -280,14 +329,29 @@ const RoundDetailsScreen: React.FC = () => {
           <View style={RoundStyles.actionButtonContainer}>
             <TextButton
               text={
-                countRequests({ status: "accepted" }) === roundDetails?.group_size
+                countRequests({ status: "accepted" }) ===
+                roundDetails?.group_size
                   ? "Round full"
-                  : "Request to join"
+                  : isUserInRound()
+                    ? "Leave round"
+                    : hasUserRequestedToJoin()
+                      ? "Cancel request"
+                      : "Request to join"
               }
               disabled={
-                countRequests({ status: "accepted" }) === roundDetails?.group_size
+                countRequests({ status: "accepted" }) ===
+                roundDetails?.group_size
               }
-              onPress={requestToJoinRound}
+              onPress={
+                countRequests({ status: "accepted" }) ===
+                roundDetails?.group_size
+                  ? undefined
+                  : isUserInRound()
+                    ? deleteRequest
+                    : hasUserRequestedToJoin()
+                      ? deleteRequest
+                      : requestToJoinRound
+              }
               textColor={colors.neutral.light}
               backgroundColor={colors.primary.default}
             />
