@@ -225,4 +225,27 @@ export const RoundStyles = StyleSheet.create({
     width: "100%",
     rowGap: 10,
   },
+  notificationItemContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    columnGap: 10,
+    paddingHorizontal: 20,
+    width: "100%",
+    paddingVertical: 5,
+  },
+  notificationHeaderContainer: {
+    width: "100%",
+    borderTopColor: colors.neutral.light,
+    borderTopWidth: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  unreadDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 9999,
+    backgroundColor: colors.primary.default,
+  },
 });

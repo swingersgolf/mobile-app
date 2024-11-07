@@ -76,12 +76,11 @@ export const NotificationCacheProvider = ({
             },
           },
         );
-        console.log("Marked as read");
         setNotificationCache((prevCache) => {
           const updatedCache = new Map(prevCache);
           const notification = updatedCache.get(notificationId);
           if (notification) {
-            notification.readAt = new Date();
+            notification.read_at = new Date();
             updatedCache.set(notificationId, notification);
           }
           return updatedCache;
@@ -112,7 +111,7 @@ export const NotificationCacheProvider = ({
           const updatedCache = new Map(prevCache);
           const notification = updatedCache.get(notificationId);
           if (notification) {
-            notification.readAt = null;
+            notification.read_at = null;
             updatedCache.set(notificationId, notification);
           }
           return updatedCache;

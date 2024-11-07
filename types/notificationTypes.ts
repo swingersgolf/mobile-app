@@ -1,9 +1,16 @@
 export interface Notification {
   id: string; // big int as a string to handle large IDs safely
-  userId: string; // Assuming varchar(255) translates to string
+  user_id: string; // Assuming varchar(255) translates to string
   type: "round_request" | "round_accepted" | "round_rejected"; // Enum types directly as literals
+  data: NotificationData; // JSON data as a flexible object type
+  read_at: Date | null; // Timestamp as Date object, or null if unread
+  created_at: Date; // Created timestamp as Date object
+  updated_at: Date; // Updated timestamp as Date object
+}
+
+export interface NotificationData {
+  to: string; // User ID as a string
+  title: string; // Notification title as a string
+  body: string; // Notification body as a string
   data: Record<string, unknown>; // JSON data as a flexible object type
-  readAt: Date | null; // Timestamp as Date object, or null if unread
-  createdAt: Date; // Created timestamp as Date object
-  updatedAt: Date; // Updated timestamp as Date object
 }
