@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import axios, { isAxiosError } from "axios";
 import { useLocalSearchParams } from "expo-router";
-import { Key, useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import GlobalStyles from "@/styles/GlobalStyles";
@@ -15,13 +15,22 @@ import { useRoundCache } from "@/contexts/RoundCacheContext";
 
 const EditRoundScreen = () => {
   const { roundId, golfers } = useLocalSearchParams();
-  const parsedGolfers = golfers ? JSON.parse(golfers as string) : [];
+  const [parsedGolfers, setParsedGolfers] = useState<Golfer[]>(
+    JSON.parse(golfers as string),
+  );
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
   const [error, setError] = useState<string>("");
 
   const router = useRouter();
   const { setRoundCache } = useRoundCache();
+
+  // // Load golfers when the component mounts or when golfers param changes
+  // useEffect(() => {
+  //   if (golfers) {
+  //     setParsedGolfers(JSON.parse(golfers as string));
+  //   }
+  // }, [golfers]);
 
   const deleteRound = () => {
     Alert.alert(
@@ -63,39 +72,65 @@ const EditRoundScreen = () => {
     );
   };
 
-  const removeGolfer = async (golferId: string) => {
-    try {
-      await axios.delete(`${apiUrl}/v1/round-user/${golferId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setRoundCache((prevCache) => {
-        const updatedCache = new Map(prevCache);
-        const roundDetails = updatedCache.get(roundId as string);
+  const removeGolfer = (golfer: Golfer) => {
+    Alert.alert(
+      "Confirm",
+      `Are you sure you want to remove ${golfer.name} from your round?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Remove",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await axios.delete(`${apiUrl}/v1/round-user/${roundId}`, {
+                data: { user_id: golfer.id },
+                headers: { Authorization: `Bearer ${token}` },
+              });
 
-        if (roundDetails) {
-          const updatedGolfers = roundDetails.golfers.filter(
-            (golfer) => golfer.id !== golferId,
-          );
-          updatedCache.set(roundId as string, {
-            ...roundDetails,
-            golfers: updatedGolfers,
-          });
-        }
+              // Update state by filtering out the removed golfer
+              setParsedGolfers((prevGolfers) =>
+                prevGolfers.filter(
+                  (updatedGolfer) => updatedGolfer.id !== golfer.id,
+                ),
+              );
 
-        return updatedCache;
-      });
-    } catch (error: unknown) {
-      if (isAxiosError(error) && error.response) {
-        const errorMessage =
-          error.response.data.message ||
-          "Failed to reject golfer. Please try again.";
-        setError(errorMessage);
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
-    }
+              // Update the round cache to reflect the changes in golfers
+              setRoundCache((prevCache) => {
+                const updatedCache = new Map(prevCache);
+                const roundDetails = updatedCache.get(roundId as string);
+
+                if (roundDetails) {
+                  updatedCache.set(roundId as string, {
+                    ...roundDetails,
+                    golfers: parsedGolfers.filter(
+                      (updatedGolfer) => updatedGolfer.id !== golfer.id,
+                    ),
+                  });
+                }
+
+                return updatedCache;
+              });
+            } catch (error: unknown) {
+              if (isAxiosError(error) && error.response) {
+                const errorMessage =
+                  error.response.data.message ||
+                  "Failed to reject golfer. Please try again.";
+                setError(errorMessage);
+              } else {
+                setError("An unexpected error occurred. Please try again.");
+              }
+            }
+          },
+        },
+      ],
+      { cancelable: false },
+    );
   };
-  
+
   return (
     <View style={[RoundStyles.container, RoundStyles.roundEditContainer]}>
       {parsedGolfers.length > 0 && (
@@ -114,7 +149,7 @@ const EditRoundScreen = () => {
                     <Text style={GlobalStyles.h3}>{golfer.name}</Text>
                   </View>
                   <View style={RoundStyles.buttonContainer}>
-                    <TouchableOpacity onPress={() => removeGolfer(golfer.id)}>
+                    <TouchableOpacity onPress={() => removeGolfer(golfer)}>
                       <MaterialIcons name="cancel" size={24} color="red" />
                     </TouchableOpacity>
                   </View>
