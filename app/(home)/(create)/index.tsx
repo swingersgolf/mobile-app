@@ -3,7 +3,6 @@ import { Text, View, Keyboard, TouchableOpacity } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useFocusEffect } from "@react-navigation/native";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createPostSchema } from "@/schemas/createPostSchema";
 import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
 import axios from "axios";
@@ -19,6 +18,19 @@ import { RoundStyles } from "@/styles/roundStyles";
 import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
+import * as yup from "yup";
+
+const createPostSchema = yup.object().shape({
+  golfCourse: yup.string().required("Golf Course is required"),
+  datetime: yup.string().required("Date and Time is required"),
+  slots: yup.string().required("Number of slots is required"),
+  preferences: yup.object({
+    drinking: yup.string().required("Drinking preference is required"),
+    walking: yup.string().required("Walking preference is required"),
+    betting: yup.string().required("Betting preference is required"),
+    // Add more preferences as needed
+  }),
+});
 
 type CreatePostValues = {
   golfCourse: string;
@@ -26,15 +38,15 @@ type CreatePostValues = {
   slots: string;
   preferences: {
     drinking: string;
-    smoking: string;
-    riding: string;
+    walking: string;
+    betting: string;
   };
 };
 
 const preferencesList = [
   { id: "drinking", label: "Drinking" },
-  { id: "smoking", label: "Smoking" },
-  { id: "riding", label: "Riding" },
+  { id: "walking", label: "Walking" },
+  { id: "betting", label: "Betting" },
   // Add more preferences as needed
 ];
 
@@ -95,6 +107,25 @@ const CreateScreen = () => {
     }
   }, [apiUrl, token]);
 
+  // const fetchPreferences = useCallback(async () => {
+  //   try {
+  //     const response = await axios.get(`${apiUrl}/v1/preferences`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     setPreferences(response.data.data);
+  //   } catch (error: unknown) {
+  //     if (axios.isAxiosError(error) && error.response) {
+  //       const errorMessage =
+  //         error.response.data.message || "Failed to fetch golf courses.";
+  //       setError(errorMessage);
+  //     } else {
+  //       setError("An unexpected error occurred. Please try again.");
+  //     }
+  //   }
+  // }, [apiUrl, token]);
+
   useFocusEffect(
     useCallback(() => {
       fetchGolfCourses();
@@ -107,6 +138,7 @@ const CreateScreen = () => {
   const handleCreateRound = async (data: CreatePostValues) => {
     setLoading(true);
     setError("");
+    console.log(data);
     try {
       await axios.post(
         `${apiUrl}/v1/round`,
@@ -354,8 +386,8 @@ const CreateScreen = () => {
                         name={
                           `preferences.${preference.id}` as
                             | "preferences.drinking"
-                            | "preferences.smoking"
-                            | "preferences.riding"
+                            | "preferences.walking"
+                            | "preferences.betting"
                         }
                         render={({ field: { onChange, value } }) => (
                           <TouchableOpacity
