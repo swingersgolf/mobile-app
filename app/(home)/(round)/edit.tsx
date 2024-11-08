@@ -11,15 +11,17 @@ import alertStyles from "@/styles/AlertStyles";
 import { Golfer } from "@/types/roundTypes";
 import TextButton from "@/components/TextButton";
 import { useRouter } from "expo-router";
+import { useRoundCache } from "@/contexts/RoundCacheContext";
 
 const EditRoundScreen = () => {
   const { roundId, golfers } = useLocalSearchParams();
-  const parsedgolfers = golfers ? JSON.parse(golfers as string) : [];
+  const parsedGolfers = golfers ? JSON.parse(golfers as string) : [];
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
   const [error, setError] = useState<string>("");
 
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
+  const { setRoundCache } = useRoundCache();
 
   const deleteRound = () => {
     Alert.alert(
@@ -37,6 +39,11 @@ const EditRoundScreen = () => {
             try {
               await axios.delete(`${apiUrl}/v1/round/${roundId}`, {
                 headers: { Authorization: `Bearer ${token}` },
+              });
+              setRoundCache((prevCache) => {
+                const updatedCache = new Map(prevCache);
+                updatedCache.delete(roundId as string); // Remove the round from the cache
+                return updatedCache;
               });
               router.replace("/"); // Navigate to home screen after deletion
             } catch (error: unknown) {
@@ -61,6 +68,22 @@ const EditRoundScreen = () => {
       await axios.delete(`${apiUrl}/v1/round-user/${golferId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      setRoundCache((prevCache) => {
+        const updatedCache = new Map(prevCache);
+        const roundDetails = updatedCache.get(roundId as string);
+
+        if (roundDetails) {
+          const updatedGolfers = roundDetails.golfers.filter(
+            (golfer) => golfer.id !== golferId,
+          );
+          updatedCache.set(roundId as string, {
+            ...roundDetails,
+            golfers: updatedGolfers,
+          });
+        }
+
+        return updatedCache;
+      });
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
         const errorMessage =
@@ -73,16 +96,16 @@ const EditRoundScreen = () => {
     }
   };
 
-  console.log(parsedgolfers, golfers);
+  console.log(parsedGolfers, golfers);
 
   return (
     <View style={[RoundStyles.container, RoundStyles.roundEditContainer]}>
-      {parsedgolfers.length > 0 && (
+      {parsedGolfers.length > 0 && (
         <>
           <Text style={GlobalStyles.h1}>Golfers</Text>
           {error ? <Text style={alertStyles.errorText}>{error}</Text> : null}
           <View style={RoundStyles.memberList}>
-            {parsedgolfers.map(
+            {parsedGolfers.map(
               (golfer: Golfer, index: Key | null | undefined) => (
                 <View key={index} style={RoundStyles.memberListItem}>
                   <View style={RoundStyles.memberListItemContent}>
