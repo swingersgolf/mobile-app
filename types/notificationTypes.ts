@@ -1,7 +1,6 @@
 export interface Notification {
   id: string; // big int as a string to handle large IDs safely
   user_id: string; // Assuming varchar(255) translates to string
-  type: "round_request" | "round_accepted" | "round_rejected"; // Enum types directly as literals
   data: NotificationData; // JSON data as a flexible object type
   read_at: Date | null; // Timestamp as Date object, or null if unread
   created_at: Date; // Created timestamp as Date object

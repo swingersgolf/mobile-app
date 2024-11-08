@@ -35,7 +35,7 @@ const CreateScreen = () => {
   const [golfCourses, setGolfCourses] = useState<
     { id: string; name: string }[]
   >([]);
-  const golfers = ["1", "2", "3"];
+  const group_size = ["2", "3", "4"];
 
   const {
     control,
@@ -165,7 +165,7 @@ const CreateScreen = () => {
                       }))}
                       labelField="label"
                       valueField="value"
-                      placeholder="Search Golf Course"
+                      placeholder="Golf Course"
                       placeholderStyle={{
                         color: value
                           ? colors.neutral.dark
@@ -217,7 +217,7 @@ const CreateScreen = () => {
                           errors.slots && formStyles.formInputTitleError,
                         ]}
                       >
-                        Golfers
+                        Group Size
                       </Text>
                     )}
                     <Dropdown
@@ -225,13 +225,13 @@ const CreateScreen = () => {
                         formStyles.formInput,
                         errors.slots && formStyles.invalidInput,
                       ]}
-                      data={golfers.map((course) => ({
+                      data={group_size.map((course) => ({
                         label: course,
                         value: course,
                       }))}
                       labelField="label"
                       valueField="value"
-                      placeholder="Looking for.. number of golfers"
+                      placeholder="Group size"
                       placeholderStyle={{
                         color: value
                           ? colors.neutral.dark
