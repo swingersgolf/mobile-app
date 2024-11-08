@@ -19,7 +19,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import * as yup from "yup";
-import { capitalizeWords } from "@/utils/text";
 
 type CreatePostValues = {
   golfCourse: string;
@@ -85,15 +84,13 @@ const CreateScreen = () => {
       golfCourse: "",
       datetime: "",
       slots: "",
-      preferences: preferencesList.reduce(
-        (acc, preference) => {
-          acc[preference.id] = ""; // Empty by default
-          return acc;
-        },
-        {} as Record<string, string>,
-      ),
+      preferences: {},
     },
   });
+
+  const capitalizeWords = (text: string) => {
+    return text.replace(/\b\w/g, (char) => char.toUpperCase());
+  };
 
   const fetchGolfCourses = useCallback(async () => {
     try {
@@ -124,21 +121,6 @@ const CreateScreen = () => {
         }),
       );
       setPreferencesList(formattedPreferences);
-      reset({
-        golfCourse: "",
-        datetime: "",
-        slots: "",
-        preferences: formattedPreferences.reduce(
-          (
-            acc: { [x: string]: string },
-            preference: { id: string | number },
-          ) => {
-            acc[preference.id] = ""; // Empty by default
-            return acc;
-          },
-          {},
-        ),
-      });
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         setError(error.response.data.message || "Failed to fetch preferences.");
@@ -176,6 +158,7 @@ const CreateScreen = () => {
           },
         },
       );
+      reset();
       router.replace("/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
