@@ -95,9 +95,7 @@ const EditRoundScreen = () => {
       }
     }
   };
-
-  console.log(parsedGolfers, golfers);
-
+  
   return (
     <View style={[RoundStyles.container, RoundStyles.roundEditContainer]}>
       {parsedGolfers.length > 0 && (
