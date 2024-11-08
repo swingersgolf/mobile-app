@@ -14,3 +14,7 @@ export const getFirstName = (fullName: string): string => {
   // Return the first part of the name or the full name if it's only one part
   return nameParts[0];
 };
+
+export const capitalizeWords = (text: string) => {
+  return text.replace(/\b\w/g, (char) => char.toUpperCase());
+};

@@ -16,6 +16,7 @@ import { RoundStyles } from "@/styles/roundStyles";
 import { router, useFocusEffect } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
+import { capitalizeWords } from "@/utils/text";
 
 const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -145,7 +146,7 @@ const RoundScreen = () => {
                             color: colors.neutral.light,
                           }}
                         >
-                          {preferred.name}
+                          {capitalizeWords(preferred.name)}
                         </Text>
                       </View>
                     ))}

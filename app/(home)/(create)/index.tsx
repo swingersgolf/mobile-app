@@ -19,36 +19,16 @@ import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import * as yup from "yup";
-
-const createPostSchema = yup.object().shape({
-  golfCourse: yup.string().required("Golf Course is required"),
-  datetime: yup.string().required("Date and Time is required"),
-  slots: yup.string().required("Number of slots is required"),
-  preferences: yup.object({
-    drinking: yup.string().required("Drinking preference is required"),
-    walking: yup.string().required("Walking preference is required"),
-    betting: yup.string().required("Betting preference is required"),
-    // Add more preferences as needed
-  }),
-});
+import { capitalizeWords } from "@/utils/text";
 
 type CreatePostValues = {
   golfCourse: string;
   datetime: string;
   slots: string;
   preferences: {
-    drinking: string;
-    walking: string;
-    betting: string;
+    [key: string]: string;
   };
 };
-
-const preferencesList = [
-  { id: "drinking", label: "Drinking" },
-  { id: "walking", label: "Walking" },
-  { id: "betting", label: "Betting" },
-  // Add more preferences as needed
-];
 
 const preferenceLabelMap: { [key: string]: string } = {
   indifferent: "Don't care",
@@ -66,7 +46,31 @@ const CreateScreen = () => {
   const [golfCourses, setGolfCourses] = useState<
     { id: string; name: string }[]
   >([]);
+  const [preferencesList, setPreferencesList] = useState<
+    { id: string; label: string }[]
+  >([]);
   const group_size = ["2", "3", "4"];
+  const createPostSchema = (preferences: { id: string; label: string }[]) =>
+    yup.object().shape({
+      golfCourse: yup.string().required("Golf Course is required"),
+      datetime: yup.string().required("Date and Time is required"),
+      slots: yup.string().required("Number of slots is required"),
+      preferences: yup.object(
+        preferences.reduce(
+          (acc, pref) => {
+            acc[pref.id] = yup
+              .string()
+              .oneOf(
+                ["preferred", "disliked", "indifferent"],
+                `Invalid value for ${pref.label}`,
+              )
+              .required(`${pref.label} preference is required`);
+            return acc;
+          },
+          {} as Record<string, yup.StringSchema<string>>,
+        ),
+      ),
+    });
 
   const {
     control,
@@ -76,14 +80,17 @@ const CreateScreen = () => {
     trigger,
     reset,
   } = useForm<CreatePostValues>({
-    resolver: yupResolver(createPostSchema),
+    resolver: yupResolver(createPostSchema(preferencesList)),
     defaultValues: {
       golfCourse: "",
       datetime: "",
       slots: "",
       preferences: preferencesList.reduce(
-        (acc, { id }) => ({ ...acc, [id]: "" }),
-        {},
+        (acc, preference) => {
+          acc[preference.id] = ""; // Empty by default
+          return acc;
+        },
+        {} as Record<string, string>,
       ),
     },
   });
@@ -91,54 +98,69 @@ const CreateScreen = () => {
   const fetchGolfCourses = useCallback(async () => {
     try {
       const response = await axios.get(`${apiUrl}/v1/course`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setGolfCourses(response.data.data);
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
-        const errorMessage =
-          error.response.data.message || "Failed to fetch golf courses.";
-        setError(errorMessage);
+        setError(
+          error.response.data.message || "Failed to fetch golf courses.",
+        );
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
     }
   }, [apiUrl, token]);
 
-  // const fetchPreferences = useCallback(async () => {
-  //   try {
-  //     const response = await axios.get(`${apiUrl}/v1/preferences`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     setPreferences(response.data.data);
-  //   } catch (error: unknown) {
-  //     if (axios.isAxiosError(error) && error.response) {
-  //       const errorMessage =
-  //         error.response.data.message || "Failed to fetch golf courses.";
-  //       setError(errorMessage);
-  //     } else {
-  //       setError("An unexpected error occurred. Please try again.");
-  //     }
-  //   }
-  // }, [apiUrl, token]);
+  const fetchPreferences = useCallback(async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/v1/preference`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const formattedPreferences = response.data.data.map(
+        (preference: { id: string; name: string }) => ({
+          id: preference.id.toString(),
+          label: capitalizeWords(preference.name),
+        }),
+      );
+      setPreferencesList(formattedPreferences);
+      reset({
+        golfCourse: "",
+        datetime: "",
+        slots: "",
+        preferences: formattedPreferences.reduce(
+          (
+            acc: { [x: string]: string },
+            preference: { id: string | number },
+          ) => {
+            acc[preference.id] = ""; // Empty by default
+            return acc;
+          },
+          {},
+        ),
+      });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        setError(error.response.data.message || "Failed to fetch preferences.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
+  }, [apiUrl, token]);
 
   useFocusEffect(
     useCallback(() => {
       fetchGolfCourses();
+      fetchPreferences();
       reset();
       setSelectedDate(undefined);
       setError("");
-    }, [fetchGolfCourses, reset]),
+    }, [fetchGolfCourses, fetchPreferences, reset]),
   );
 
   const handleCreateRound = async (data: CreatePostValues) => {
     setLoading(true);
     setError("");
-    console.log(data);
     try {
       await axios.post(
         `${apiUrl}/v1/round`,
@@ -368,9 +390,7 @@ const CreateScreen = () => {
                   key={preference.id}
                   style={[
                     RoundStyles.preferenceRow,
-                    errors.preferences?.[
-                      preference.id as keyof typeof errors.preferences
-                    ]
+                    errors.preferences?.[preference.id]
                       ? RoundStyles.preferenceRowError
                       : null,
                   ]}
@@ -383,12 +403,7 @@ const CreateScreen = () => {
                       <Controller
                         key={status}
                         control={control}
-                        name={
-                          `preferences.${preference.id}` as
-                            | "preferences.drinking"
-                            | "preferences.walking"
-                            | "preferences.betting"
-                        }
+                        name={`preferences.${preference.id}`}
                         render={({ field: { onChange, value } }) => (
                           <TouchableOpacity
                             style={[
