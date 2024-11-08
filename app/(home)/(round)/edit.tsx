@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import axios, { isAxiosError } from "axios";
 import { useLocalSearchParams } from "expo-router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import GlobalStyles from "@/styles/GlobalStyles";
