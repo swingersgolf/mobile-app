@@ -180,6 +180,7 @@ const CreateScreen = () => {
                       </Text>
                     )}
                     <Dropdown
+                      search
                       style={[
                         formStyles.formInput,
                         errors.golfCourse && formStyles.invalidInput,
