@@ -137,6 +137,11 @@ const CreateScreen = () => {
       reset();
       setSelectedDate(undefined);
       setError("");
+      return () => {
+        reset();
+        setSelectedDate(undefined);
+        setError("");
+      };
     }, [fetchGolfCourses, fetchPreferences, reset]),
   );
 
@@ -158,7 +163,6 @@ const CreateScreen = () => {
           },
         },
       );
-      reset();
       router.replace("/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
