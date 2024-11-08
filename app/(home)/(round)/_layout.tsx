@@ -53,6 +53,12 @@ const RoundLayout = () => {
         }}
       />
       <Stack.Screen name="notifications" />
+      <Stack.Screen
+        name="edit"
+        options={{
+          presentation: "modal",
+        }}
+      />
     </Stack>
   );
 };

@@ -79,7 +79,7 @@ const EditAccountScreen = () => {
           <View>
             <Text style={GlobalStyles.h1}>Edit your profile</Text>
           </View>
-          <View id="login-form" style={formStyles.form}>
+          <View id="edit-profile-form" style={formStyles.form}>
             <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}

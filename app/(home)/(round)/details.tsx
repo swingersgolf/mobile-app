@@ -17,7 +17,7 @@ import GlobalStyles from "@/styles/GlobalStyles";
 import { parseRoundDate } from "@/utils/date";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import TextButton from "@/components/TextButton";
-import { useRoundCache } from "@/contexts/RoundCacheContext"; // Import the context
+import { useRoundCache } from "@/contexts/RoundCacheContext";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const RoundDetailsScreen: React.FC = () => {
@@ -69,7 +69,7 @@ const RoundDetailsScreen: React.FC = () => {
     await fetchRoundDetails();
     setRoundCache((prevCache) => {
       const updatedCache = new Map(prevCache);
-      updatedCache.delete(roundId as string); // Remove the specific round details from cache
+      updatedCache.delete(roundId as string);
       return updatedCache;
     });
     setRefreshing(false);
@@ -136,8 +136,11 @@ const RoundDetailsScreen: React.FC = () => {
   }) => {
     if (!roundDetails) return [];
     return roundDetails.golfers
-      .filter((golfer) => golfer.status === "pending")
-      .map((golfer) => ({ id: golfer.id, name: golfer.name })); // Adjust this according to what you want to pass
+      .filter(
+        (golfer) =>
+          golfer.status === status && golfer.id !== roundDetails.host_id,
+      )
+      .map((golfer) => ({ id: golfer.id, name: golfer.name }));
   };
 
   const requestToJoinRound = async () => {
@@ -155,7 +158,7 @@ const RoundDetailsScreen: React.FC = () => {
       await fetchRoundDetails();
       setRoundCache((prevCache) => {
         const updatedCache = new Map(prevCache);
-        updatedCache.delete(roundId as string); // Remove the specific round details from cache
+        updatedCache.delete(roundId as string);
         return updatedCache;
       });
       setRefreshing(false);
@@ -182,7 +185,7 @@ const RoundDetailsScreen: React.FC = () => {
       await fetchRoundDetails();
       setRoundCache((prevCache) => {
         const updatedCache = new Map(prevCache);
-        updatedCache.delete(roundId as string); // Remove the specific round details from cache
+        updatedCache.delete(roundId as string);
         return updatedCache;
       });
       setRefreshing(false);
@@ -220,7 +223,7 @@ const RoundDetailsScreen: React.FC = () => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={[colors.primary.default]} // Customize the spinner color
+            colors={[colors.primary.default]}
           />
         }
       >
@@ -228,7 +231,20 @@ const RoundDetailsScreen: React.FC = () => {
           <View style={RoundStyles.roundDetailsContainer}>
             {roundDetails.host_id === user?.id && (
               <TouchableOpacity
-                onPress={() => console.log("Edit round")}
+                onPress={() => {
+                  if (countRequests({ status: "accepted" }) > 0) {
+                    const acceptedGolfers = JSON.stringify(
+                      getGolfers({ status: "accepted" }),
+                    );
+                    router.push({
+                      pathname: "/edit",
+                      params: {
+                        roundId: roundId,
+                        golfers: acceptedGolfers,
+                      },
+                    });
+                  }
+                }}
                 style={{ position: "absolute", top: 20, right: 20 }}
               >
                 <MaterialIcons name="edit" size={24} color="black" />
@@ -256,12 +272,12 @@ const RoundDetailsScreen: React.FC = () => {
             <View style={RoundStyles.memberList}>
               {/* Sort golfers first */}
               {roundDetails.golfers
-                .filter((golfer) => golfer.status === "accepted") // Filter to only include accepted golfers
+                .filter((golfer) => golfer.status === "accepted")
                 .slice()
                 .sort((a, b) => {
-                  if (a.id === roundDetails.host_id) return -1; // a is host
-                  if (b.id === roundDetails.host_id) return 1; // b is host
-                  return 0; // No change in order
+                  if (a.id === roundDetails.host_id) return -1;
+                  if (b.id === roundDetails.host_id) return 1;
+                  return 0;
                 })
                 .concat(
                   Array.from({
@@ -270,7 +286,7 @@ const RoundDetailsScreen: React.FC = () => {
                       roundDetails.golfers.filter(
                         (golfer) => golfer.status === "accepted",
                       ).length,
-                  }).fill(undefined) as Golfer[], // Fill empty slots based on accepted golfers count
+                  }).fill(undefined) as Golfer[],
                 )
                 .map((golfer, index) => (
                   <View key={index} style={RoundStyles.memberListItem}>
@@ -279,7 +295,7 @@ const RoundDetailsScreen: React.FC = () => {
                         <View style={RoundStyles.memberListItemContent}>
                           <Image
                             style={RoundStyles.memberProfilePicture}
-                            source={SampleProfilePicture} // Replace with actual golfer image if available
+                            source={SampleProfilePicture}
                           />
                           <Text style={GlobalStyles.h3}>{golfer.name}</Text>
                         </View>

@@ -118,6 +118,14 @@ export const RoundStyles = StyleSheet.create({
     padding: 20,
     rowGap: 20,
   },
+  roundEditContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    padding: 20,
+    rowGap: 20,
+  },
   memberList: {
     display: "flex",
     flexDirection: "column",

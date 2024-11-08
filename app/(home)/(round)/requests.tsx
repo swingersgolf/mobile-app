@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import axios, { isAxiosError } from "axios";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import { Key, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -9,17 +9,15 @@ import { RoundStyles } from "@/styles/roundStyles";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import alertStyles from "@/styles/AlertStyles";
 import { Golfer } from "@/types/roundTypes";
-import { useRoundCache } from "@/contexts/RoundCacheContext"; // Import the context
+import { useRoundCache } from "@/contexts/RoundCacheContext";
 
-const Requests = () => {
+const RoundRequestsScreen = () => {
   const { roundId, requests } = useLocalSearchParams();
   const parsedRequests = requests ? JSON.parse(requests as string) : [];
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
   const [error, setError] = useState<string>("");
-  const router = useRouter(); // Initialize router for navigation
 
-  // Access the round cache
   const { setRoundCache } = useRoundCache();
 
   const updateRoundCache = (
@@ -31,24 +29,19 @@ const Requests = () => {
       const roundDetails = updatedCache.get(roundId as string);
 
       if (roundDetails) {
-        // Update the golfer's status based on the requestId
         const updatedGolfers = roundDetails.golfers.map((golfer) =>
           golfer.id === requestId ? { ...golfer, status } : golfer,
         );
-
-        // Update the round details in the cache
         updatedCache.set(roundId as string, {
           ...roundDetails,
           golfers: updatedGolfers,
         });
       }
 
-      // Check if there are no pending golfers left
       const hasPendingGolfers = updatedCache
         .get(roundId as string)
         ?.golfers.some((golfer) => golfer.status === "pending");
 
-      // If no pending golfers, navigate to the round details screen
       if (!hasPendingGolfers) {
         console.log("All golfers have been accepted or rejected");
         router.back();
@@ -65,8 +58,6 @@ const Requests = () => {
         { user_id: requestId },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-
-      // Update cache to update the user status to accepted
       updateRoundCache(requestId, "accepted");
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
@@ -87,8 +78,6 @@ const Requests = () => {
         { user_id: requestId },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-
-      // Update cache to update the user status to rejected
       updateRoundCache(requestId, "rejected");
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
@@ -133,4 +122,4 @@ const Requests = () => {
   );
 };
 
-export default Requests;
+export default RoundRequestsScreen;
