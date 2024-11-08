@@ -1,5 +1,11 @@
 import { useState, useCallback } from "react";
-import { Text, View, Keyboard, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  Keyboard,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useFocusEffect } from "@react-navigation/native";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,12 +24,25 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
 import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 type CreatePostValues = {
   golfCourse: string;
   datetime: string;
   slots: string;
+  preferences: {
+    drinking: string;
+    smoking: string;
+    riding: string;
+  };
 };
+
+const preferencesList = [
+  { id: "drinking", label: "Drinking" },
+  { id: "smoking", label: "Smoking" },
+  { id: "riding", label: "Riding" },
+  // Add more preferences as needed
+];
 
 const CreateScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -50,6 +69,10 @@ const CreateScreen = () => {
       golfCourse: "",
       datetime: "",
       slots: "",
+      preferences: preferencesList.reduce(
+        (acc, { id }) => ({ ...acc, [id]: "" }),
+        {},
+      ),
     },
   });
 
@@ -91,6 +114,7 @@ const CreateScreen = () => {
           when: selectedDate,
           group_size: data.slots,
           course_id: data.golfCourse,
+          preferences: data.preferences,
         },
         {
           headers: {
@@ -138,6 +162,7 @@ const CreateScreen = () => {
       ) : (
         <>
           <View id="new-post-form" style={formStyles.form}>
+            <Text style={GlobalStyles.h3}>Details</Text>
             <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}
@@ -166,12 +191,7 @@ const CreateScreen = () => {
                       labelField="label"
                       valueField="value"
                       placeholder="Golf Course"
-                      placeholderStyle={{
-                        color: value
-                          ? colors.neutral.dark
-                          : colors.neutral.medium,
-                        fontSize: 14,
-                      }}
+                      placeholderStyle={formStyles.placeholderStyle}
                       selectedTextStyle={{
                         color: colors.neutral.dark,
                         fontSize: 14,
@@ -232,12 +252,7 @@ const CreateScreen = () => {
                       labelField="label"
                       valueField="value"
                       placeholder="Group size"
-                      placeholderStyle={{
-                        color: value
-                          ? colors.neutral.dark
-                          : colors.neutral.medium,
-                        fontSize: 14,
-                      }}
+                      placeholderStyle={formStyles.placeholderStyle}
                       selectedTextStyle={{
                         color: colors.neutral.dark,
                         fontSize: 14,
@@ -290,14 +305,7 @@ const CreateScreen = () => {
                         errors.datetime && formStyles.invalidInput,
                       ]}
                     >
-                      <Text
-                        style={{
-                          color: value
-                            ? colors.neutral.dark
-                            : colors.neutral.medium,
-                          fontSize: 14,
-                        }}
-                      >
+                      <Text style={formStyles.placeholderStyle}>
                         {selectedDate
                           ? formatDateDayMonthTime(selectedDate)
                           : "Date and time"}
@@ -316,6 +324,62 @@ const CreateScreen = () => {
                   </>
                 )}
               />
+            </View>
+
+            <Text style={GlobalStyles.h3}>Preferences</Text>
+            <View
+              style={(formStyles.inputWrapper, RoundStyles.preferencesForm)}
+            >
+              {preferencesList.map((preference) => (
+                <View
+                  key={preference.id}
+                  style={[
+                    RoundStyles.preferenceRow,
+                    errors.preferences?.[
+                      preference.id as keyof typeof errors.preferences
+                    ]
+                      ? RoundStyles.preferenceRowError
+                      : null,
+                  ]}
+                >
+                  <Text style={RoundStyles.preferenceLabel}>
+                    {preference.label}
+                  </Text>
+                  <View style={RoundStyles.preferenceOptions}>
+                    {["indifferent", "preferred", "disliked"].map((status) => (
+                      <Controller
+                        key={status}
+                        control={control}
+                        name={
+                          `preferences.${preference.id}` as
+                            | "preferences.drinking"
+                            | "preferences.smoking"
+                            | "preferences.riding"
+                        }
+                        render={({ field: { onChange, value } }) => (
+                          <TouchableOpacity
+                            style={[
+                              RoundStyles.preferenceButton,
+                              value === status && RoundStyles.selectedButton,
+                            ]}
+                            onPress={() => onChange(status)}
+                          >
+                            <Text
+                              style={[
+                                RoundStyles.preferenceButtonText,
+                                value === status &&
+                                  RoundStyles.selectedButtonText,
+                              ]}
+                            >
+                              {status.charAt(0).toUpperCase() + status.slice(1)}
+                            </Text>
+                          </TouchableOpacity>
+                        )}
+                      />
+                    ))}
+                  </View>
+                </View>
+              ))}
             </View>
 
             {error && <Alert error={error} />}

@@ -115,7 +115,7 @@ const ResetPasswordScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.email && (
                       <InFormAlert error={errors.email.message} />
@@ -160,7 +160,7 @@ const ResetPasswordScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.password && (
                       <InFormAlert error={errors.password.message} />
@@ -206,7 +206,7 @@ const ResetPasswordScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.code && <InFormAlert error={errors.code.message} />}
                   </>

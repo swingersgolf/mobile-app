@@ -5,7 +5,6 @@ const formStyles = StyleSheet.create({
   form: {
     width: "100%",
     justifyContent: "center",
-    alignItems: "center",
     rowGap: 20,
   },
   inputWrapper: {
@@ -52,6 +51,10 @@ const formStyles = StyleSheet.create({
     borderBottomColor: colors.neutral.light,
     backgroundColor: colors.background.primary,
     width: "100%",
+  },
+  placeholderStyle: {
+    color: colors.neutral.mediumDark,
+    fontSize: 14,
   },
 });
 

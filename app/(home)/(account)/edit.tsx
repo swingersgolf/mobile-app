@@ -109,7 +109,7 @@ const EditAccountScreen = () => {
                         onChange(val === "" ? null : val); // Set null if the input is cleared
                       }}
                       value={value?.toString()}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.handicap && (
                       <InFormAlert error={errors.handicap.message} />
@@ -146,7 +146,7 @@ const EditAccountScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.postalCode && (
                       <InFormAlert error={errors.postalCode.message} />

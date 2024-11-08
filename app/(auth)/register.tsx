@@ -144,7 +144,7 @@ const RegisterScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value || ""}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.name && <InFormAlert error={errors.name.message} />}
                   </>
@@ -189,7 +189,7 @@ const RegisterScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value || ""}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.email && (
                       <InFormAlert error={errors.email.message} />
@@ -287,7 +287,7 @@ const RegisterScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value || ""}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.password && (
                       <InFormAlert error={errors.password.message} />

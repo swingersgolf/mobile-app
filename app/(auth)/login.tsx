@@ -130,7 +130,7 @@ const LoginScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.email && (
                       <InFormAlert error={errors.email.message} />
@@ -175,7 +175,7 @@ const LoginScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.password && (
                       <InFormAlert error={errors.password.message} />

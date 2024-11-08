@@ -128,7 +128,7 @@ const VerifyEmailScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.medium}
+                      placeholderTextColor={colors.neutral.mediumDark}
                     />
                     {errors.code && <InFormAlert error={errors.code.message} />}
                   </>

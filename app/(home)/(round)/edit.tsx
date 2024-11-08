@@ -58,11 +58,9 @@ const EditRoundScreen = () => {
 
   const removeGolfer = async (golferId: string) => {
     try {
-      await axios.post(
-        `${apiUrl}/v1/round/${roundId}/reject`,
-        { user_id: golferId },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      await axios.delete(`${apiUrl}/v1/round-user/${golferId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
         const errorMessage =
