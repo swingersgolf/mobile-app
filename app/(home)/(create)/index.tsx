@@ -1,11 +1,5 @@
 import { useState, useCallback } from "react";
-import {
-  Text,
-  View,
-  Keyboard,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { Text, View, Keyboard, TouchableOpacity } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useFocusEffect } from "@react-navigation/native";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -43,6 +37,12 @@ const preferencesList = [
   { id: "riding", label: "Riding" },
   // Add more preferences as needed
 ];
+
+const preferenceLabelMap: { [key: string]: string } = {
+  indifferent: "Don't care",
+  preferred: "Yes",
+  disliked: "No",
+};
 
 const CreateScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -347,7 +347,7 @@ const CreateScreen = () => {
                     {preference.label}
                   </Text>
                   <View style={RoundStyles.preferenceOptions}>
-                    {["indifferent", "preferred", "disliked"].map((status) => (
+                    {["preferred", "disliked", "indifferent"].map((status) => (
                       <Controller
                         key={status}
                         control={control}
@@ -372,7 +372,7 @@ const CreateScreen = () => {
                                   RoundStyles.selectedButtonText,
                               ]}
                             >
-                              {status.charAt(0).toUpperCase() + status.slice(1)}
+                              {preferenceLabelMap[status]}
                             </Text>
                           </TouchableOpacity>
                         )}
