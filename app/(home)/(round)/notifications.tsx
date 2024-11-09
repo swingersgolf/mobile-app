@@ -22,7 +22,7 @@ import { getTimeElapsed } from "@/utils/date";
 import { router } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
-import { set } from "react-hook-form";
+import { MaterialIcons } from "@expo/vector-icons";
 
 type Section = {
   title: string;
@@ -155,38 +155,48 @@ const Notifications = () => {
     setRefreshing(false);
   };
 
+  if (notifications.length === 0) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text style={GlobalStyles.h3}>No notifications</Text>
+      </View>
+    );
+  }
+
   // Swipeable delete button functionality
   const renderRightActions = (
-    progress: Animated.AnimatedInterpolation,
-    dragX: Animated.AnimatedInterpolation,
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>,
     notification: Notification,
   ) => {
     // Animate the delete button sliding in from the right
     const translateX = dragX.interpolate({
-      inputRange: [-100, 0],
-      outputRange: [0, 100],
+      inputRange: [-50, 0],
+      outputRange: [0, 50],
       extrapolate: "clamp",
     });
 
     const opacity = dragX.interpolate({
-      inputRange: [-100, 0],
+      inputRange: [0, 50],
       outputRange: [1, 0],
       extrapolate: "clamp",
     });
 
     return (
-      <View style={styles.swipedRow}>
-        <Animated.View
-          style={[
-            styles.deleteButton,
-            { transform: [{ translateX }], opacity }, // Applying translation and opacity for smooth transition
-          ]}
-        >
-          <TouchableOpacity onPress={() => deleteNotification(notification.id)}>
-            <Text style={styles.deleteButtonText}>Delete</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </View>
+      <Animated.View
+        style={[styles.deleteButton, { transform: [{ translateX }], opacity }]}
+      >
+        <TouchableOpacity onPress={() => deleteNotification(notification.id)}>
+          <MaterialIcons name="delete" size={24} color={colors.neutral.light} />
+        </TouchableOpacity>
+      </Animated.View>
     );
   };
 
@@ -256,24 +266,12 @@ const Notifications = () => {
 };
 
 const styles = StyleSheet.create({
-  swipedRow: {
-    flexDirection: "row",
-    flex: 1,
-    justifyContent: "flex-end", // Align delete button to the right
-    paddingRight: 10, // Padding to give space from the edge
-  },
   deleteButton: {
-    backgroundColor: "#d9534f",
+    backgroundColor: colors.alert.error,
     justifyContent: "center",
     height: "100%",
-    width: 100,
+    width: 50,
     alignItems: "center",
-    borderRadius: 5,
-  },
-  deleteButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    padding: 10,
   },
 });
 
