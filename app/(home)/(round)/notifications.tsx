@@ -7,7 +7,6 @@ import {
   RefreshControl,
   ListRenderItem,
   Animated,
-  StyleSheet,
 } from "react-native";
 import {
   GestureHandlerRootView,
@@ -191,7 +190,10 @@ const Notifications = () => {
 
     return (
       <Animated.View
-        style={[styles.deleteButton, { transform: [{ translateX }], opacity }]}
+        style={[
+          RoundStyles.deleteButton,
+          { transform: [{ translateX }], opacity },
+        ]}
       >
         <TouchableOpacity onPress={() => deleteNotification(notification.id)}>
           <MaterialIcons name="delete" size={24} color={colors.neutral.light} />
@@ -264,15 +266,5 @@ const Notifications = () => {
     </GestureHandlerRootView>
   );
 };
-
-const styles = StyleSheet.create({
-  deleteButton: {
-    backgroundColor: colors.alert.error,
-    justifyContent: "center",
-    height: "100%",
-    width: 50,
-    alignItems: "center",
-  },
-});
 
 export default Notifications;

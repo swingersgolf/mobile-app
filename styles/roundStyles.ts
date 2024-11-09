@@ -309,4 +309,11 @@ export const RoundStyles = StyleSheet.create({
     rowGap: 20,
     width: "100%",
   },
+  deleteButton: {
+    backgroundColor: colors.alert.error,
+    justifyContent: "center",
+    height: "100%",
+    width: 50,
+    alignItems: "center",
+  },
 });
