@@ -11,5 +11,11 @@ export interface NotificationData {
   to: string; // User ID as a string
   title: string; // Notification title as a string
   body: string; // Notification body as a string
-  data: Record<string, unknown>; // JSON data as a flexible object type
+  data: NotificationDataData; // JSON data as a flexible object type
+}
+
+export interface NotificationDataData {
+  type: string; // Notification type as a string
+  route: string; // Route as a string
+  params: Record<string, unknown>; // JSON data as a flexible object type
 }

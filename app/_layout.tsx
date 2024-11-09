@@ -7,9 +7,7 @@ export default function Root() {
   return (
     <AuthProvider>
       <RoundCacheProvider>
-        <NotificationCacheProvider>
-          <Slot />
-        </NotificationCacheProvider>
+        <Slot />
       </RoundCacheProvider>
     </AuthProvider>
   );

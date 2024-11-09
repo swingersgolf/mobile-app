@@ -25,13 +25,6 @@ const EditRoundScreen = () => {
   const router = useRouter();
   const { setRoundCache } = useRoundCache();
 
-  // // Load golfers when the component mounts or when golfers param changes
-  // useEffect(() => {
-  //   if (golfers) {
-  //     setParsedGolfers(JSON.parse(golfers as string));
-  //   }
-  // }, [golfers]);
-
   const deleteRound = () => {
     Alert.alert(
       "Confirm",
@@ -102,7 +95,6 @@ const EditRoundScreen = () => {
               setRoundCache((prevCache) => {
                 const updatedCache = new Map(prevCache);
                 const roundDetails = updatedCache.get(roundId as string);
-
                 if (roundDetails) {
                   updatedCache.set(roundId as string, {
                     ...roundDetails,
