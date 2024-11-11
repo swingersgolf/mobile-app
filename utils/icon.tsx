@@ -26,7 +26,7 @@ const PreferenceIcon: React.FC<IconProps> = ({
       case "smoking":
         return <MaterialIcons name="smoking-rooms" size={size} color={color} />;
       case "betting":
-        return <MaterialIcons name="casino" size={size} color={color} />;
+        return <MaterialCommunityIcons name="cash" size={size} color={color} />;
       case "riding":
         return (
           <MaterialCommunityIcons name="golf-cart" size={size} color={color} />

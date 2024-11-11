@@ -1,17 +1,32 @@
-import TextButton from "@/components/TextButton";
-import { colors } from "@/constants/Colors";
 import { useAuth } from "@/contexts/AuthContext";
-import { router } from "expo-router";
-import { Text, View, ScrollView, Image, RefreshControl } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  Image,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
 import accountStyles from "@/styles/accountStyles";
-import { convertCamelCaseToLabel } from "@/utils/text";
+import { convertCamelCaseToLabel, labelFromStatus } from "@/utils/text";
 import Spinner from "@/components/Spinner";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useState } from "react";
+import PreferenceIcon from "@/utils/icon";
+import { MaterialIcons } from "@expo/vector-icons";
+import { colors } from "@/constants/Colors";
+import { router } from "expo-router";
 
 const AccountScreen = () => {
-  const { user, profile, fetchProfile, fetchUser } = useAuth();
+  const {
+    user,
+    profile,
+    preferences,
+    fetchPreferences,
+    fetchProfile,
+    fetchUser,
+  } = useAuth();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -19,6 +34,7 @@ const AccountScreen = () => {
     setRefreshing(true);
     await fetchUser();
     await fetchProfile();
+    await fetchPreferences();
     setRefreshing(false);
   };
 
@@ -58,43 +74,85 @@ const AccountScreen = () => {
               <View style={accountStyles.accountContent}>
                 <View style={accountStyles.infoContainer}>
                   <Text style={GlobalStyles.h2}>User</Text>
-                  {user &&
-                    Object.entries(user)
-                      .filter(
-                        ([key]) => key !== "id" && key !== "expo_push_token",
-                      )
-                      .map(([key, value]) => (
-                        <View key={key} style={accountStyles.info}>
+                  <View style={accountStyles.infoSection}>
+                    {user &&
+                      Object.entries(user)
+                        .filter(
+                          ([key]) => key !== "id" && key !== "expo_push_token",
+                        )
+                        .map(([key, value]) => (
+                          <View key={`user-${key}`} style={accountStyles.info}>
+                            <Text style={GlobalStyles.body}>
+                              {convertCamelCaseToLabel(key)}
+                            </Text>
+                            <Text style={GlobalStyles.body}>{value}</Text>
+                          </View>
+                        ))}
+                  </View>
+                </View>
+                <View style={accountStyles.infoContainer}>
+                  <View style={accountStyles.headerContainer}>
+                    <Text style={GlobalStyles.h2}>Profile</Text>
+                    <TouchableOpacity
+                      onPress={() => router.push("edit-profile")}
+                    >
+                      <MaterialIcons
+                        name="edit"
+                        size={16}
+                        color={colors.neutral.dark}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={accountStyles.infoSection}>
+                    {profile &&
+                      Object.entries(profile).map(([key, value]) => (
+                        <View key={`profile-${key}`} style={accountStyles.info}>
                           <Text style={GlobalStyles.body}>
                             {convertCamelCaseToLabel(key)}
                           </Text>
                           <Text style={GlobalStyles.body}>{value}</Text>
                         </View>
                       ))}
+                  </View>
                 </View>
                 <View style={accountStyles.infoContainer}>
-                  <Text style={GlobalStyles.h2}>Profile</Text>
-                  {profile &&
-                    Object.entries(profile).map(([key, value]) => (
-                      <View key={key} style={accountStyles.info}>
-                        <Text style={GlobalStyles.body}>
-                          {convertCamelCaseToLabel(key)}
-                        </Text>
-                        <Text style={GlobalStyles.body}>{value}</Text>
-                      </View>
-                    ))}
+                  <View style={accountStyles.headerContainer}>
+                    <Text style={GlobalStyles.h2}>Preferences</Text>
+                    <TouchableOpacity
+                      onPress={() => router.push("edit-preferences")}
+                    >
+                      <MaterialIcons
+                        name="edit"
+                        size={16}
+                        color={colors.neutral.dark}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={accountStyles.infoSection}>
+                    {preferences &&
+                      preferences.map((preference) => (
+                        <View
+                          key={`preferences-${preference.preference_id}}`}
+                          style={accountStyles.info}
+                        >
+                          <View style={accountStyles.preferenceLabel}>
+                            <PreferenceIcon
+                              preference={preference.preference_name}
+                            />
+                            <Text style={GlobalStyles.body}>
+                              {convertCamelCaseToLabel(
+                                preference.preference_name,
+                              )}
+                            </Text>
+                          </View>
+
+                          <Text style={GlobalStyles.body}>
+                            {labelFromStatus(preference.status)}
+                          </Text>
+                        </View>
+                      ))}
+                  </View>
                 </View>
-              </View>
-              <View style={accountStyles.paddedButtonContainer}>
-                {user && profile && (
-                  <TextButton
-                    text={"Edit profile"}
-                    onPress={() => router.push("edit")}
-                    textColor={colors.neutral.light}
-                    backgroundColor={colors.primary.default}
-                    fontSize={16}
-                  />
-                )}
               </View>
             </View>
           </>

@@ -11,7 +11,7 @@ import {
   setStorageItemAsync,
   useStorageState,
 } from "@/storage/useStorageState";
-import { User, Profile } from "@/types/authTypes";
+import { User, Profile, Preference } from "@/types/authTypes";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
@@ -21,6 +21,7 @@ interface AuthContextType {
   token: string | null;
   user: User | null;
   profile: Profile | null;
+  preferences: Preference[] | null;
   expoPushToken: string | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
@@ -33,7 +34,9 @@ interface AuthContextType {
   isLoading: boolean;
   fetchUser: () => Promise<void>;
   fetchProfile: () => Promise<void>;
+  fetchPreferences: () => Promise<void>;
   updateProfile: (updatedProfile: Profile) => Promise<void>;
+  updatePreferences: (updatedPreferences: Preferences) => Promise<void>;
   verifyEmail: (email: string, code: string) => Promise<void>;
   resendVerificationCode: (email: string) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
@@ -97,6 +100,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [[isLoading, token], setToken] = useStorageState("token");
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [preferences, setPreferences] = useState<Preferences | null>(null);
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
 
   const updatePushTokenInBackend = useCallback(
@@ -234,6 +238,23 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   }, [apiUrl, token]);
 
+  const fetchPreferences = useCallback(async () => {
+    try {
+      if (token) {
+        const response = await axios.get(`${apiUrl}/v1/preference-user`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setPreferences(response.data.data);
+      }
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      return Promise.reject(error);
+    }
+  }, [apiUrl, token]);
+
   const updateProfile = async (updatedProfile: Profile) => {
     try {
       if (token) {
@@ -247,7 +268,25 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       }
       return Promise.resolve();
     } catch (error) {
-      console.error("Error updating user:", error);
+      console.error("Error updating user profile:", error);
+      return Promise.reject(error);
+    }
+  };
+
+  const updatePreferences = async (updatedPreferences: Preferences) => {
+    try {
+      if (token) {
+        await axios.patch(`${apiUrl}/v1/preference-user`, updatedPreferences, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Set Content-Type header
+          },
+        });
+        await fetchPreferences();
+      }
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error updating user preferences:", error);
       return Promise.reject(error);
     }
   };
@@ -315,19 +354,22 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           await setStorageItemAsync("token", token);
           await fetchUser();
           await fetchProfile();
+          await fetchPreferences();
         } catch {
           setToken(null);
           setUser(null);
           setProfile(null);
+          setPreferences(null);
         }
       } else {
         await setStorageItemAsync("token", null);
         setUser(null);
         setProfile(null);
+        setPreferences(null);
       }
     };
     syncStorage();
-  }, [fetchProfile, fetchUser, setToken, token]);
+  }, [fetchPreferences, fetchProfile, fetchUser, setToken, token]);
 
   return (
     <AuthContext.Provider
@@ -335,13 +377,16 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         token,
         user,
         profile,
+        preferences,
         expoPushToken,
         signIn,
         signOut,
         createAccount,
         fetchUser,
         fetchProfile,
+        fetchPreferences,
         updateProfile,
+        updatePreferences,
         verifyEmail,
         resendVerificationCode,
         forgotPassword,

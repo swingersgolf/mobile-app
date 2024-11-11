@@ -15,7 +15,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Profile } from "@/types/authTypes";
 import GlobalStyles from "@/styles/GlobalStyles";
 
-const EditAccountScreen = () => {
+const EditProfileScreen = () => {
   const { profile, updateProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -178,4 +178,4 @@ const EditAccountScreen = () => {
   );
 };
 
-export default EditAccountScreen;
+export default EditProfileScreen;

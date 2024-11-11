@@ -10,3 +10,9 @@ export interface Profile {
   handicap?: number;
   postalCode?: string;
 }
+
+export interface Preference {
+  status: string;
+  preference_id: string;
+  preference_name: string;
+}

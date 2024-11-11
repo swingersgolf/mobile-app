@@ -50,7 +50,7 @@ const accountStyles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     padding: 20,
-    rowGap: 5,
+    rowGap: 10,
     borderBottomColor: colors.neutral.light,
     borderBottomWidth: 5,
   },
@@ -61,6 +61,7 @@ const accountStyles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     width: "100%",
   },
   buttonContainer: {
@@ -92,6 +93,24 @@ const accountStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.neutral.medium,
     color: colors.neutral.dark,
+  },
+  infoSection: {
+    display: "flex",
+    flexDirection: "column",
+    rowGap: 5,
+    width: "100%",
+  },
+  preferenceLabel: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 2.5,
+    alignItems: "center",
+  },
+  headerContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
 

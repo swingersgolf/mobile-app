@@ -45,7 +45,11 @@ const AccountLayout = () => {
           ),
         }}
       />
-      <Stack.Screen name="edit" options={{ presentation: "modal" }} />
+      <Stack.Screen name="edit-profile" options={{ presentation: "modal" }} />
+      <Stack.Screen
+        name="edit-preferences"
+        options={{ presentation: "modal" }}
+      />
       <Stack.Screen name="settings" />
       <Stack.Screen name="reset" options={{ presentation: "modal" }} />
     </Stack>
