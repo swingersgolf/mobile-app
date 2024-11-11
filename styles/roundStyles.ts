@@ -67,8 +67,7 @@ export const RoundStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    columnGap: 10,
-    rowGap: 10,
+    gap: 5,
     flexWrap: "wrap",
   },
   scrollStyle: {

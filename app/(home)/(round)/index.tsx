@@ -17,6 +17,7 @@ import { router, useFocusEffect } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import { capitalizeWords } from "@/utils/text";
+import PreferenceIcon from "@/utils/icon";
 
 const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -141,13 +142,10 @@ const RoundScreen = () => {
                         key={preferred.id}
                         style={[statusStyles[preferred.status] || {}]}
                       >
-                        <Text
-                          style={{
-                            color: colors.neutral.light,
-                          }}
-                        >
-                          {capitalizeWords(preferred.name)}
-                        </Text>
+                        <PreferenceIcon
+                          preference={preferred.name}
+                          color={colors.neutral.light}
+                        />
                       </View>
                     ))}
                 </View>
