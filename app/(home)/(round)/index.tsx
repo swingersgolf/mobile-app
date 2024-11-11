@@ -16,7 +16,6 @@ import { RoundStyles } from "@/styles/roundStyles";
 import { router, useFocusEffect } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
-import { capitalizeWords } from "@/utils/text";
 import PreferenceIcon from "@/utils/icon";
 
 const RoundScreen = () => {
