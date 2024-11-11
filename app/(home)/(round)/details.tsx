@@ -19,6 +19,7 @@ import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import TextButton from "@/components/TextButton";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import { MaterialIcons } from "@expo/vector-icons";
+import PreferenceIcon from "@/utils/icon";
 
 const RoundDetailsScreen: React.FC = () => {
   const { roundId } = useLocalSearchParams();
@@ -261,11 +262,11 @@ const RoundDetailsScreen: React.FC = () => {
                   key={preferred.id}
                   style={[statusStyles[preferred.status] || {}]}
                 >
-                  <Text
-                    style={[GlobalStyles.body, { color: colors.neutral.light }]}
-                  >
-                    {preferred.name}
-                  </Text>
+                  <PreferenceIcon
+                    preference={preferred.name}
+                    color={colors.neutral.light}
+                    status={preferred.status}
+                  />
                 </View>
               ))}
             </View>

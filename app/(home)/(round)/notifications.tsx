@@ -154,21 +154,6 @@ const Notifications = () => {
     setRefreshing(false);
   };
 
-  if (notifications.length === 0) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Text style={GlobalStyles.h3}>No notifications</Text>
-      </View>
-    );
-  }
-
   // Swipeable delete button functionality
   const renderRightActions = (
     progress: Animated.AnimatedInterpolation<number>,

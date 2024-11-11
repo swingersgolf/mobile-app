@@ -19,6 +19,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import * as yup from "yup";
+import PreferenceIcon from "@/utils/icon";
 
 type CreatePostValues = {
   golfCourse: string;
@@ -382,9 +383,19 @@ const CreateScreen = () => {
                       : null,
                   ]}
                 >
-                  <Text style={RoundStyles.preferenceLabel}>
-                    {preference.label}
-                  </Text>
+                  <View
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexDirection: "row",
+                      gap: 5,
+                    }}
+                  >
+                    <PreferenceIcon preference={preference.label} />
+                    <Text style={RoundStyles.preferenceLabel}>
+                      {preference.label}
+                    </Text>
+                  </View>
                   <View style={RoundStyles.preferenceOptions}>
                     {["preferred", "disliked", "indifferent"].map((status) => (
                       <Controller

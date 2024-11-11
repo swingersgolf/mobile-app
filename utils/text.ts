@@ -18,3 +18,16 @@ export const getFirstName = (fullName: string): string => {
 export const capitalizeWords = (text: string) => {
   return text.replace(/\b\w/g, (char) => char.toUpperCase());
 };
+
+export const labelFromStatus = (status: string) => {
+  switch (status) {
+    case "disliked":
+      return "No";
+    case "preferred":
+      return "Yes";
+    case "indifferent":
+      return "Don't care";
+    default:
+      return status;
+  }
+};
