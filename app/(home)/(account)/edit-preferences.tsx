@@ -15,8 +15,7 @@ import Alert from "@/components/Alert";
 import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
 import { capitalizeWords } from "@/utils/text";
-
-type EditPreferenceValues = {
+type Preferences = {
   preferences: {
     [key: string]: string;
   };
@@ -30,11 +29,11 @@ const preferenceLabelMap: { [key: string]: string } = {
 
 const EditPreferencesScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-  const { token, profile, updatePreferences } = useAuth();
+  const { token, profile, preferences, updatePreferences } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [preferencesList, setPreferencesList] = useState<
-    { id: string; label: string }[]
+    { preference_id: string; preference_name: string }[]
   >([]);
 
   const fetchPreferences = useCallback(async () => {
@@ -44,8 +43,8 @@ const EditPreferencesScreen = () => {
       });
       const formattedPreferences = response.data.data.map(
         (preference: { id: string; name: string }) => ({
-          id: preference.id.toString(),
-          label: capitalizeWords(preference.name),
+          preference_id: preference.id.toString(),
+          preference_name: capitalizeWords(preference.name),
         }),
       );
       setPreferencesList(formattedPreferences);
@@ -58,19 +57,24 @@ const EditPreferencesScreen = () => {
     }
   }, [apiUrl, token]);
 
-  const handleSaveChanges = async (data) => {
+  const handleSaveChanges = async (data: {
+    preferences: Record<string, string>;
+  }) => {
     setLoading(true);
     setError("");
 
-    // Create a new object with only the fields that have a value
-    const filteredData = Object.fromEntries(
-      Object.entries(data).filter(
-        ([_, value]) => value !== "" && value != null,
-      ),
-    );
+    const formattedPreferences = preferencesList.map((preference) => ({
+      preference_id: preference.preference_id,
+      preference_name: preference.preference_name,
+      status: data.preferences[preference.preference_id], // Access the status for each preference
+    }));
+
+    const preferencesData = {
+      preferences: formattedPreferences,
+    };
 
     try {
-      updatePreferences(filteredData);
+      updatePreferences(preferencesData);
       if (router.canGoBack()) {
         router.back();
       }
@@ -93,18 +97,20 @@ const EditPreferencesScreen = () => {
     router.back();
   };
 
-  const createPostSchema = (preferences: { id: string; label: string }[]) =>
+  const createPostSchema = (
+    preferences: { preference_id: string; preference_name: string }[],
+  ) =>
     yup.object().shape({
       preferences: yup.object(
         preferences.reduce(
           (acc, pref) => {
-            acc[pref.id] = yup
+            acc[pref.preference_id] = yup
               .string()
               .oneOf(
                 ["preferred", "disliked", "indifferent"],
-                `Invalid value for ${pref.label}`,
+                `Invalid value for ${pref.preference_name}`,
               )
-              .required(`${pref.label} preference is required`);
+              .required(`${pref.preference_name} preference is required`);
             return acc;
           },
           {} as Record<string, yup.StringSchema<string>>,
@@ -116,13 +122,19 @@ const EditPreferencesScreen = () => {
     control,
     handleSubmit,
     formState: { errors },
-    setValue,
-    trigger,
     reset,
-  } = useForm<EditPreferenceValues>({
+  } = useForm<Preferences>({
     resolver: yupResolver(createPostSchema(preferencesList)),
     defaultValues: {
-      preferences: {},
+      preferences: preferences
+        ? preferences.reduce(
+            (acc, pref) => {
+              acc[pref.preference_id] = pref.status || "indifferent"; // Default to "indifferent" if no status is set
+              return acc;
+            },
+            {} as Record<string, string>,
+          )
+        : {}, // Fallback to empty object if no preferences are available
     },
   });
 
@@ -153,10 +165,10 @@ const EditPreferencesScreen = () => {
             <View style={(formStyles.inputWrapper, formStyles.preferencesForm)}>
               {preferencesList.map((preference) => (
                 <View
-                  key={preference.id}
+                  key={preference.preference_id}
                   style={[
                     formStyles.preferenceRow,
-                    errors.preferences?.[preference.id]
+                    errors.preferences?.[preference.preference_id]
                       ? formStyles.preferenceRowError
                       : null,
                   ]}
@@ -169,9 +181,9 @@ const EditPreferencesScreen = () => {
                       gap: 5,
                     }}
                   >
-                    <PreferenceIcon preference={preference.label} />
+                    <PreferenceIcon preference={preference.preference_name} />
                     <Text style={formStyles.preferenceLabel}>
-                      {preference.label}
+                      {preference.preference_name}
                     </Text>
                   </View>
                   <View style={formStyles.preferenceOptions}>
@@ -179,7 +191,7 @@ const EditPreferencesScreen = () => {
                       <Controller
                         key={status}
                         control={control}
-                        name={`preferences.${preference.id}`}
+                        name={`preferences.${preference.preference_id}`}
                         render={({ field: { onChange, value } }) => (
                           <TouchableOpacity
                             style={[

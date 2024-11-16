@@ -16,3 +16,7 @@ export interface Preference {
   preference_id: string;
   preference_name: string;
 }
+
+export interface Preferences {
+  preferences: Preference[];
+}

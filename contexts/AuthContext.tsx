@@ -11,7 +11,7 @@ import {
   setStorageItemAsync,
   useStorageState,
 } from "@/storage/useStorageState";
-import { User, Profile, Preference } from "@/types/authTypes";
+import { User, Profile, Preference, Preferences } from "@/types/authTypes";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
@@ -273,13 +273,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const updatePreferences = async (updatedPreferences: Preference) => {
+  const updatePreferences = async (updatedPreferences: Preferences) => {
     try {
       if (token) {
         await axios.patch(`${apiUrl}/v1/preference-user`, updatedPreferences, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json", // Set Content-Type header
+            "Content-Type": "application/json",
           },
         });
         await fetchPreferences();
