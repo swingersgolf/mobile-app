@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [[isLoading, token], setToken] = useStorageState("token");
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [preferences, setPreferences] = useState<Preferences | null>(null);
+  const [preferences, setPreferences] = useState<Preference[] | null>(null);
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
 
   const updatePushTokenInBackend = useCallback(
@@ -273,7 +273,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const updatePreferences = async (updatedPreferences: Preferences) => {
+  const updatePreferences = async (updatedPreferences: Preference) => {
     try {
       if (token) {
         await axios.patch(`${apiUrl}/v1/preference-user`, updatedPreferences, {

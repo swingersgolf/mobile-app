@@ -56,6 +56,60 @@ const formStyles = StyleSheet.create({
     color: colors.neutral.mediumDark,
     fontSize: 14,
   },
+  preferencesForm: {
+    display: "flex",
+    flexDirection: "column",
+    rowGap: 20,
+    width: "100%",
+  },
+  preferenceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: colors.neutral.medium,
+    borderRadius: 5,
+  },
+  preferenceRowError: {
+    borderColor: colors.alert.error,
+  },
+  preferencesSection: {
+    marginTop: 10,
+  },
+  preferenceOptions: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  preferenceLabel: {
+    color: colors.neutral.mediumDark,
+  },
+  preferenceButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    marginLeft: 5,
+    borderWidth: 1,
+    borderColor: colors.neutral.medium,
+  },
+  preferenceButtonText: {
+    color: colors.neutral.dark,
+  },
+  selectedButton: {
+    backgroundColor: colors.primary.default,
+    borderColor: colors.primary.default,
+  },
+  selectedButtonText: {
+    color: colors.neutral.light,
+  },
+  textButtonContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+    rowGap: 10,
+  },
 });
 
 export default formStyles;

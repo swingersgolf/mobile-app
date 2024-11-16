@@ -9,6 +9,7 @@ const AuthLayout = () => {
       <Stack
         screenOptions={{
           headerShown: true,
+          headerBackButtonDisplayMode: "minimal",
           headerTintColor: colors.neutral.dark,
           headerTitle: () => (
             <Icon id="icon" testID="icon" height={30} width={30} />

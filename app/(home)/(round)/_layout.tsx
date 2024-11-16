@@ -10,7 +10,7 @@ const RoundLayout = () => {
     <Stack
       screenOptions={{
         headerShown: true,
-        headerBackTitleVisible: false,
+        headerBackButtonDisplayMode: "minimal",
         headerTitle: () => (
           <Icon id="icon" testID="icon" height={30} width={30} />
         ),
@@ -39,7 +39,7 @@ const RoundLayout = () => {
               <MaterialIcons
                 name="notifications-none"
                 size={28}
-                color={colors.primary.default}
+                color={colors.neutral.dark}
               />
             </TouchableOpacity>
           ),

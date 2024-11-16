@@ -142,7 +142,6 @@ const CreateScreen = () => {
         reset();
         setSelectedDate(undefined);
         setError("");
-        setPreferencesList([]);
       };
     }, [fetchGolfCourses, fetchPreferences, reset]),
   );
@@ -371,16 +370,14 @@ const CreateScreen = () => {
             </View>
 
             <Text style={GlobalStyles.h3}>Preferences</Text>
-            <View
-              style={(formStyles.inputWrapper, RoundStyles.preferencesForm)}
-            >
+            <View style={(formStyles.inputWrapper, formStyles.preferencesForm)}>
               {preferencesList.map((preference) => (
                 <View
                   key={preference.id}
                   style={[
-                    RoundStyles.preferenceRow,
+                    formStyles.preferenceRow,
                     errors.preferences?.[preference.id]
-                      ? RoundStyles.preferenceRowError
+                      ? formStyles.preferenceRowError
                       : null,
                   ]}
                 >
@@ -393,11 +390,11 @@ const CreateScreen = () => {
                     }}
                   >
                     <PreferenceIcon preference={preference.label} />
-                    <Text style={RoundStyles.preferenceLabel}>
+                    <Text style={formStyles.preferenceLabel}>
                       {preference.label}
                     </Text>
                   </View>
-                  <View style={RoundStyles.preferenceOptions}>
+                  <View style={formStyles.preferenceOptions}>
                     {["preferred", "disliked", "indifferent"].map((status) => (
                       <Controller
                         key={status}
@@ -406,16 +403,16 @@ const CreateScreen = () => {
                         render={({ field: { onChange, value } }) => (
                           <TouchableOpacity
                             style={[
-                              RoundStyles.preferenceButton,
-                              value === status && RoundStyles.selectedButton,
+                              formStyles.preferenceButton,
+                              value === status && formStyles.selectedButton,
                             ]}
                             onPress={() => onChange(status)}
                           >
                             <Text
                               style={[
-                                RoundStyles.preferenceButtonText,
+                                formStyles.preferenceButtonText,
                                 value === status &&
-                                  RoundStyles.selectedButtonText,
+                                  formStyles.selectedButtonText,
                               ]}
                             >
                               {preferenceLabelMap[status]}

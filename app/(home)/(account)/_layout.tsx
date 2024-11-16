@@ -9,6 +9,7 @@ const AccountLayout = () => {
     <Stack
       screenOptions={{
         headerShown: true,
+        headerBackButtonDisplayMode: "minimal",
         headerTintColor: colors.neutral.dark,
         contentStyle: {
           backgroundColor: colors.background.primary,

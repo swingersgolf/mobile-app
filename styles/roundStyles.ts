@@ -263,53 +263,6 @@ export const RoundStyles = StyleSheet.create({
     color: colors.primary.dark,
     marginBottom: 10,
   },
-  preferencesSection: {
-    marginTop: 10,
-  },
-  preferenceRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: colors.neutral.medium,
-    borderRadius: 5,
-  },
-  preferenceRowError: {
-    borderColor: colors.alert.error,
-  },
-  preferenceOptions: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  preferenceLabel: {
-    color: colors.neutral.mediumDark,
-  },
-  preferenceButton: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    marginLeft: 5,
-    borderWidth: 1,
-    borderColor: colors.neutral.medium,
-  },
-  selectedButton: {
-    backgroundColor: colors.primary.default,
-    borderColor: colors.primary.default,
-  },
-  preferenceButtonText: {
-    color: colors.neutral.dark,
-  },
-  selectedButtonText: {
-    color: colors.neutral.light,
-  },
-  preferencesForm: {
-    display: "flex",
-    flexDirection: "column",
-    rowGap: 20,
-    width: "100%",
-  },
   deleteButton: {
     backgroundColor: colors.alert.error,
     justifyContent: "center",
