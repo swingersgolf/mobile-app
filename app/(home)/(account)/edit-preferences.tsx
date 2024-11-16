@@ -15,6 +15,7 @@ import Alert from "@/components/Alert";
 import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
 import { capitalizeWords } from "@/utils/text";
+
 type Preferences = {
   preferences: {
     [key: string]: string;

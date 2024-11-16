@@ -151,7 +151,7 @@ const CreateScreen = () => {
     setLoading(true);
     setError("");
     try {
-      const respone = await axios.post(
+      const response = await axios.post(
         `${apiUrl}/v1/round`,
         {
           when: selectedDate,
@@ -165,8 +165,10 @@ const CreateScreen = () => {
           },
         },
       );
-      console.log(respone.data);
-      router.replace("/(round)");
+      router.replace({
+        pathname: "/(home)/(round)/details",
+        params: { roundId: response.data.data.id },
+      });
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
