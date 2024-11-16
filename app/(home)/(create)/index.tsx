@@ -142,6 +142,7 @@ const CreateScreen = () => {
         reset();
         setSelectedDate(undefined);
         setError("");
+        setPreferencesList([]);
       };
     }, [fetchGolfCourses, fetchPreferences, reset]),
   );
@@ -150,7 +151,7 @@ const CreateScreen = () => {
     setLoading(true);
     setError("");
     try {
-      await axios.post(
+      const respone = await axios.post(
         `${apiUrl}/v1/round`,
         {
           when: selectedDate,
@@ -164,6 +165,7 @@ const CreateScreen = () => {
           },
         },
       );
+      console.log(respone.data);
       router.replace("/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
