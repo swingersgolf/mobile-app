@@ -142,6 +142,7 @@ const CreateScreen = () => {
         reset();
         setSelectedDate(undefined);
         setError("");
+        setPreferencesList([]);
       };
     }, [fetchGolfCourses, fetchPreferences, reset]),
   );

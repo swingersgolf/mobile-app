@@ -14,14 +14,16 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aidanfroggatt.mobileapp"
+      "bundleIdentifier": "com.aidanfroggatt.mobileapp",
+      "newArchEnabled": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.aidanfroggatt.mobileapp"
+      "package": "com.aidanfroggatt.mobileapp",
+      "newArchEnabled": true
     },
     "web": {
       "bundler": "metro",
@@ -42,6 +44,7 @@
         "projectId": "be4fc09e-310b-455d-8845-6681e920a9b3"
       }
     },
-    "owner": "swingersgolf"
+    "owner": "swingersgolf",
+    "newArchEnabled": true
   }
 }
