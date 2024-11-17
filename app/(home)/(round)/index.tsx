@@ -120,6 +120,7 @@ const RoundScreen = () => {
                 matchType,
               };
             })
+            .filter((pref) => pref.matchType !== "mismatch")
             .sort((a, b) => {
               const matchTypeOrder = {
                 perfect: 1,
@@ -133,7 +134,6 @@ const RoundScreen = () => {
                 matchTypeOrder[b.matchType as keyof typeof matchTypeOrder]
               );
             });
-
           return (
             <TouchableOpacity
               key={round.id}
