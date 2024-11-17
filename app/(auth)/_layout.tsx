@@ -1,7 +1,7 @@
-import { Pressable, Keyboard } from "react-native";
+import { Pressable, Keyboard, TouchableOpacity, Text } from "react-native";
 import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 
 const AuthLayout = () => {
   return (
@@ -29,7 +29,32 @@ const AuthLayout = () => {
         />
         <Stack.Screen name="login" options={{}} />
         <Stack.Screen name="register" options={{}} />
-        <Stack.Screen name="verify" options={{ presentation: "modal" }} />
+        <Stack.Screen
+          name="set-profile"
+          options={{
+            headerRight: () => {
+              return (
+                <TouchableOpacity
+                  onPress={() => router.push("set-preferences")}
+                >
+                  <Text
+                    style={{
+                      color: colors.neutral.medium,
+                    }}
+                  >
+                    Skip
+                  </Text>
+                </TouchableOpacity>
+              );
+            },
+            presentation: "card",
+          }}
+        />
+        <Stack.Screen
+          name="set-preferences"
+          options={{ presentation: "card" }}
+        />
+        <Stack.Screen name="verify" options={{ presentation: "card" }} />
         <Stack.Screen name="forgot" options={{ presentation: "modal" }} />
         <Stack.Screen name="reset" options={{ presentation: "modal" }} />
       </Stack>
