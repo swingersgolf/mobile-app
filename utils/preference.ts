@@ -14,3 +14,15 @@ export const classifyPreference = (userStatus: string, roundStatus: string) => {
   }
   return "partial";
 };
+
+export type Preferences = {
+  preferences: {
+    [key: string]: string;
+  };
+};
+
+export const preferenceLabelMap: { [key: string]: string } = {
+  indifferent: "Don't care",
+  preferred: "Yes",
+  disliked: "No",
+};
