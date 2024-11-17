@@ -11,7 +11,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { Attribute, Golfer, RoundDetails } from "@/types/roundTypes";
+import { Golfer, RoundDetails } from "@/types/roundTypes";
 import { colors } from "@/constants/Colors";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { parseRoundDate } from "@/utils/date";
