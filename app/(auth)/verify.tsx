@@ -41,7 +41,7 @@ const VerifyEmailScreen = () => {
     try {
       await verifyEmail(email as string, data.code);
       await signIn(email as string, password as string);
-      router.replace("/(round)");
+      router.replace("/(home)/(round)");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =

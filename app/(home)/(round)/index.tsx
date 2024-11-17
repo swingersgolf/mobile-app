@@ -21,7 +21,7 @@ import PreferenceIcon from "@/utils/icon";
 
 const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-  const { token, preferences } = useAuth(); // Include preferences from AuthContext
+  const { token, preferences } = useAuth();
   const { roundCache, setRoundCache } = useRoundCache();
 
   const [error, setError] = useState("");
@@ -39,13 +39,11 @@ const RoundScreen = () => {
       const fetchedRounds = response.data.data;
       const roundsMap = new Map<string, RoundDetails>();
 
-      // Populate roundCache with the fetched rounds
       fetchedRounds.forEach((round: RoundDetails) => {
         roundsMap.set(round.id.toString(), round);
       });
 
       setRoundCache((prevCache) => {
-        // Merges with the current cache without clearing it
         const updatedCache = new Map(prevCache);
         roundsMap.forEach((value, key) => updatedCache.set(key, value));
         return updatedCache;
@@ -70,7 +68,7 @@ const RoundScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      fetchRounds(); // Fetch data only on focus
+      fetchRounds();
     }, [fetchRounds]),
   );
 
@@ -101,32 +99,39 @@ const RoundScreen = () => {
 
           const orderedPreferences = round.preferences
             .map((roundPref) => {
-              const userPref = preferences?.find(
-                (pref) => pref?.preference_id === roundPref.id, // Ensure pref is not null
+              if (!preferences) {
+                // If no user preferences, show all round preferences with medium color
+                return {
+                  ...roundPref,
+                  matchType: "no-preference",
+                };
+              }
+
+              const userPref = preferences.find(
+                (pref) => pref?.preference_id === roundPref.id,
               );
 
-              if (!userPref) return null; // Skip if no matching user preference is found
-
-              const matchType = classifyPreference(
-                userPref.status,
-                roundPref.status,
-              );
-
-              if (matchType === "mismatch") return null; // Skip mismatches
+              const matchType = userPref
+                ? classifyPreference(userPref.status, roundPref.status)
+                : "no-preference";
 
               return {
                 ...roundPref,
                 matchType,
               };
             })
-            .filter((pref) => pref !== null) // Remove null values after mapping
             .sort((a, b) => {
-              // Sort by match type: perfect matches first, partial matches second
-              if (a.matchType === "perfect" && b.matchType !== "perfect")
-                return -1;
-              if (a.matchType !== "perfect" && b.matchType === "perfect")
-                return 1;
-              return 0;
+              const matchTypeOrder = {
+                perfect: 1,
+                partial: 2,
+                "no-preference": 3,
+                mismatch: 4,
+              };
+
+              return (
+                matchTypeOrder[a.matchType as keyof typeof matchTypeOrder] -
+                matchTypeOrder[b.matchType as keyof typeof matchTypeOrder]
+              );
             });
 
           return (
@@ -153,6 +158,8 @@ const RoundScreen = () => {
                     const color =
                       pref.matchType === "perfect"
                         ? colors.primary.default
+                        : pref.matchType === "mismatch"
+                        ? colors.alert.error
                         : colors.neutral.medium;
 
                     return (
@@ -176,7 +183,6 @@ const RoundScreen = () => {
                 {[...Array(round.group_size)].map((_, index) => {
                   const golfer = round.golfers[index];
                   if (golfer && golfer.status === "accepted") {
-                    // Only show if status is "accepted"
                     return (
                       <View style={RoundStyles.memberIconFilled} key={index}>
                         <MaterialIcons

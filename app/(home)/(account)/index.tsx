@@ -85,7 +85,9 @@ const AccountScreen = () => {
                             <Text style={GlobalStyles.body}>
                               {convertCamelCaseToLabel(key)}
                             </Text>
-                            <Text style={GlobalStyles.body}>{value}</Text>
+                            <Text style={GlobalStyles.body}>
+                              {value ? value : "Not set"}
+                            </Text>
                           </View>
                         ))}
                   </View>
@@ -110,7 +112,10 @@ const AccountScreen = () => {
                           <Text style={GlobalStyles.body}>
                             {convertCamelCaseToLabel(key)}
                           </Text>
-                          <Text style={GlobalStyles.body}>{value}</Text>
+                          <Text style={GlobalStyles.body}>
+                            {" "}
+                            {value ? value : "Not set"}
+                          </Text>
                         </View>
                       ))}
                   </View>
@@ -129,7 +134,7 @@ const AccountScreen = () => {
                     </TouchableOpacity>
                   </View>
                   <View style={accountStyles.infoSection}>
-                    {preferences &&
+                    {preferences && preferences.length > 0 ? (
                       preferences.map((preference) => (
                         <View
                           key={`preferences-${preference.preference_id}}`}
@@ -147,10 +152,15 @@ const AccountScreen = () => {
                           </View>
 
                           <Text style={GlobalStyles.body}>
-                            {labelFromStatus(preference.status)}
+                            {labelFromStatus(preference.status)
+                              ? labelFromStatus(preference.status)
+                              : "Not set"}
                           </Text>
                         </View>
-                      ))}
+                      ))
+                    ) : (
+                      <Text style={GlobalStyles.body}>No preferences set</Text>
+                    )}
                   </View>
                 </View>
               </View>
