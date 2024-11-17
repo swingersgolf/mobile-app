@@ -159,8 +159,8 @@ const RoundScreen = () => {
                       pref.matchType === "perfect"
                         ? colors.primary.default
                         : pref.matchType === "mismatch"
-                        ? colors.alert.error
-                        : colors.neutral.medium;
+                          ? colors.alert.error
+                          : colors.neutral.medium;
 
                     return (
                       <View
