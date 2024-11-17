@@ -72,6 +72,14 @@ export const RoundStyles = StyleSheet.create({
     gap: 5,
     flexWrap: "wrap",
   },
+  attribute: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    padding: 5,
+  },
   scrollStyle: {
     width: "100%",
     backgroundColor: colors.background.primary,

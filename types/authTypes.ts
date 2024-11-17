@@ -13,7 +13,7 @@ export interface Profile {
 
 export interface Preference {
   status: string;
-  preference_id: string;
+  preference_id: number;
   preference_name: string;
 }
 

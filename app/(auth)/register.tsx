@@ -229,7 +229,7 @@ const RegisterScreen = () => {
                         style={{
                           color: value
                             ? colors.neutral.dark
-                            : colors.neutral.medium,
+                            : colors.neutral.mediumDark,
                         }}
                       >
                         {selectedDate

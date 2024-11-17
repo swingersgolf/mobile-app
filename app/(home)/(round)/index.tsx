@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
-import { Attribute, RoundDetails } from "@/types/roundTypes";
+import { classifyPreference } from "@/utils/preference";
+import { RoundDetails } from "@/types/roundTypes";
 import { parseRoundDate } from "@/utils/date";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
@@ -20,7 +21,7 @@ import PreferenceIcon from "@/utils/icon";
 
 const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-  const { token } = useAuth();
+  const { token, preferences } = useAuth(); // Include preferences from AuthContext
   const { roundCache, setRoundCache } = useRoundCache();
 
   const [error, setError] = useState("");
@@ -98,11 +99,35 @@ const RoundScreen = () => {
             round.when,
           );
 
-          const statusStyles: { [key in Attribute["status"]]: unknown } = {
-            preferred: RoundStyles.preferredAttribute,
-            disliked: undefined,
-            indifferent: RoundStyles.indifferentAttribute,
-          };
+          const orderedPreferences = round.preferences
+            .map((roundPref) => {
+              const userPref = preferences?.find(
+                (pref) => pref?.preference_id === roundPref.id, // Ensure pref is not null
+              );
+
+              if (!userPref) return null; // Skip if no matching user preference is found
+
+              const matchType = classifyPreference(
+                userPref.status,
+                roundPref.status,
+              );
+
+              if (matchType === "mismatch") return null; // Skip mismatches
+
+              return {
+                ...roundPref,
+                matchType,
+              };
+            })
+            .filter((pref) => pref !== null) // Remove null values after mapping
+            .sort((a, b) => {
+              // Sort by match type: perfect matches first, partial matches second
+              if (a.matchType === "perfect" && b.matchType !== "perfect")
+                return -1;
+              if (a.matchType !== "perfect" && b.matchType === "perfect")
+                return 1;
+              return 0;
+            });
 
           return (
             <TouchableOpacity
@@ -124,29 +149,27 @@ const RoundScreen = () => {
               <View style={RoundStyles.infoContainer}>
                 <Text style={GlobalStyles.h2}>{round.course}</Text>
                 <View style={RoundStyles.attributeContainer}>
-                  {round.preferences
-                    .filter(
-                      (preferred: Attribute) => preferred.status !== "disliked",
-                    ) // Filter out 'disliked' attributes
-                    .sort((a: Attribute, b: Attribute) => {
-                      // Sort by "preferred" first, then "indifferent"
-                      if (a.status === "preferred" && b.status !== "preferred")
-                        return -1;
-                      if (a.status !== "preferred" && b.status === "preferred")
-                        return 1;
-                      return 0;
-                    })
-                    .map((preferred: Attribute) => (
+                  {orderedPreferences.map((pref) => {
+                    const color =
+                      pref.matchType === "perfect"
+                        ? colors.primary.default
+                        : colors.neutral.medium;
+
+                    return (
                       <View
-                        key={preferred.id}
-                        style={[statusStyles[preferred.status] || {}]}
+                        key={pref.id}
+                        style={[
+                          RoundStyles.attribute,
+                          { backgroundColor: color },
+                        ]}
                       >
                         <PreferenceIcon
-                          preference={preferred.name}
+                          preference={pref.name}
                           color={colors.neutral.light}
                         />
                       </View>
-                    ))}
+                    );
+                  })}
                 </View>
               </View>
               <View style={RoundStyles.memberContainer}>
@@ -177,10 +200,6 @@ const RoundScreen = () => {
         }}
         keyExtractor={(item) => item.id.toString()}
       />
-      {/* TODO: If user has rounds which they are the host of then display button to view filtered round list of only their rounds */}
-      {/* <TouchableOpacity style={RoundStyles.myRoundsButton}>
-        <Text style={RoundStyles.myRoundsButtonText}>View my rounds</Text>
-      </TouchableOpacity> */}
     </View>
   );
 };

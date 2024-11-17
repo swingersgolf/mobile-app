@@ -20,11 +20,12 @@ import TextButton from "@/components/TextButton";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import PreferenceIcon from "@/utils/icon";
+import { classifyPreference } from "@/utils/preference";
 
 const RoundDetailsScreen: React.FC = () => {
   const { roundId } = useLocalSearchParams();
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-  const { token, user } = useAuth();
+  const { token, user, preferences } = useAuth();
 
   const { roundCache, setRoundCache } = useRoundCache();
 
@@ -103,22 +104,6 @@ const RoundDetailsScreen: React.FC = () => {
     }
     return null;
   };
-
-  const statusStyles: { [key in Attribute["status"]]: unknown } = {
-    preferred: RoundStyles.preferredAttribute,
-    disliked: RoundStyles.dislikedAttribute,
-    indifferent: RoundStyles.indifferentAttribute,
-  };
-
-  const statusOrder: { [key in Attribute["status"]]: number } = {
-    preferred: 1,
-    indifferent: 2,
-    disliked: 3,
-  };
-
-  const sortedPreferences = roundDetails?.preferences.sort((a, b) => {
-    return statusOrder[a.status] - statusOrder[b.status];
-  });
 
   const countRequests = ({
     status,
@@ -257,19 +242,60 @@ const RoundDetailsScreen: React.FC = () => {
               <Text style={GlobalStyles.h1}>{roundDetails.course}</Text>
             </View>
             <View style={RoundStyles.attributeContainer}>
-              {sortedPreferences?.map((preferred: Attribute) => (
-                <View
-                  key={preferred.id}
-                  style={[statusStyles[preferred.status] || {}]}
-                >
-                  <PreferenceIcon
-                    preference={preferred.name}
-                    color={colors.neutral.light}
-                    status={preferred.status}
-                  />
-                </View>
-              ))}
+              {roundDetails?.preferences
+                .map((roundPref) => {
+                  const userPref = preferences?.find(
+                    (pref) => pref?.preference_id === roundPref.id,
+                  );
+
+                  const matchType = userPref
+                    ? classifyPreference(userPref.status, roundPref.status)
+                    : "no-preference";
+
+                  const backgroundColor =
+                    matchType === "perfect"
+                      ? colors.primary.default
+                      : matchType === "mismatch"
+                        ? colors.alert.error
+                        : colors.neutral.medium;
+
+                  return {
+                    ...roundPref,
+                    matchType,
+                    backgroundColor,
+                  };
+                })
+                .filter((pref) => pref !== null)
+                .sort((a, b) => {
+                  const matchTypeOrder = {
+                    perfect: 1,
+                    partial: 2,
+                    "no-preference": 3,
+                    mismatch: 4,
+                  };
+
+                  return (
+                    matchTypeOrder[a.matchType as keyof typeof matchTypeOrder] -
+                    matchTypeOrder[b.matchType as keyof typeof matchTypeOrder]
+                  );
+                })
+                .map((sortedPref) => (
+                  <View
+                    key={sortedPref.id}
+                    style={[
+                      RoundStyles.attribute,
+                      { backgroundColor: sortedPref.backgroundColor },
+                    ]}
+                  >
+                    <PreferenceIcon
+                      preference={sortedPref.name}
+                      color={colors.neutral.light}
+                      status={sortedPref.status} // Pass the round's status directly
+                    />
+                  </View>
+                ))}
             </View>
+
             <View style={RoundStyles.memberList}>
               {/* Sort golfers first */}
               {roundDetails.golfers
