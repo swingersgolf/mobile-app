@@ -9,7 +9,7 @@ import Spinner from "@/components/Spinner";
 import Alert, { InFormAlert } from "@/components/Alert";
 import { router } from "expo-router";
 import formStyles from "@/styles/FormStyles";
-import { profileSchema } from "@/schemas/profileSchema";
+import { setProfileSchema } from "@/schemas/profileSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import { Profile } from "@/types/authTypes";
@@ -53,7 +53,7 @@ const SetProfileScreen = () => {
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    resolver: yupResolver(profileSchema),
+    resolver: yupResolver(setProfileSchema),
     defaultValues: {
       handicap: profile?.handicap,
       postalCode: profile?.postalCode,
