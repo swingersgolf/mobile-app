@@ -120,7 +120,6 @@ const RoundScreen = () => {
                 matchType,
               };
             })
-            .filter((pref) => pref.matchType !== "mismatch")
             .sort((a, b) => {
               const matchTypeOrder = {
                 perfect: 1,

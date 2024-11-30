@@ -360,7 +360,7 @@ const CreateScreen = () => {
                     </TouchableOpacity>
                     <DateTimePickerModal
                       isVisible={isDatePickerVisible}
-                      mode="datetime"
+                      mode="date"
                       date={selectedDate || new Date()}
                       onConfirm={handleConfirm}
                       onCancel={hideDatePicker}
