@@ -1,5 +1,12 @@
 import { useState, useCallback } from "react";
-import { Text, View, Keyboard, TouchableOpacity, FlatList } from "react-native";
+import {
+  Text,
+  View,
+  Keyboard,
+  TouchableOpacity,
+  FlatList,
+  Modal,
+} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useFocusEffect } from "@react-navigation/native";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,22 +15,23 @@ import { colors } from "@/constants/Colors";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDateDayMonthTime } from "@/utils/date";
+import { formatDateYYYY_MM_DD } from "@/utils/date";
 import createStyles from "@/styles/createStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
 import formStyles from "@/styles/FormStyles";
 import { Dropdown } from "react-native-element-dropdown";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
 import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
-import GlobalStyles from "@/styles/GlobalStyles";
 import * as yup from "yup";
 import PreferenceIcon from "@/utils/icon";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 type CreatePostValues = {
   golfCourse: string;
-  datetime: string;
+  date: string;
+  time: string;
   slots: string;
   preferences: {
     [key: string]: string;
@@ -53,7 +61,8 @@ const CreateScreen = () => {
   const createPostSchema = (preferences: { id: string; label: string }[]) =>
     yup.object().shape({
       golfCourse: yup.string().required("Golf Course is required"),
-      datetime: yup.string().required("Date and Time is required"),
+      date: yup.string().required("Date is required"),
+      time: yup.string().required("Time is required"),
       slots: yup.string().required("Number of slots is required"),
       preferences: yup.object(
         preferences.reduce(
@@ -83,7 +92,8 @@ const CreateScreen = () => {
     resolver: yupResolver(createPostSchema(preferencesList)),
     defaultValues: {
       golfCourse: "",
-      datetime: "",
+      date: "",
+      time: "",
       slots: "",
       preferences: {},
     },
@@ -154,7 +164,8 @@ const CreateScreen = () => {
       const response = await axios.post(
         `${apiUrl}/v1/round`,
         {
-          when: selectedDate,
+          date: selectedDate,
+          time: data.time,
           group_size: data.slots,
           course_id: data.golfCourse,
           preferences: data.preferences,
@@ -194,8 +205,8 @@ const CreateScreen = () => {
 
   const handleConfirm = (date: Date) => {
     setSelectedDate(date);
-    setValue("datetime", date.toISOString());
-    trigger("datetime");
+    setValue("date", date.toISOString());
+    trigger("date");
     hideDatePicker();
   };
 
@@ -328,30 +339,28 @@ const CreateScreen = () => {
       <View style={formStyles.inputWrapper}>
         <Controller
           control={control}
-          name="datetime"
+          name="date"
           render={({ field: { value } }) => (
             <>
               {value && (
                 <Text
                   style={[
                     formStyles.formInputTitle,
-                    errors.datetime && formStyles.formInputTitleError,
+                    errors.date && formStyles.formInputTitleError,
                   ]}
                 >
-                  Date and time
+                  Date
                 </Text>
               )}
               <TouchableOpacity
                 onPress={showDatePicker}
                 style={[
                   formStyles.formInput,
-                  errors.datetime && formStyles.invalidInput,
+                  errors.date && formStyles.invalidInput,
                 ]}
               >
                 <Text style={formStyles.placeholderStyle}>
-                  {selectedDate
-                    ? formatDateDayMonthTime(selectedDate)
-                    : "Date and time"}
+                  {selectedDate ? formatDateYYYY_MM_DD(selectedDate) : "Date"}
                 </Text>
               </TouchableOpacity>
               <DateTimePickerModal
@@ -361,12 +370,175 @@ const CreateScreen = () => {
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
               />
-              {errors.datetime && (
-                <InFormAlert error={errors.datetime.message} />
-              )}
+              {errors.date && <InFormAlert error={errors.date.message} />}
             </>
           )}
         />
+      </View>
+    );
+  };
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const renderTimePicker = () => {
+    const timeRanges = [
+      {
+        label: "Early Bird",
+        id: "early_bird",
+        range: "Open - 9:59 AM",
+        icon: <MaterialCommunityIcons name="weather-sunset-up" size={16} />,
+      },
+      {
+        label: "Morning",
+        id: "morning",
+        range: "10:00 AM - 3:59 PM",
+        icon: <MaterialCommunityIcons name="weather-sunny" size={16} />,
+      },
+      {
+        label: "Afternoon",
+        id: "afternoon",
+        range: "4:00 PM - 7:59 PM",
+        icon: <MaterialCommunityIcons name="weather-sunset-down" size={16} />,
+      },
+      {
+        label: "Twilight",
+        id: "twilight",
+        range: "8:00 PM - Close",
+        icon: <MaterialCommunityIcons name="weather-night" size={16} />,
+      },
+    ];
+
+    // Function to close the modal
+    const closeModal = () => setIsModalVisible(false);
+
+    return (
+      <View style={(formStyles.inputWrapper, formStyles.preferencesForm)}>
+        <View
+          style={[
+            formStyles.preferenceRow,
+            errors.time ? formStyles.preferenceRowError : null,
+          ]}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              columnGap: 5,
+              alignItems: "center",
+            }}
+          >
+            <Text style={formStyles.preferenceLabel}>Time</Text>
+            <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+              <MaterialIcons
+                name="info"
+                size={16}
+                color={colors.neutral.dark}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={formStyles.preferenceOptions}>
+            {timeRanges.map((timeRange) => (
+              <Controller
+                key={timeRange.id}
+                control={control}
+                name="time"
+                render={({ field: { onChange, value } }) => (
+                  <TouchableOpacity
+                    style={[
+                      formStyles.preferenceButton,
+                      value === timeRange.id && formStyles.selectedButton,
+                    ]}
+                    onPress={() => onChange(timeRange.id)}
+                  >
+                    <Text
+                      style={[
+                        formStyles.preferenceButtonText,
+                        value === timeRange.id && formStyles.selectedButtonText,
+                      ]}
+                    >
+                      {timeRange.icon}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+            ))}
+          </View>
+        </View>
+
+        {/* Info Modal */}
+        <Modal
+          visible={isModalVisible}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={closeModal}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: colors.neutral.light,
+                padding: 20,
+                borderRadius: 5,
+                width: "80%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 20,
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={GlobalStyles.h2}>Time Ranges</Text>
+                <TouchableOpacity onPress={closeModal}>
+                  <MaterialIcons
+                    name="close"
+                    size={20}
+                    color={colors.neutral.dark}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{ display: "flex", flexDirection: "column", gap: 10 }}
+              >
+                {timeRanges.map((timeRange) => (
+                  <View
+                    key={timeRange.id}
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      paddingVertical: 5,
+                    }}
+                  >
+                    <View
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 5,
+                        alignItems: "center",
+                      }}
+                    >
+                      {timeRange.icon}
+                      <Text style={GlobalStyles.body}>{timeRange.label}</Text>
+                    </View>
+                    <Text style={GlobalStyles.body}>{timeRange.range}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   };
@@ -429,7 +601,8 @@ const CreateScreen = () => {
   const formData = [
     { key: "golfCourse", component: renderGolfCourseDropdown },
     { key: "slots", component: renderSlotsDropdown },
-    { key: "datetime", component: renderDatePicker },
+    { key: "date", component: renderDatePicker },
+    { key: "time", component: renderTimePicker },
     ...preferencesList.map((pref) => ({
       key: `preferences.${pref.id}`,
       component: () => renderPreference(pref),
@@ -450,7 +623,6 @@ const CreateScreen = () => {
       renderItem={renderItem}
       keyExtractor={(item) => item.key}
       contentContainerStyle={createStyles.container}
-      ListHeaderComponent={() => <Text style={GlobalStyles.h3}>Details</Text>}
       ListFooterComponent={() => (
         <View>
           {error && <Alert error={error} />}

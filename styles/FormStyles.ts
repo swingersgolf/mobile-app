@@ -81,6 +81,7 @@ const formStyles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    columnGap: 5,
   },
   preferenceLabel: {
     color: colors.neutral.mediumDark,
@@ -89,7 +90,6 @@ const formStyles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,
-    marginLeft: 5,
     borderWidth: 1,
     borderColor: colors.neutral.medium,
   },
