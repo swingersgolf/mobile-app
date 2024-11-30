@@ -472,15 +472,18 @@ const CreateScreen = () => {
           transparent={true}
           onRequestClose={closeModal}
         >
-          <View
+          <TouchableOpacity
             style={{
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: "rgba(0, 0, 0, 0.5)",
             }}
+            activeOpacity={1}
+            onPress={closeModal}
           >
             <View
+              onStartShouldSetResponder={() => true}
               style={{
                 backgroundColor: colors.neutral.light,
                 padding: 20,
@@ -537,7 +540,7 @@ const CreateScreen = () => {
                 ))}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </Modal>
       </View>
     );
