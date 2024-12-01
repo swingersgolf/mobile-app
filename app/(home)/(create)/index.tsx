@@ -20,18 +20,20 @@ import createStyles from "@/styles/createStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
 import formStyles from "@/styles/FormStyles";
 import { Dropdown } from "react-native-element-dropdown";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
 import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
 import * as yup from "yup";
-import PreferenceIcon from "@/utils/icon";
+import { PreferenceIcon, TimeRangeIcon } from "@/utils/icon";
 import GlobalStyles from "@/styles/GlobalStyles";
+import { getTimeRange } from "@/utils/timeRange";
+import { timeRanges } from "@/constants/TimeRanges";
 
 type CreatePostValues = {
   golfCourse: string;
   date: string;
-  time: string;
+  time_range: "early_bird" | "morning" | "afternoon" | "twilight";
   slots: string;
   preferences: {
     [key: string]: string;
@@ -62,7 +64,13 @@ const CreateScreen = () => {
     yup.object().shape({
       golfCourse: yup.string().required("Golf Course is required"),
       date: yup.string().required("Date is required"),
-      time: yup.string().required("Time is required"),
+      time_range: yup
+        .string()
+        .oneOf(
+          ["early_bird", "morning", "afternoon", "twilight"],
+          "Invalid time range selected",
+        )
+        .required("Time range is required"),
       slots: yup.string().required("Number of slots is required"),
       preferences: yup.object(
         preferences.reduce(
@@ -93,7 +101,7 @@ const CreateScreen = () => {
     defaultValues: {
       golfCourse: "",
       date: "",
-      time: "",
+      time_range: undefined,
       slots: "",
       preferences: {},
     },
@@ -160,12 +168,13 @@ const CreateScreen = () => {
   const handleCreateRound = async (data: CreatePostValues) => {
     setLoading(true);
     setError("");
+    console.log(data);
     try {
       const response = await axios.post(
         `${apiUrl}/v1/round`,
         {
           date: selectedDate,
-          time: data.time,
+          time_range: data.time_range,
           group_size: data.slots,
           course_id: data.golfCourse,
           preferences: data.preferences,
@@ -204,8 +213,9 @@ const CreateScreen = () => {
   };
 
   const handleConfirm = (date: Date) => {
+    const formattedDate = date.toISOString().slice(0, 10); // Slices the string to get the date part YYYY-MM-DD
     setSelectedDate(date);
-    setValue("date", date.toISOString());
+    setValue("date", formattedDate);
     trigger("date");
     hideDatePicker();
   };
@@ -381,33 +391,6 @@ const CreateScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const renderTimePicker = () => {
-    const timeRanges = [
-      {
-        label: "Early Bird",
-        id: "early_bird",
-        range: "Open - 9:59 AM",
-        icon: <MaterialCommunityIcons name="weather-sunset-up" size={16} />,
-      },
-      {
-        label: "Morning",
-        id: "morning",
-        range: "10:00 AM - 3:59 PM",
-        icon: <MaterialCommunityIcons name="weather-sunny" size={16} />,
-      },
-      {
-        label: "Afternoon",
-        id: "afternoon",
-        range: "4:00 PM - 7:59 PM",
-        icon: <MaterialCommunityIcons name="weather-sunset-down" size={16} />,
-      },
-      {
-        label: "Twilight",
-        id: "twilight",
-        range: "8:00 PM - Close",
-        icon: <MaterialCommunityIcons name="weather-night" size={16} />,
-      },
-    ];
-
     // Function to close the modal
     const closeModal = () => setIsModalVisible(false);
 
@@ -416,7 +399,7 @@ const CreateScreen = () => {
         <View
           style={[
             formStyles.preferenceRow,
-            errors.time ? formStyles.preferenceRowError : null,
+            errors.time_range ? formStyles.preferenceRowError : null,
           ]}
         >
           <View
@@ -430,7 +413,7 @@ const CreateScreen = () => {
             <Text style={formStyles.preferenceLabel}>Time</Text>
             <TouchableOpacity onPress={() => setIsModalVisible(true)}>
               <MaterialIcons
-                name="info"
+                name="info-outline"
                 size={16}
                 color={colors.neutral.dark}
               />
@@ -441,7 +424,7 @@ const CreateScreen = () => {
               <Controller
                 key={timeRange.id}
                 control={control}
-                name="time"
+                name="time_range"
                 render={({ field: { onChange, value } }) => (
                   <TouchableOpacity
                     style={[
@@ -456,7 +439,7 @@ const CreateScreen = () => {
                         value === timeRange.id && formStyles.selectedButtonText,
                       ]}
                     >
-                      {timeRange.icon}
+                      <TimeRangeIcon name={timeRange.id} size={16} />
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -532,10 +515,12 @@ const CreateScreen = () => {
                         alignItems: "center",
                       }}
                     >
-                      {timeRange.icon}
+                      <TimeRangeIcon name={timeRange.id} size={16} />
                       <Text style={GlobalStyles.body}>{timeRange.label}</Text>
                     </View>
-                    <Text style={GlobalStyles.body}>{timeRange.range}</Text>
+                    <Text style={GlobalStyles.body}>
+                      {getTimeRange(timeRange.id)}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -566,7 +551,7 @@ const CreateScreen = () => {
               gap: 5,
             }}
           >
-            <PreferenceIcon preference={preference.label} />
+            <PreferenceIcon name={preference.label} />
             <Text style={formStyles.preferenceLabel}>{preference.label}</Text>
           </View>
           <View style={formStyles.preferenceOptions}>

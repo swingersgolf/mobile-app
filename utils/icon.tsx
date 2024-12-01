@@ -3,20 +3,20 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text } from "react-native";
 import { colors } from "@/constants/Colors";
 import { View } from "react-native";
-import { labelFromStatus } from "./text";
+import { labelFromStatus } from "@/utils/text";
 
 interface IconProps {
-  preference: string;
+  name: string;
   size?: number;
   color?: string;
   status?: string;
 }
 
-const PreferenceIcon: React.FC<IconProps> = ({
-  preference,
+export const PreferenceIcon: React.FC<IconProps> = ({
+  name,
   status,
   size = 16,
-  color = "black",
+  color = colors.neutral.dark,
 }) => {
   const getIcon = (preference: string) => {
     preference = preference.toLowerCase();
@@ -47,7 +47,7 @@ const PreferenceIcon: React.FC<IconProps> = ({
         gap: 2.5,
       }}
     >
-      {getIcon(preference)}
+      {getIcon(name)}
       {status && (
         <Text style={{ fontSize: 14, color: colors.neutral.light }}>
           {labelFromStatus(status)}
@@ -57,4 +57,24 @@ const PreferenceIcon: React.FC<IconProps> = ({
   );
 };
 
-export default PreferenceIcon;
+export const TimeRangeIcon: React.FC<IconProps> = ({ name, size = 16 }) => {
+  const getIcon = (timeRange: string) => {
+    timeRange = timeRange.toLowerCase();
+    switch (timeRange) {
+      case "early_bird":
+        return <MaterialCommunityIcons name="weather-sunset-up" size={size} />;
+      case "morning":
+        return <MaterialCommunityIcons name="weather-sunny" size={size} />;
+      case "afternoon":
+        return (
+          <MaterialCommunityIcons name="weather-sunset-down" size={size} />
+        );
+      case "twilight":
+        return <MaterialCommunityIcons name="weather-night" size={size} />;
+      default:
+        return <Text style={{ fontSize: size }}>{timeRange}</Text>;
+    }
+  };
+
+  return getIcon(name);
+};

@@ -17,7 +17,7 @@ import { RoundStyles } from "@/styles/roundStyles";
 import { router, useFocusEffect } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
-import PreferenceIcon from "@/utils/icon";
+import { PreferenceIcon } from "@/utils/icon";
 
 const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -94,7 +94,7 @@ const RoundScreen = () => {
         data={Array.from(roundCache.values())}
         renderItem={({ item: round }) => {
           const { dayOfWeek, dayNumber, month, TimeIcon } = parseRoundDate(
-            round.when,
+            round.date,
           );
 
           const orderedPreferences = round.preferences
@@ -170,7 +170,7 @@ const RoundScreen = () => {
                         ]}
                       >
                         <PreferenceIcon
-                          preference={pref.name}
+                          name={pref.name}
                           color={colors.neutral.light}
                         />
                       </View>

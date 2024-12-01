@@ -10,7 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import GlobalStyles from "@/styles/GlobalStyles";
 import * as yup from "yup";
-import PreferenceIcon from "@/utils/icon";
+import { PreferenceIcon } from "@/utils/icon";
 import Alert from "@/components/Alert";
 import TextButton from "@/components/TextButton";
 import { colors } from "@/constants/Colors";
@@ -164,7 +164,7 @@ const SetPreferencesScreen = () => {
                       gap: 5,
                     }}
                   >
-                    <PreferenceIcon preference={preference.preference_name} />
+                    <PreferenceIcon name={preference.preference_name} />
                     <Text style={formStyles.preferenceLabel}>
                       {preference.preference_name}
                     </Text>
