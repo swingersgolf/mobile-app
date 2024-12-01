@@ -65,7 +65,7 @@ export const getAgeFromDateYYY_MM_DD = (dateString: string): number => {
 };
 
 export const parseRoundDate = (when: string, long?: boolean) => {
-  const longForm = long ?  "long" : "short";
+  const longForm = long ? "long" : "short";
   const date = new Date(when);
 
   // Get day of the week (3 characters)
