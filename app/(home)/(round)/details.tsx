@@ -19,8 +19,9 @@ import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import TextButton from "@/components/TextButton";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import { MaterialIcons } from "@expo/vector-icons";
-import PreferenceIcon from "@/utils/icon";
+import { PreferenceIcon, TimeRangeIcon } from "@/utils/icon";
 import { classifyPreference } from "@/utils/preference";
+import { getTimeRange, getTimeRangeLabelFromId } from "@/utils/timeRange";
 
 const RoundDetailsScreen: React.FC = () => {
   const { roundId } = useLocalSearchParams();
@@ -92,14 +93,16 @@ const RoundDetailsScreen: React.FC = () => {
   }
 
   const renderRoundDate = () => {
+    console.log(roundDetails?.time_range);
     if (roundDetails) {
-      const { dayOfWeek, dayNumber, month, time } = parseRoundDate(
-        roundDetails.when,
+      const { dayOfWeek, dayNumber, month } = parseRoundDate(
+        roundDetails.date,
+        true,
       );
       return (
-        <Text
-          style={GlobalStyles.h2}
-        >{`${dayOfWeek}, ${dayNumber} ${month}, ${time}`}</Text>
+        <Text style={GlobalStyles.h2}>
+          {`${dayOfWeek} ${dayNumber} ${month}`}
+        </Text>
       );
     }
     return null;
@@ -240,6 +243,22 @@ const RoundDetailsScreen: React.FC = () => {
             <View>
               {renderRoundDate()}
               <Text style={GlobalStyles.h1}>{roundDetails.course}</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  columnGap: 5,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={GlobalStyles.h3}>
+                  {getTimeRangeLabelFromId(roundDetails.time_range)}
+                </Text>
+                <TimeRangeIcon name={roundDetails.time_range} />
+                <Text style={GlobalStyles.h3}>
+                  {getTimeRange(roundDetails.time_range)}
+                </Text>
+              </View>
             </View>
             <View style={RoundStyles.attributeContainer}>
               {roundDetails?.preferences
@@ -288,7 +307,7 @@ const RoundDetailsScreen: React.FC = () => {
                     ]}
                   >
                     <PreferenceIcon
-                      preference={sortedPref.name}
+                      name={sortedPref.name}
                       color={colors.neutral.light}
                       status={sortedPref.status} // Pass the round's status directly
                     />

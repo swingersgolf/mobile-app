@@ -13,7 +13,7 @@ import Spinner from "@/components/Spinner";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useState } from "react";
-import PreferenceIcon from "@/utils/icon";
+import { PreferenceIcon } from "@/utils/icon";
 import { MaterialIcons } from "@expo/vector-icons";
 import { colors } from "@/constants/Colors";
 import { router } from "expo-router";
@@ -141,9 +141,7 @@ const AccountScreen = () => {
                           style={accountStyles.info}
                         >
                           <View style={accountStyles.preferenceLabel}>
-                            <PreferenceIcon
-                              preference={preference.preference_name}
-                            />
+                            <PreferenceIcon name={preference.preference_name} />
                             <Text style={GlobalStyles.body}>
                               {convertCamelCaseToLabel(
                                 preference.preference_name,

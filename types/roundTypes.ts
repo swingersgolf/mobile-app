@@ -12,7 +12,8 @@ interface Golfer {
 
 interface RoundDetails {
   id: number;
-  when: string;
+  date: string;
+  time_range: "early_bird" | "morning" | "afternoon" | "twilight";
   course: string;
   preferences: Attribute[];
   golfers: Golfer[];
