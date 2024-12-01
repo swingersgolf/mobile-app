@@ -17,7 +17,7 @@ import { RoundStyles } from "@/styles/roundStyles";
 import { router, useFocusEffect } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
-import { PreferenceIcon } from "@/utils/icon";
+import { PreferenceIcon, TimeRangeIcon } from "@/utils/icon";
 import { formatDistanceMetric } from "@/utils/text";
 
 const RoundScreen = () => {
@@ -95,9 +95,7 @@ const RoundScreen = () => {
         }
         data={Array.from(roundCache.values())}
         renderItem={({ item: round }) => {
-          const { dayOfWeek, dayNumber, month, TimeIcon } = parseRoundDate(
-            round.date,
-          );
+          const { dayOfWeek, dayNumber, month } = parseRoundDate(round.date);
 
           const orderedPreferences = round.preferences
             .map((roundPref) => {
@@ -148,9 +146,9 @@ const RoundScreen = () => {
             >
               <View style={RoundStyles.infoContainer}>
                 <View style={RoundStyles.whenConatiner}>
-                  <TimeIcon />
+                  <TimeRangeIcon name={round.time_range} />
                   <Text style={GlobalStyles.h3}>
-                    {`${dayOfWeek} ${month} ${dayNumber}`}
+                    {`${dayOfWeek} ${dayNumber} ${month}`}
                   </Text>
                 </View>
                 <Text style={GlobalStyles.h2}>{round.course}</Text>

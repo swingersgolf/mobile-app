@@ -153,7 +153,6 @@ const Notifications = () => {
           colors={[colors.primary.default]}
         />
       }
-      style={RoundStyles.notificationList}
       contentContainerStyle={RoundStyles.notificationListContent}
       sections={groupedNotifications}
       keyExtractor={(item) => item.id}

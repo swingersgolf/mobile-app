@@ -22,6 +22,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { PreferenceIcon, TimeRangeIcon } from "@/utils/icon";
 import { classifyPreference } from "@/utils/preference";
 import { getTimeRange, getTimeRangeLabelFromId } from "@/utils/timeRange";
+import { formatDistanceMetric } from "@/utils/text";
 
 const RoundDetailsScreen: React.FC = () => {
   const { roundId } = useLocalSearchParams();
@@ -239,7 +240,7 @@ const RoundDetailsScreen: React.FC = () => {
               </TouchableOpacity>
             )}
 
-            <View>
+            <View style={RoundStyles.roundDetails}>
               {renderRoundDate()}
               <Text style={GlobalStyles.h1}>{roundDetails.course}</Text>
               <View
@@ -258,6 +259,9 @@ const RoundDetailsScreen: React.FC = () => {
                   {getTimeRange(roundDetails.time_range)}
                 </Text>
               </View>
+              <Text style={GlobalStyles.h4}>
+                {formatDistanceMetric(roundDetails.distance)}
+              </Text>
             </View>
             <View style={RoundStyles.attributeContainer}>
               {roundDetails?.preferences

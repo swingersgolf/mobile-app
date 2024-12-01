@@ -41,7 +41,7 @@ export const RoundStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    gap: 5,
+    gap: 2.5,
   },
   infoContainer: {
     display: "flex",
@@ -130,6 +130,14 @@ export const RoundStyles = StyleSheet.create({
     alignItems: "flex-start",
     padding: 20,
     rowGap: 20,
+  },
+  roundDetails: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    rowGap: 5,
+    width: "100%",
   },
   roundEditContainer: {
     display: "flex",
@@ -284,10 +292,6 @@ export const RoundStyles = StyleSheet.create({
     height: "100%",
     width: 50,
     alignItems: "center",
-  },
-  notificationList: {
-    backgroundColor: colors.background.secondary,
-    width: "100%",
   },
   notificationListContent: {
     backgroundColor: colors.background.secondary,

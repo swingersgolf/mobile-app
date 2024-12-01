@@ -86,28 +86,12 @@ export const parseRoundDate = (when: string, long?: boolean) => {
     minute: "2-digit",
   });
 
-  const TimeIcon = () => {
-    const hours = date.getHours();
-
-    if (hours >= 0 && hours < 10) {
-      // Early AM (12:00 AM - 9:59 AM)
-      return <MaterialCommunityIcons name="weather-sunset" size={20} />;
-    } else if (hours >= 10 && hours < 16) {
-      // Mid-afternoon (1:00 PM - 3:59 PM)
-      return <MaterialCommunityIcons name="weather-sunny" size={20} />;
-    } else if (hours >= 16) {
-      // Twilight (4:00 PM - 11:59 PM)
-      return <MaterialCommunityIcons name="weather-night" size={20} />;
-    }
-  };
-
   return {
     dayOfWeek, // E.g., "Mon"
     dayNumber: dayNumber.toString(), // E.g., "17"
     month, // E.g., "Oct"
     time, // E.g., "10:00"
     year, // E.g., "2021"
-    TimeIcon,
   };
 };
 
