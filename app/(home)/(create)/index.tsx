@@ -28,7 +28,7 @@ import * as yup from "yup";
 import { PreferenceIcon, TimeRangeIcon } from "@/utils/icon";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { getTimeRange } from "@/utils/timeRange";
-import { timeRanges } from "@/constants/TimeRanges";
+import { timeRanges } from "@/data/timeRanges";
 
 type CreatePostValues = {
   golfCourse: string;

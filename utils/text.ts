@@ -31,3 +31,19 @@ export const labelFromStatus = (status: string) => {
       return status;
   }
 };
+
+export const formatDistanceMetric = (distance: number): string => {
+  if (distance < 1) {
+    // Convert to meters if less than 1 km
+    return `${Math.round(distance * 1000)} M`;
+  } else if (distance < 10) {
+    // Between 1 km and 10 km: X.XX KM
+    return `${distance.toFixed(2)} KM`;
+  } else if (distance < 100) {
+    // Between 10 km and 100 km: XX.X KM
+    return `${distance.toFixed(1)} KM`;
+  } else {
+    // Greater than 100 km: XXXYYY KM (rounded to nearest integer)
+    return `${Math.round(distance)} KM`;
+  }
+};

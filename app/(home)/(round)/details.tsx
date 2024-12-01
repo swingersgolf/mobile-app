@@ -93,15 +93,14 @@ const RoundDetailsScreen: React.FC = () => {
   }
 
   const renderRoundDate = () => {
-    console.log(roundDetails?.time_range);
     if (roundDetails) {
-      const { dayOfWeek, dayNumber, month } = parseRoundDate(
+      const { dayOfWeek, dayNumber, month, year } = parseRoundDate(
         roundDetails.date,
         true,
       );
       return (
         <Text style={GlobalStyles.h2}>
-          {`${dayOfWeek} ${dayNumber} ${month}`}
+          {`${dayOfWeek} ${dayNumber} ${month} ${year}`}
         </Text>
       );
     }
@@ -207,7 +206,7 @@ const RoundDetailsScreen: React.FC = () => {
   return (
     <View style={RoundStyles.container}>
       <ScrollView
-        style={RoundStyles.scrollStyle}
+        style={RoundStyles.scrollStyleDetails}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

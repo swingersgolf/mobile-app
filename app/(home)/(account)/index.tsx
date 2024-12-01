@@ -43,129 +43,119 @@ const AccountScreen = () => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }
+      style={accountStyles.scrollContainer}
+      contentContainerStyle={accountStyles.scrollContainerContent}
     >
-      <View style={accountStyles.container}>
-        {!user || !profile ? (
-          <View style={accountStyles.spinnerContainer}>
-            <Spinner />
-          </View>
-        ) : (
-          <>
-            <View style={accountStyles.accountContainer}>
-              <View
-                style={[
-                  accountStyles.infoContainer,
-                  accountStyles.pictureContainer,
-                ]}
-              >
-                <View style={accountStyles.profilePicture}>
-                  {/* <Text>Profile picture</Text> */}
-                  <Image
-                    source={SampleProfilePicture}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: 9999,
-                    }}
-                    resizeMode="cover"
-                  />
-                </View>
-              </View>
-              <View style={accountStyles.accountContent}>
-                <View style={accountStyles.infoContainer}>
-                  <Text style={GlobalStyles.h2}>User</Text>
-                  <View style={accountStyles.infoSection}>
-                    {user &&
-                      Object.entries(user)
-                        .filter(
-                          ([key]) => key !== "id" && key !== "expo_push_token",
-                        )
-                        .map(([key, value]) => (
-                          <View key={`user-${key}`} style={accountStyles.info}>
-                            <Text style={GlobalStyles.body}>
-                              {convertCamelCaseToLabel(key)}
-                            </Text>
-                            <Text style={GlobalStyles.body}>
-                              {value ? value : "Not set"}
-                            </Text>
-                          </View>
-                        ))}
-                  </View>
-                </View>
-                <View style={accountStyles.infoContainer}>
-                  <View style={accountStyles.headerContainer}>
-                    <Text style={GlobalStyles.h2}>Profile</Text>
-                    <TouchableOpacity
-                      onPress={() => router.push("edit-profile")}
-                    >
-                      <MaterialIcons
-                        name="edit"
-                        size={16}
-                        color={colors.neutral.dark}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <View style={accountStyles.infoSection}>
-                    {profile &&
-                      Object.entries(profile).map(([key, value]) => (
-                        <View key={`profile-${key}`} style={accountStyles.info}>
-                          <Text style={GlobalStyles.body}>
-                            {convertCamelCaseToLabel(key)}
-                          </Text>
-                          <Text style={GlobalStyles.body}>
-                            {" "}
-                            {value ? value : "Not set"}
-                          </Text>
-                        </View>
-                      ))}
-                  </View>
-                </View>
-                <View style={accountStyles.infoContainer}>
-                  <View style={accountStyles.headerContainer}>
-                    <Text style={GlobalStyles.h2}>Preferences</Text>
-                    <TouchableOpacity
-                      onPress={() => router.push("edit-preferences")}
-                    >
-                      <MaterialIcons
-                        name="edit"
-                        size={16}
-                        color={colors.neutral.dark}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <View style={accountStyles.infoSection}>
-                    {preferences && preferences.length > 0 ? (
-                      preferences.map((preference) => (
-                        <View
-                          key={`preferences-${preference.preference_id}}`}
-                          style={accountStyles.info}
-                        >
-                          <View style={accountStyles.preferenceLabel}>
-                            <PreferenceIcon name={preference.preference_name} />
-                            <Text style={GlobalStyles.body}>
-                              {convertCamelCaseToLabel(
-                                preference.preference_name,
-                              )}
-                            </Text>
-                          </View>
-
-                          <Text style={GlobalStyles.body}>
-                            {labelFromStatus(preference.status)
-                              ? labelFromStatus(preference.status)
-                              : "Not set"}
-                          </Text>
-                        </View>
-                      ))
-                    ) : (
-                      <Text style={GlobalStyles.body}>No preferences set</Text>
-                    )}
-                  </View>
-                </View>
-              </View>
+      {!user || !profile ? (
+        <View style={accountStyles.spinnerContainer}>
+          <Spinner />
+        </View>
+      ) : (
+        <>
+          <View
+            style={[
+              accountStyles.infoContainer,
+              accountStyles.pictureContainer,
+            ]}
+          >
+            <View style={accountStyles.profilePicture}>
+              {/* <Text>Profile picture</Text> */}
+              <Image
+                source={SampleProfilePicture}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 9999,
+                }}
+                resizeMode="cover"
+              />
             </View>
-          </>
-        )}
-      </View>
+          </View>
+          <View style={accountStyles.infoContainer}>
+            <Text style={GlobalStyles.h2}>User</Text>
+            <View style={accountStyles.infoSection}>
+              {user &&
+                Object.entries(user)
+                  .filter(([key]) => key !== "id" && key !== "expo_push_token")
+                  .map(([key, value]) => (
+                    <View key={`user-${key}`} style={accountStyles.info}>
+                      <Text style={GlobalStyles.body}>
+                        {convertCamelCaseToLabel(key)}
+                      </Text>
+                      <Text style={GlobalStyles.body}>
+                        {value ? value : "Not set"}
+                      </Text>
+                    </View>
+                  ))}
+            </View>
+          </View>
+          <View style={accountStyles.infoContainer}>
+            <View style={accountStyles.headerContainer}>
+              <Text style={GlobalStyles.h2}>Profile</Text>
+              <TouchableOpacity onPress={() => router.push("edit-profile")}>
+                <MaterialIcons
+                  name="edit"
+                  size={16}
+                  color={colors.neutral.dark}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={accountStyles.infoSection}>
+              {profile &&
+                Object.entries(profile)
+                  .filter(([key]) => key !== "latitude" && key !== "longitude")
+                  .map(([key, value]) => (
+                    <View key={`profile-${key}`} style={accountStyles.info}>
+                      <Text style={GlobalStyles.body}>
+                        {convertCamelCaseToLabel(key)}
+                      </Text>
+                      <Text style={GlobalStyles.body}>
+                        {" "}
+                        {value ? value : "Not set"}
+                      </Text>
+                    </View>
+                  ))}
+            </View>
+          </View>
+          <View style={accountStyles.infoContainer}>
+            <View style={accountStyles.headerContainer}>
+              <Text style={GlobalStyles.h2}>Preferences</Text>
+              <TouchableOpacity onPress={() => router.push("edit-preferences")}>
+                <MaterialIcons
+                  name="edit"
+                  size={16}
+                  color={colors.neutral.dark}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={accountStyles.infoSection}>
+              {preferences && preferences.length > 0 ? (
+                preferences.map((preference) => (
+                  <View
+                    key={`preferences-${preference.preference_id}}`}
+                    style={accountStyles.info}
+                  >
+                    <View style={accountStyles.preferenceLabel}>
+                      <PreferenceIcon name={preference.preference_name} />
+                      <Text style={GlobalStyles.body}>
+                        {convertCamelCaseToLabel(preference.preference_name)}
+                      </Text>
+                    </View>
+
+                    <Text style={GlobalStyles.body}>
+                      {labelFromStatus(preference.status)
+                        ? labelFromStatus(preference.status)
+                        : "Not set"}
+                    </Text>
+                  </View>
+                ))
+              ) : (
+                <Text style={GlobalStyles.body}>No preferences set</Text>
+              )}
+            </View>
+          </View>
+        </>
+      )}
     </ScrollView>
   );
 };

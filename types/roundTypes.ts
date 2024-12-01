@@ -21,6 +21,7 @@ interface RoundDetails {
   group_size: number;
   user: Golfer;
   host_id: string;
+  distance: number;
 }
 
 interface Round {

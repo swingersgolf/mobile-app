@@ -229,6 +229,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log("Profile response:", response.data);
         setProfile(response.data.data);
       }
       return Promise.resolve();

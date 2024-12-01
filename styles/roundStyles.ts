@@ -35,15 +35,13 @@ export const RoundStyles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: colors.background.primary,
-    borderBottomColor: colors.neutral.light,
-    borderBottomWidth: 5,
   },
   whenConatiner: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "flex-start",
-    width: 35,
+    alignItems: "center",
+    gap: 5,
   },
   infoContainer: {
     display: "flex",
@@ -62,7 +60,6 @@ export const RoundStyles = StyleSheet.create({
     columnGap: 5,
     rowGap: 5,
     flexWrap: "wrap",
-    width: 50,
   },
   attributeContainer: {
     display: "flex",
@@ -82,7 +79,14 @@ export const RoundStyles = StyleSheet.create({
   },
   scrollStyle: {
     width: "100%",
+    backgroundColor: colors.background.secondary,
+  },
+  scrollStyleDetails: {
+    width: "100%",
     backgroundColor: colors.background.primary,
+  },
+  roundScrollStyle: {
+    gap: 5,
   },
   filterOverlayContainer: {
     display: "flex",
@@ -247,17 +251,20 @@ export const RoundStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    columnGap: 10,
-    paddingHorizontal: 20,
     width: "100%",
+    paddingHorizontal: 20,
     paddingVertical: 5,
+    backgroundColor: colors.background.primary,
   },
   notificationHeaderContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
     width: "100%",
-    borderTopColor: colors.neutral.light,
-    borderTopWidth: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,
+    backgroundColor: colors.background.primary,
   },
   unreadDot: {
     width: 10,
@@ -277,5 +284,17 @@ export const RoundStyles = StyleSheet.create({
     height: "100%",
     width: 50,
     alignItems: "center",
+  },
+  notificationList: {
+    backgroundColor: colors.background.secondary,
+    width: "100%",
+  },
+  notificationListContent: {
+    backgroundColor: colors.background.secondary,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    width: "100%",
   },
 });

@@ -18,6 +18,7 @@ import { router, useFocusEffect } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import { PreferenceIcon } from "@/utils/icon";
+import { formatDistanceMetric } from "@/utils/text";
 
 const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -84,6 +85,7 @@ const RoundScreen = () => {
     <View style={RoundStyles.container}>
       <FlatList
         style={RoundStyles.scrollStyle}
+        contentContainerStyle={RoundStyles.roundScrollStyle}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -144,13 +146,13 @@ const RoundScreen = () => {
                 })
               }
             >
-              <View style={RoundStyles.whenConatiner}>
-                <TimeIcon />
-                <Text style={GlobalStyles.h3}>{dayOfWeek}</Text>
-                <Text style={GlobalStyles.h3}>{month}</Text>
-                <Text style={GlobalStyles.h3}>{dayNumber}</Text>
-              </View>
               <View style={RoundStyles.infoContainer}>
+                <View style={RoundStyles.whenConatiner}>
+                  <TimeIcon />
+                  <Text style={GlobalStyles.h3}>
+                    {`${dayOfWeek} ${month} ${dayNumber}`}
+                  </Text>
+                </View>
                 <Text style={GlobalStyles.h2}>{round.course}</Text>
                 <View style={RoundStyles.attributeContainer}>
                   {orderedPreferences.map((pref) => {
@@ -177,28 +179,33 @@ const RoundScreen = () => {
                     );
                   })}
                 </View>
-              </View>
-              <View style={RoundStyles.memberContainer}>
-                {[...Array(round.group_size)].map((_, index) => {
-                  const golfer = round.golfers[index];
-                  if (golfer && golfer.status === "accepted") {
+                <View style={{ position: "absolute", right: 0, bottom: 0 }}>
+                  <Text style={GlobalStyles.h4}>
+                    {formatDistanceMetric(round.distance)}
+                  </Text>
+                </View>
+                <View style={RoundStyles.memberContainer}>
+                  {[...Array(round.group_size)].map((_, index) => {
+                    const golfer = round.golfers[index];
+                    if (golfer && golfer.status === "accepted") {
+                      return (
+                        <View style={RoundStyles.memberIconFilled} key={index}>
+                          <MaterialIcons
+                            name="person"
+                            size={16}
+                            color={colors.neutral.light}
+                          />
+                        </View>
+                      );
+                    }
                     return (
-                      <View style={RoundStyles.memberIconFilled} key={index}>
-                        <MaterialIcons
-                          name="person"
-                          size={16}
-                          color={colors.neutral.light}
-                        />
-                      </View>
+                      <View
+                        style={RoundStyles.memberIconEmpty}
+                        key={index}
+                      ></View>
                     );
-                  }
-                  return (
-                    <View
-                      style={RoundStyles.memberIconEmpty}
-                      key={index}
-                    ></View>
-                  );
-                })}
+                  })}
+                </View>
               </View>
             </TouchableOpacity>
           );

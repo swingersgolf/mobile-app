@@ -2,16 +2,12 @@ import { useCallback, useState, useMemo } from "react";
 import {
   View,
   Text,
-  FlatList,
+  SectionList,
   TouchableOpacity,
   RefreshControl,
-  ListRenderItem,
-  Animated,
+  SectionListRenderItem,
+  SectionListData,
 } from "react-native";
-import {
-  GestureHandlerRootView,
-  Swipeable,
-} from "react-native-gesture-handler";
 import { Notification } from "@/types/notificationTypes";
 import { useFocusEffect } from "@react-navigation/native";
 import { colors } from "@/constants/Colors";
@@ -21,7 +17,6 @@ import { getTimeElapsed } from "@/utils/date";
 import { router } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
-import { MaterialIcons } from "@expo/vector-icons";
 
 type Section = {
   title: string;
@@ -69,70 +64,29 @@ const Notifications = () => {
     [apiUrl, token],
   );
 
-  const deleteNotification = useCallback(
-    async (notificationId: string) => {
-      try {
-        await axios.delete(`${apiUrl}/v1/notification/${notificationId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setNotifications((prevNotifications) =>
-          prevNotifications.filter(
-            (notification) => notification.id !== notificationId,
-          ),
-        );
-      } catch (error) {
-        console.error(`Error deleting notification ${notificationId}:`, error);
-      }
-    },
-    [apiUrl, token],
-  );
-
-  const notificationsArray = useMemo(
-    () =>
-      Array.from(notifications.values()).sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      ),
-    [notifications],
-  );
-
-  const groupNotificationsByDate = (): Section[] => {
+  const groupedNotifications = useMemo(() => {
     const now = new Date();
-    const today: Notification[] = [];
-    const last7Days: Notification[] = [];
-    const last30Days: Notification[] = [];
-    const older: Notification[] = [];
+    const sections: Section[] = [
+      { title: "Today", data: [] },
+      { title: "Last 7 Days", data: [] },
+      { title: "Last 30 Days", data: [] },
+      { title: "Older", data: [] },
+    ];
 
-    notificationsArray.forEach((notification) => {
+    notifications.forEach((notification) => {
       const createdAt = new Date(notification.created_at);
       const diffDays = Math.floor(
         (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24),
       );
 
-      if (diffDays === 0) {
-        today.push(notification);
-      } else if (diffDays <= 7) {
-        last7Days.push(notification);
-      } else if (diffDays <= 30) {
-        last30Days.push(notification);
-      } else {
-        older.push(notification);
-      }
+      if (diffDays === 0) sections[0].data.push(notification);
+      else if (diffDays <= 7) sections[1].data.push(notification);
+      else if (diffDays <= 30) sections[2].data.push(notification);
+      else sections[3].data.push(notification);
     });
 
-    return [
-      { title: "Today", data: today },
-      { title: "Last 7 Days", data: last7Days },
-      { title: "Last 30 Days", data: last30Days },
-      { title: "Older", data: older },
-    ].filter((section) => section.data.length > 0);
-  };
-
-  const groupedNotifications = useMemo(groupNotificationsByDate, [
-    notificationsArray,
-  ]);
+    return sections.filter((section) => section.data.length > 0);
+  }, [notifications]);
 
   const handleReadNotification = (notification: Notification) => {
     if (!notification.read_at) markAsRead(notification.id);
@@ -154,101 +108,58 @@ const Notifications = () => {
     setRefreshing(false);
   };
 
-  // Swipeable delete button functionality
-  const renderRightActions = (
-    progress: Animated.AnimatedInterpolation<number>,
-    dragX: Animated.AnimatedInterpolation<number>,
-    notification: Notification,
-  ) => {
-    // Animate the delete button sliding in from the right
-    const translateX = dragX.interpolate({
-      inputRange: [-50, 0],
-      outputRange: [0, 50],
-      extrapolate: "clamp",
-    });
-
-    const opacity = dragX.interpolate({
-      inputRange: [0, 50],
-      outputRange: [1, 0],
-      extrapolate: "clamp",
-    });
-
-    return (
-      <Animated.View
-        style={[
-          RoundStyles.deleteButton,
-          { transform: [{ translateX }], opacity },
-        ]}
-      >
-        <TouchableOpacity onPress={() => deleteNotification(notification.id)}>
-          <MaterialIcons name="delete" size={24} color={colors.neutral.light} />
-        </TouchableOpacity>
-      </Animated.View>
-    );
-  };
-
-  const renderNotification: ListRenderItem<Notification> = ({ item }) => {
+  const renderNotification: SectionListRenderItem<Notification> = ({
+    item,
+  }) => {
     const createdAt = new Date(item.created_at);
     const isUnread = !item.read_at;
     return (
-      <Swipeable
-        renderRightActions={(progress, dragX) =>
-          renderRightActions(progress, dragX, item)
-        }
+      <TouchableOpacity
+        onPress={() => handleReadNotification(item)}
+        style={RoundStyles.notificationItemContainer}
       >
-        <TouchableOpacity
-          onPress={() => handleReadNotification(item)}
-          style={RoundStyles.notificationItemContainer}
-        >
-          {isUnread && (
-            <View style={{ position: "absolute", left: 5 }}>
-              <View style={RoundStyles.unreadDot} />
-            </View>
-          )}
-          <Text>
-            <Text style={{ fontWeight: "500" }}>{item.data.title}&nbsp;</Text>
-            {item.data.body}&nbsp;
-            <Text style={{ color: colors.neutral.medium }}>
-              {getTimeElapsed(createdAt)}
-            </Text>
+        {isUnread && (
+          <View style={{ position: "absolute", left: 5 }}>
+            <View style={RoundStyles.unreadDot} />
+          </View>
+        )}
+        <Text style={{ fontWeight: "500", flexGrow: 1 }}>
+          {item.data.title}&nbsp;
+          {item.data.body}&nbsp;
+          <Text style={{ color: colors.neutral.medium }}>
+            {getTimeElapsed(createdAt)}
           </Text>
-        </TouchableOpacity>
-      </Swipeable>
+        </Text>
+      </TouchableOpacity>
     );
   };
 
   const renderSectionHeader = ({
-    section: { title },
+    section,
   }: {
-    section: Section;
+    section: SectionListData<Notification>;
   }) => (
     <View style={RoundStyles.notificationHeaderContainer}>
-      <Text style={GlobalStyles.h3}>{title}</Text>
+      <Text style={[GlobalStyles.h3, { width: "100%" }]}>{section.title}</Text>
     </View>
   );
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <FlatList
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={[colors.primary.default]}
-          />
-        }
-        data={groupedNotifications}
-        keyExtractor={(item, index) => `${item.title}-${index}`}
-        renderItem={({ item }) => (
-          <FlatList
-            data={item.data}
-            keyExtractor={(notification) => notification.id}
-            renderItem={renderNotification}
-            ListHeaderComponent={renderSectionHeader({ section: item })}
-          />
-        )}
-      />
-    </GestureHandlerRootView>
+    <SectionList
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={[colors.primary.default]}
+        />
+      }
+      style={RoundStyles.notificationList}
+      contentContainerStyle={RoundStyles.notificationListContent}
+      sections={groupedNotifications}
+      keyExtractor={(item) => item.id}
+      renderItem={renderNotification}
+      renderSectionHeader={renderSectionHeader}
+    />
   );
 };
 

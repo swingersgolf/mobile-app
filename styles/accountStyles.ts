@@ -2,12 +2,15 @@ import { StyleSheet } from "react-native";
 import { colors } from "@/constants/Colors";
 
 const accountStyles = StyleSheet.create({
-  container: {
+  scrollContainer: {
+    backgroundColor: colors.background.secondary,
+  },
+  scrollContainerContent: {
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    rowGap: 20,
-    flex: 1,
+    rowGap: 5,
+    backgroundColor: colors.background.secondary,
   },
   spinnerContainer: {
     width: "100%",
@@ -49,13 +52,13 @@ const accountStyles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    padding: 20,
     rowGap: 10,
-    borderBottomColor: colors.neutral.light,
-    borderBottomWidth: 5,
+    backgroundColor: colors.background.primary,
+    padding: 20,
   },
   pictureContainer: {
     alignItems: "center",
+    padding: 40,
   },
   info: {
     display: "flex",

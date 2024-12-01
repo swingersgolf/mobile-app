@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Alert, Linking } from "react-native";
 import { useAuth } from "@/contexts/AuthContext";
 import accountStyles from "@/styles/accountStyles";
 import TextButton from "@/components/TextButton";
@@ -23,9 +23,37 @@ const AccountSettingsScreen = () => {
     }
   };
 
+  const handleContactSupport = async () => {
+    const supportEmail = "support@example.com";
+    const subject = "Support Request";
+    const body = `Hello Support Team,\n\nI need help with...`;
+    const mailto = `mailto:${supportEmail}?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(body)}`;
+
+    try {
+      const supported = await Linking.canOpenURL(mailto);
+      if (supported) {
+        await Linking.openURL(mailto);
+      } else {
+        Alert.alert("Error", "No email application available");
+      }
+    } catch (error) {
+      console.error("Error opening email app:", error);
+      Alert.alert("Error", "Unable to open email application");
+    }
+  };
+
   return (
-    <View style={accountStyles.container}>
+    <View>
       <View style={accountStyles.paddedButtonContainer}>
+        <TextButton
+          text={"Contact support"}
+          onPress={handleContactSupport}
+          outline
+          textColor={colors.primary.default}
+          backgroundColor={colors.primary.default}
+        />
         {user && (
           <TextButton
             text={"Reset password"}
