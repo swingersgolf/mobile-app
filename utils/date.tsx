@@ -64,17 +64,18 @@ export const getAgeFromDateYYY_MM_DD = (dateString: string): number => {
   return age;
 };
 
-export const parseRoundDate = (when: string) => {
+export const parseRoundDate = (when: string, long?: boolean) => {
+  const longForm = long ?  "long" : "short";
   const date = new Date(when);
 
   // Get day of the week (3 characters)
-  const dayOfWeek = date.toLocaleString("en-US", { weekday: "short" });
+  const dayOfWeek = date.toLocaleString("en-US", { weekday: longForm });
 
   // Get day of the month
   const dayNumber = date.getDate();
 
   // Get month (3 characters)
-  const month = date.toLocaleString("en-US", { month: "short" });
+  const month = date.toLocaleString("en-US", { month: longForm });
 
   // Get time (HH:MM)
   const time = date.toLocaleString("en-US", {

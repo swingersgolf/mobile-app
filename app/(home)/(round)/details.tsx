@@ -95,10 +95,13 @@ const RoundDetailsScreen: React.FC = () => {
   const renderRoundDate = () => {
     console.log(roundDetails?.time_range);
     if (roundDetails) {
-      const { dayOfWeek, dayNumber, month } = parseRoundDate(roundDetails.date);
+      const { dayOfWeek, dayNumber, month } = parseRoundDate(
+        roundDetails.date,
+        true,
+      );
       return (
         <Text style={GlobalStyles.h2}>
-          {`${dayOfWeek}, ${dayNumber} ${month}`}
+          {`${dayOfWeek} ${dayNumber} ${month}`}
         </Text>
       );
     }
