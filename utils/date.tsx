@@ -1,5 +1,3 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
 export const isOver18 = (date: Date) => {
   const today = new Date();
   const birthDate = new Date(date);
