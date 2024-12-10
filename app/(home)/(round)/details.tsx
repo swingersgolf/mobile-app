@@ -204,6 +204,13 @@ const RoundDetailsScreen: React.FC = () => {
     );
   };
 
+  const handleMemberPress = ({ memberId }: { memberId: string }) => {
+    router.push({
+      pathname: "/public-account",
+      params: { userId: memberId },
+    });
+  };
+
   return (
     <View style={RoundStyles.container}>
       <ScrollView
@@ -338,9 +345,14 @@ const RoundDetailsScreen: React.FC = () => {
                   }).fill(undefined) as Golfer[],
                 )
                 .map((golfer, index) => (
-                  <View key={index} style={RoundStyles.memberListItem}>
+                  <View key={index} style={{ width: "100%" }}>
                     {golfer ? (
-                      <>
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleMemberPress({ memberId: golfer.id })
+                        }
+                        style={RoundStyles.memberListItem}
+                      >
                         <View style={RoundStyles.memberListItemContent}>
                           <Image
                             style={RoundStyles.memberProfilePicture}
@@ -351,11 +363,13 @@ const RoundDetailsScreen: React.FC = () => {
                         {golfer.id === roundDetails.host_id && (
                           <Text>Host</Text>
                         )}
-                      </>
+                      </TouchableOpacity>
                     ) : (
-                      <Text style={[GlobalStyles.h4]}>
-                        Waiting for member to join
-                      </Text>
+                      <View style={RoundStyles.memberListItem}>
+                        <Text style={[GlobalStyles.h4]}>
+                          Waiting for member to join
+                        </Text>
+                      </View>
                     )}
                   </View>
                 ))}

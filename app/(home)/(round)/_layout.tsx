@@ -59,6 +59,7 @@ const RoundLayout = () => {
           presentation: "modal",
         }}
       />
+      <Stack.Screen name="public-account" />
     </Stack>
   );
 };

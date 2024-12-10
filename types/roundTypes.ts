@@ -10,6 +10,12 @@ interface Golfer {
   status: "accepted" | "pending" | "rejected";
 }
 
+interface PublicAccount {
+  date_of_birth: string | null;
+  name: string;
+  preferences: Attribute[];
+}
+
 interface RoundDetails {
   id: number;
   date: string;
@@ -34,4 +40,4 @@ interface Round {
   group_size: number;
 }
 
-export type { Round, RoundDetails, Attribute, Golfer };
+export type { Round, RoundDetails, Attribute, Golfer, PublicAccount };

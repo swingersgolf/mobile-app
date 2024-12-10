@@ -1,42 +1,53 @@
-import { useAuth } from "@/contexts/AuthContext";
-import {
-  Text,
-  View,
-  ScrollView,
-  Image,
-  RefreshControl,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, ScrollView, Image, RefreshControl } from "react-native";
 import accountStyles from "@/styles/accountStyles";
 import { convertCamelCaseToLabel, labelFromStatus } from "@/utils/text";
 import Spinner from "@/components/Spinner";
 import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import GlobalStyles from "@/styles/GlobalStyles";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { PreferenceIcon } from "@/utils/icon";
-import { MaterialIcons } from "@expo/vector-icons";
-import { colors } from "@/constants/Colors";
-import { router } from "expo-router";
+import { PublicAccount } from "@/types/roundTypes";
 
-const AccountScreen = () => {
-  const {
-    user,
-    profile,
-    preferences,
-    fetchPreferences,
-    fetchProfile,
-    fetchUser,
-  } = useAuth();
-
+const PublicAccountScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
+  const [publicAccount, setPublicAccount] = useState<PublicAccount | null>(
+    null,
+  );
+  const { userId } = useLocalSearchParams();
+  const { token } = useAuth();
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+  const fetchPublicAccount = useCallback(async () => {
+    try {
+      console.log(`${apiUrl}/v1/public-account/${userId}`);
+      const response = await axios.get(
+        `${apiUrl}/v1/public-account/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setPublicAccount(response.data.data);
+    } catch (error) {
+      console.error("Error fetching account:", error);
+    }
+  }, [apiUrl, token, userId]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await fetchUser();
-    await fetchProfile();
-    await fetchPreferences();
+    await fetchPublicAccount();
     setRefreshing(false);
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPublicAccount();
+    }, [fetchPublicAccount]),
+  );
 
   return (
     <ScrollView
@@ -46,7 +57,7 @@ const AccountScreen = () => {
       style={accountStyles.scrollContainer}
       contentContainerStyle={accountStyles.scrollContainerContent}
     >
-      {!user || !profile ? (
+      {!publicAccount ? (
         <View style={accountStyles.spinnerContainer}>
           <Spinner />
         </View>
@@ -71,46 +82,21 @@ const AccountScreen = () => {
             </View>
           </View>
           <View style={accountStyles.infoContainer}>
-            <Text style={GlobalStyles.h2}>User</Text>
-            <View style={accountStyles.infoSection}>
-              {user &&
-                Object.entries(user)
-                  .filter(([key]) => key !== "id" && key !== "expo_push_token")
-                  .map(([key, value]) => (
-                    <View key={`user-${key}`} style={accountStyles.info}>
-                      <Text style={GlobalStyles.body}>
-                        {convertCamelCaseToLabel(key)}
-                      </Text>
-                      <Text style={GlobalStyles.body}>
-                        {value ? value : "Not set"}
-                      </Text>
-                    </View>
-                  ))}
-            </View>
-          </View>
-          <View style={accountStyles.infoContainer}>
             <View style={accountStyles.headerContainer}>
-              <Text style={GlobalStyles.h2}>Profile</Text>
-              <TouchableOpacity onPress={() => router.push("edit-profile")}>
-                <MaterialIcons
-                  name="edit"
-                  size={16}
-                  color={colors.neutral.dark}
-                />
-              </TouchableOpacity>
+              <Text style={GlobalStyles.h2}>Account</Text>
             </View>
             <View style={accountStyles.infoSection}>
-              {profile &&
-                Object.entries(profile)
-                  .filter(([key]) => key !== "latitude" && key !== "longitude")
+              {publicAccount &&
+                Object.entries(publicAccount)
+                  .filter(([key]) => key !== "preferences")
                   .map(([key, value]) => (
-                    <View key={`profile-${key}`} style={accountStyles.info}>
+                    <View key={`Account-${key}`} style={accountStyles.info}>
                       <Text style={GlobalStyles.body}>
                         {convertCamelCaseToLabel(key)}
                       </Text>
                       <Text style={GlobalStyles.body}>
                         {" "}
-                        {value ? value : "Not set"}
+                        {value ? String(value) : "Not set"}
                       </Text>
                     </View>
                   ))}
@@ -119,32 +105,24 @@ const AccountScreen = () => {
           <View style={accountStyles.infoContainer}>
             <View style={accountStyles.headerContainer}>
               <Text style={GlobalStyles.h2}>Preferences</Text>
-              <TouchableOpacity onPress={() => router.push("edit-preferences")}>
-                <MaterialIcons
-                  name="edit"
-                  size={16}
-                  color={colors.neutral.dark}
-                />
-              </TouchableOpacity>
             </View>
             <View style={accountStyles.infoSection}>
-              {preferences && preferences.length > 0 ? (
-                preferences.map((preference) => (
+              {publicAccount &&
+              publicAccount.preferences &&
+              publicAccount.preferences.length > 0 ? (
+                publicAccount.preferences.map((preference) => (
                   <View
-                    key={`preferences-${preference.preference_id}}`}
+                    key={`preferences-${preference.id}`}
                     style={accountStyles.info}
                   >
                     <View style={accountStyles.preferenceLabel}>
-                      <PreferenceIcon name={preference.preference_name} />
+                      <PreferenceIcon name={preference.name} />
                       <Text style={GlobalStyles.body}>
-                        {convertCamelCaseToLabel(preference.preference_name)}
+                        {convertCamelCaseToLabel(preference.name)}
                       </Text>
                     </View>
-
                     <Text style={GlobalStyles.body}>
-                      {labelFromStatus(preference.status)
-                        ? labelFromStatus(preference.status)
-                        : "Not set"}
+                      {labelFromStatus(preference.status) || "Not set"}
                     </Text>
                   </View>
                 ))
@@ -159,4 +137,4 @@ const AccountScreen = () => {
   );
 };
 
-export default AccountScreen;
+export default PublicAccountScreen;

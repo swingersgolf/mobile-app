@@ -43,7 +43,6 @@ const RoundRequestsScreen = () => {
         ?.golfers.some((golfer) => golfer.status === "pending");
 
       if (!hasPendingGolfers) {
-        console.log("All golfers have been accepted or rejected");
         router.back();
       }
 
