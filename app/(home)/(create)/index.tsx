@@ -29,6 +29,7 @@ import { PreferenceIcon, TimeRangeIcon } from "@/utils/icon";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { getTimeRange } from "@/utils/timeRange";
 import { timeRanges } from "@/data/timeRanges";
+import { capitalizeWords } from "@/utils/text";
 
 type CreatePostValues = {
   golfCourse: string;
@@ -106,10 +107,6 @@ const CreateScreen = () => {
       preferences: {},
     },
   });
-
-  const capitalizeWords = (text: string) => {
-    return text.replace(/\b\w/g, (char) => char.toUpperCase());
-  };
 
   const fetchGolfCourses = useCallback(async () => {
     try {
