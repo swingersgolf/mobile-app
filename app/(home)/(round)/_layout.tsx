@@ -52,7 +52,7 @@ const RoundLayout = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  router.push("/(messages)");
+                  router.push("messages");
                 }}
               >
                 <MaterialCommunityIcons
@@ -81,6 +81,7 @@ const RoundLayout = () => {
       />
       <Stack.Screen name="public-account" />
       <Stack.Screen name="messages" />
+      <Stack.Screen name="messages-chat" />
     </Stack>
   );
 };

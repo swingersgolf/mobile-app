@@ -131,7 +131,7 @@ const MessagesScreen = () => {
 
   const handleMessagePress = ({ id }: { id: number }) => {
     router.push({
-      pathname: "/chat",
+      pathname: "messages-chat",
       params: { messageId: id },
     });
   };

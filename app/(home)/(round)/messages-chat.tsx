@@ -1,6 +1,4 @@
 import { colors } from "@/constants/Colors";
-import { useAuth } from "@/contexts/AuthContext";
-import { useLocalSearchParams } from "expo-router";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -14,7 +12,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 
 const MessagesChatScreen = () => {
-  const { messageId } = useLocalSearchParams();
+  // const { messageId } = useLocalSearchParams();
   // const { user } = useAuth();
   const user = {
     id: 1,
@@ -123,10 +121,12 @@ const MessagesChatScreen = () => {
               style={{
                 textAlign: item.sender === user.name ? "right" : "left",
                 fontSize: 12,
+                color: colors.neutral.medium,
               }}
             >
               {item.sender}
             </Text>
+
             <View
               style={{
                 padding: 10,
@@ -136,6 +136,8 @@ const MessagesChatScreen = () => {
                     : colors.neutral.medium,
                 borderRadius: 10,
                 maxWidth: "75%",
+                alignSelf:
+                  item.sender === user.name ? "flex-end" : "flex-start",
               }}
             >
               <Text>{item.message}</Text>
@@ -176,7 +178,7 @@ const MessagesChatScreen = () => {
             onPress={handleSendMessage}
             style={{
               position: "absolute",
-              right: 10,
+              right: 5,
               top: 20,
               transform: [{ translateY: "-50%" }],
             }}
@@ -184,7 +186,7 @@ const MessagesChatScreen = () => {
           >
             <MaterialIcons
               name="telegram"
-              size={24}
+              size={30}
               color={
                 message.trim() ? colors.primary.light : colors.neutral.medium
               }

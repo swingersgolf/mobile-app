@@ -32,6 +32,7 @@ const CreateLayout = () => {
           name="index"
           options={{
             headerTitle: "New Round",
+            presentation: "fullScreenModal",
           }}
         />
       </Stack>
