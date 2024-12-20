@@ -9,6 +9,9 @@ export interface User {
 export interface Profile {
   handicap?: number;
   postalCode?: string;
+  longitude?: number;
+  latitude?: number;
+  picture?: string;
 }
 
 export interface Preference {

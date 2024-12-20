@@ -10,13 +10,14 @@ import {
 import accountStyles from "@/styles/accountStyles";
 import { convertCamelCaseToLabel, labelFromStatus } from "@/utils/text";
 import Spinner from "@/components/Spinner";
-import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useState } from "react";
+import * as ImagePicker from "expo-image-picker";
 import { PreferenceIcon } from "@/utils/icon";
 import { MaterialIcons } from "@expo/vector-icons";
 import { colors } from "@/constants/Colors";
 import { router } from "expo-router";
+import ProfilePicturePlaceholder from "@/assets/images/profile-picture-placeholder.png";
 
 const AccountScreen = () => {
   const {
@@ -26,6 +27,7 @@ const AccountScreen = () => {
     fetchPreferences,
     fetchProfile,
     fetchUser,
+    setProfilePicture,
   } = useAuth();
 
   const [refreshing, setRefreshing] = useState(false);
@@ -36,6 +38,26 @@ const AccountScreen = () => {
     await fetchProfile();
     await fetchPreferences();
     setRefreshing(false);
+  };
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access media library is required!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: "images",
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      const newImageUri = result.assets[0].uri;
+      setProfilePicture(newImageUri); // Update via AuthContext
+    }
   };
 
   return (
@@ -58,18 +80,25 @@ const AccountScreen = () => {
               accountStyles.pictureContainer,
             ]}
           >
-            <View style={accountStyles.profilePicture}>
-              <Image
-                source={SampleProfilePicture}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 9999,
-                }}
-                resizeMode="cover"
-              />
-            </View>
+            <TouchableOpacity onPress={pickImage}>
+              <View style={accountStyles.profilePicture}>
+                <Image
+                  source={
+                    profile.picture
+                      ? { uri: profile.picture }
+                      : ProfilePicturePlaceholder
+                  }
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 9999,
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
+            </TouchableOpacity>
           </View>
+
           <View style={accountStyles.infoContainer}>
             <Text style={GlobalStyles.h2}>User</Text>
             <View style={accountStyles.infoSection}>
@@ -88,6 +117,8 @@ const AccountScreen = () => {
                   ))}
             </View>
           </View>
+
+          {/* Profile Info */}
           <View style={accountStyles.infoContainer}>
             <View style={accountStyles.headerContainer}>
               <Text style={GlobalStyles.h2}>Profile</Text>
@@ -102,20 +133,25 @@ const AccountScreen = () => {
             <View style={accountStyles.infoSection}>
               {profile &&
                 Object.entries(profile)
-                  .filter(([key]) => key !== "latitude" && key !== "longitude")
+                  .filter(
+                    ([key]) =>
+                      key !== "latitude" &&
+                      key !== "longitude" &&
+                      key !== "picture",
+                  )
                   .map(([key, value]) => (
                     <View key={`profile-${key}`} style={accountStyles.info}>
                       <Text style={GlobalStyles.body}>
                         {convertCamelCaseToLabel(key)}
                       </Text>
                       <Text style={GlobalStyles.body}>
-                        {" "}
                         {value ? value : "Not set"}
                       </Text>
                     </View>
                   ))}
             </View>
           </View>
+
           <View style={accountStyles.infoContainer}>
             <View style={accountStyles.headerContainer}>
               <Text style={GlobalStyles.h2}>Preferences</Text>

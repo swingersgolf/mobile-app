@@ -2,8 +2,8 @@ import { router, Stack } from "expo-router";
 import BannerLogo from "@/assets/branding/BannerLogo.svg";
 import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
-import { MaterialIcons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { TouchableOpacity, View } from "react-native";
 
 const RoundLayout = () => {
   return (
@@ -31,17 +31,37 @@ const RoundLayout = () => {
             <BannerLogo id="icon" testID="icon" height={30} width={180} />
           ),
           headerRight: () => (
-            <TouchableOpacity
-              onPress={() => {
-                router.push("notifications");
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 15,
+                alignItems: "center",
               }}
             >
-              <MaterialIcons
-                name="notifications-none"
-                size={28}
-                color={colors.neutral.dark}
-              />
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push("notifications");
+                }}
+              >
+                <MaterialIcons
+                  name="notifications-none"
+                  size={30}
+                  color={colors.neutral.dark}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push("/(messages)");
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="chat-outline"
+                  size={30}
+                  color={colors.neutral.dark}
+                />
+              </TouchableOpacity>
+            </View>
           ),
         }}
       />
@@ -60,6 +80,7 @@ const RoundLayout = () => {
         }}
       />
       <Stack.Screen name="public-account" />
+      <Stack.Screen name="messages" />
     </Stack>
   );
 };

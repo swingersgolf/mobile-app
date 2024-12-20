@@ -46,6 +46,7 @@ interface AuthContextType {
     password: string,
   ) => Promise<void>;
   requestPushNotificationPermission: (authToken: string) => Promise<void>;
+  setProfilePicture: (profilePicture: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -347,6 +348,16 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const setProfilePicture = (uri: string) => {
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      picture: uri,
+    }));
+    // Optionally, send an update to the backend
+
+    return Promise.resolve();
+  };
+
   useEffect(() => {
     const syncStorage = async () => {
       if (token) {
@@ -393,6 +404,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         resetPassword,
         isLoading,
         requestPushNotificationPermission,
+        setProfilePicture,
       }}
     >
       {children}

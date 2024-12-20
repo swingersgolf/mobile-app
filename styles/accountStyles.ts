@@ -47,6 +47,7 @@ const accountStyles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 9999,
+    overflow: "hidden",
   },
   infoContainer: {
     display: "flex",
