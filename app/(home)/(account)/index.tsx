@@ -135,6 +135,40 @@ const AccountScreen = () => {
       host_id: "u2",
       distance: 18.7,
     },
+    {
+      id: 3,
+      date: "2025-01-20",
+      time_range: "afternoon",
+      course: "Pebble Beach Golf Links",
+      preferences: [
+        { id: 3, name: "Cart required", status: "indifferent" },
+        { id: 4, name: "Quiet play", status: "preferred" },
+      ],
+      golfers: [
+        {
+          id: "g3",
+          name: "Robert Lee",
+          status: "rejected",
+          photo: "https://example.com/photos/robert.jpg",
+        },
+        {
+          id: "g4",
+          name: "Emily Davis",
+          status: "accepted",
+          photo: "https://example.com/photos/emily.jpg",
+        },
+      ],
+      golfer_count: 3,
+      group_size: 4,
+      user: {
+        id: "u2",
+        name: "Chris Walker",
+        status: "accepted",
+        photo: null,
+      },
+      host_id: "u2",
+      distance: 18.7,
+    },
   ];
 
   return (

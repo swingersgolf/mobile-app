@@ -250,7 +250,11 @@ const RoundDetailsScreen: React.FC = () => {
                 }}
                 style={{ position: "absolute", top: 20, right: 20 }}
               >
-                <MaterialIcons name="edit" size={24} color="black" />
+                <MaterialIcons
+                  name="edit"
+                  size={24}
+                  color={colors.neutral.dark}
+                />
               </TouchableOpacity>
             )}
 
