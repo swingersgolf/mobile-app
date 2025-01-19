@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobile-app",
+    "name": "Swingers Golf",
     "slug": "swingers-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aidanfroggatt.mobileapp",
+      "bundleIdentifier": "com.swingersgolfapp.swingersgolf",
       "newArchEnabled": true,
       "splash": {
         "image": "./assets/images/splash.png",
