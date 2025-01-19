@@ -305,7 +305,7 @@ const RegisterScreen = () => {
               By clicking create account you are agreeing to follow our&nbsp;
               <Text
                 style={GlobalStyles.link}
-                onPress={() => handleLinkPress("https://google.com")}
+                onPress={() => handleLinkPress("https://swingersgolfapp.com/privacy")}
               >
                 privacy & terms
               </Text>
