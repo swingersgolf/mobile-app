@@ -6,6 +6,7 @@ import {
   Image,
   RefreshControl,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import accountStyles from "@/styles/accountStyles";
 import { convertCamelCaseToLabel, labelFromStatus } from "@/utils/text";
@@ -17,7 +18,7 @@ import { PreferenceIcon } from "@/utils/icon";
 import { MaterialIcons } from "@expo/vector-icons";
 import { colors } from "@/constants/Colors";
 import { router } from "expo-router";
-import ProfilePicturePlaceholder from "@/assets/images/profile-picture-placeholder.png";
+import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
 
 const AccountScreen = () => {
   const {
@@ -27,10 +28,11 @@ const AccountScreen = () => {
     fetchPreferences,
     fetchProfile,
     fetchUser,
-    setProfilePicture,
+    updateProfilePicture,
   } = useAuth();
 
   const [refreshing, setRefreshing] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -47,18 +49,93 @@ const AccountScreen = () => {
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
+    const newImage = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: "images",
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
     });
 
-    if (!result.canceled) {
-      const newImageUri = result.assets[0].uri;
-      setProfilePicture(newImageUri); // Update via AuthContext
+    if (!newImage.canceled) {
+      console.log("New image", newImage);
+      updateProfilePicture(newImage.assets[0].uri);
     }
   };
+
+  const handleImageError = () => {
+    setImageError(true); // Set to true when image fails to load
+  };
+
+  const myRounds = [
+    {
+      id: 1,
+      date: "2025-01-18",
+      time_range: "morning",
+      course: "Sunnyvale Golf Course",
+      preferences: [
+        { id: 1, name: "No smoking", status: "preferred" },
+        { id: 2, name: "No pets", status: "disliked" },
+      ],
+      golfers: [
+        {
+          id: "g1",
+          name: "John Doe",
+          status: "accepted",
+          photo: "https://example.com/photos/john.jpg",
+        },
+        {
+          id: "g2",
+          name: "Jane Smith",
+          status: "pending",
+          photo: null,
+        },
+      ],
+      golfer_count: 2,
+      group_size: 4,
+      user: {
+        id: "u1",
+        name: "Alice Johnson",
+        status: "accepted",
+        photo: "https://example.com/photos/alice.jpg",
+      },
+      host_id: "u1",
+      distance: 5.3,
+    },
+    {
+      id: 2,
+      date: "2025-01-20",
+      time_range: "afternoon",
+      course: "Pebble Beach Golf Links",
+      preferences: [
+        { id: 3, name: "Cart required", status: "indifferent" },
+        { id: 4, name: "Quiet play", status: "preferred" },
+      ],
+      golfers: [
+        {
+          id: "g3",
+          name: "Robert Lee",
+          status: "rejected",
+          photo: "https://example.com/photos/robert.jpg",
+        },
+        {
+          id: "g4",
+          name: "Emily Davis",
+          status: "accepted",
+          photo: "https://example.com/photos/emily.jpg",
+        },
+      ],
+      golfer_count: 3,
+      group_size: 4,
+      user: {
+        id: "u2",
+        name: "Chris Walker",
+        status: "accepted",
+        photo: null,
+      },
+      host_id: "u2",
+      distance: 18.7,
+    },
+  ];
 
   return (
     <ScrollView
@@ -84,9 +161,9 @@ const AccountScreen = () => {
               <View style={accountStyles.profilePicture}>
                 <Image
                   source={
-                    profile.picture
-                      ? { uri: profile.picture }
-                      : ProfilePicturePlaceholder
+                    imageError || !profile?.photo
+                      ? PlaceholderProfilePicture
+                      : { uri: profile.photo }
                   }
                   style={{
                     width: "100%",
@@ -94,11 +171,44 @@ const AccountScreen = () => {
                     borderRadius: 9999,
                   }}
                   resizeMode="cover"
+                  onError={handleImageError}
                 />
               </View>
             </TouchableOpacity>
           </View>
 
+          {/* My Rounds Info */}
+          {myRounds && myRounds.length > 0 && (
+            <View style={accountStyles.infoContainer}>
+              <Text style={GlobalStyles.h2}>My Rounds</Text>
+              <FlatList
+                data={myRounds}
+                horizontal
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={accountStyles.roundCard}
+                    onPress={() =>
+                      router.replace({
+                        pathname: "/(home)/(round)/details",
+                        params: item.id,
+                      })
+                    }
+                  >
+                    <Text style={GlobalStyles.h3}>{item.course}</Text>
+                    <Text style={GlobalStyles.body}>{item.date}</Text>
+                    <Text style={GlobalStyles.body}>
+                      {convertCamelCaseToLabel(item.time_range)}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={accountStyles.horizontalFlatlist}
+              />
+            </View>
+          )}
+
+          {/* User info */}
           <View style={accountStyles.infoContainer}>
             <Text style={GlobalStyles.h2}>User</Text>
             <View style={accountStyles.infoSection}>
@@ -137,7 +247,7 @@ const AccountScreen = () => {
                     ([key]) =>
                       key !== "latitude" &&
                       key !== "longitude" &&
-                      key !== "picture",
+                      key !== "photo",
                   )
                   .map(([key, value]) => (
                     <View key={`profile-${key}`} style={accountStyles.info}>

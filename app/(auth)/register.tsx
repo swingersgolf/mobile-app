@@ -144,7 +144,7 @@ const RegisterScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value || ""}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.name && <InFormAlert error={errors.name.message} />}
                   </>
@@ -189,7 +189,7 @@ const RegisterScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value || ""}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.email && (
                       <InFormAlert error={errors.email.message} />
@@ -227,9 +227,7 @@ const RegisterScreen = () => {
                     >
                       <Text
                         style={{
-                          color: value
-                            ? colors.neutral.dark
-                            : colors.neutral.mediumDark,
+                          color: colors.neutral.dark,
                         }}
                       >
                         {selectedDate
@@ -287,7 +285,7 @@ const RegisterScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value || ""}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.password && (
                       <InFormAlert error={errors.password.message} />
@@ -300,8 +298,8 @@ const RegisterScreen = () => {
             <TextButton
               text="Create Account"
               onPress={handleSubmit(handleCreateAccount)}
-              textColor={colors.neutral.light}
-              backgroundColor={colors.primary.default}
+              textColor={colors.button.primary.text}
+              backgroundColor={colors.button.primary.background}
             />
             <Text style={GlobalStyles.body}>
               By clicking create account you are agreeing to follow our&nbsp;
@@ -314,7 +312,7 @@ const RegisterScreen = () => {
               .
             </Text>
           </View>
-          <Text style={(GlobalStyles.body, { textAlign: "center" })}>
+          <Text style={[GlobalStyles.body, { textAlign: "center" }]}>
             Already have an account?&nbsp;
             <Text
               style={GlobalStyles.link}

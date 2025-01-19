@@ -257,6 +257,12 @@ const CreateScreen = () => {
                   color: colors.neutral.dark,
                   fontSize: 14,
                 }}
+                itemContainerStyle={{
+                  backgroundColor: colors.background.primary,
+                }}
+                containerStyle={{
+                  backgroundColor: colors.background.secondary,
+                }}
                 value={value}
                 onChange={(item) => {
                   onChange(item.value); // Now this will be the course id
@@ -320,6 +326,12 @@ const CreateScreen = () => {
                 itemTextStyle={{
                   color: colors.neutral.dark,
                   fontSize: 14,
+                }}
+                itemContainerStyle={{
+                  backgroundColor: colors.background.primary,
+                }}
+                containerStyle={{
+                  backgroundColor: colors.background.secondary,
                 }}
                 value={value}
                 onChange={(item) => onChange(item.value)}
@@ -615,8 +627,8 @@ const CreateScreen = () => {
             <TextButton
               text="Create Post"
               onPress={handleSubmit(handleCreateRound)}
-              textColor={colors.neutral.light}
-              backgroundColor={colors.primary.default}
+              textColor={colors.button.primary.text}
+              backgroundColor={colors.button.primary.background}
             />
           </View>
         </View>

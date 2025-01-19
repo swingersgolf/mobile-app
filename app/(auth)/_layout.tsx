@@ -1,7 +1,7 @@
 import { Pressable, Keyboard, TouchableOpacity, Text } from "react-native";
-import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
 import { router, Stack } from "expo-router";
+import Icon from "@/components/Icon";
 
 const AuthLayout = () => {
   return (
@@ -11,9 +11,7 @@ const AuthLayout = () => {
           headerShown: true,
           headerBackButtonDisplayMode: "minimal",
           headerTintColor: colors.neutral.dark,
-          headerTitle: () => (
-            <Icon id="icon" testID="icon" height={30} width={30} />
-          ),
+          headerTitle: () => <Icon height={30} width={30} />,
           contentStyle: {
             backgroundColor: colors.background.primary,
             padding: 20,
@@ -29,6 +27,7 @@ const AuthLayout = () => {
         />
         <Stack.Screen name="login" options={{}} />
         <Stack.Screen name="register" options={{}} />
+        <Stack.Screen name="set-photo" options={{ presentation: "card" }} />
         <Stack.Screen
           name="set-profile"
           options={{

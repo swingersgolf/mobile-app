@@ -6,10 +6,10 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { RoundStyles } from "@/styles/roundStyles";
-import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import alertStyles from "@/styles/AlertStyles";
 import { Golfer } from "@/types/roundTypes";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
+import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
 
 const RoundRequestsScreen = () => {
   const { roundId, requests } = useLocalSearchParams();
@@ -17,8 +17,13 @@ const RoundRequestsScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
   const [error, setError] = useState<string>("");
+  const [imageError, setImageError] = useState<boolean>(false);
 
   const { setRoundCache } = useRoundCache();
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
 
   const updateRoundCache = (
     requestId: string,
@@ -101,7 +106,12 @@ const RoundRequestsScreen = () => {
               <View style={RoundStyles.memberListItemContent}>
                 <Image
                   style={RoundStyles.memberProfilePicture}
-                  source={SampleProfilePicture} // Replace with actual golfer image if available
+                  source={
+                    imageError || !golfer.photo
+                      ? PlaceholderProfilePicture
+                      : { uri: golfer.photo }
+                  }
+                  onError={handleImageError} // Error handler for image loading
                 />
                 <Text style={GlobalStyles.h3}>{request.name}</Text>
               </View>

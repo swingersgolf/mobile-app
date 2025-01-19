@@ -109,7 +109,7 @@ const ForgotPasswordScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.email && (
                       <InFormAlert error={errors.email.message} />
@@ -123,8 +123,8 @@ const ForgotPasswordScreen = () => {
               <TextButton
                 text="Send code"
                 onPress={handleSubmit(handleForgotPassword)}
-                textColor={colors.neutral.light}
-                backgroundColor={colors.primary.default}
+                textColor={colors.button.primary.text}
+                backgroundColor={colors.button.primary.background}
               />
             </View>
           </View>

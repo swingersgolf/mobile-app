@@ -9,3 +9,7 @@ export const setProfileSchema = yup.object().shape({
   handicap: yup.number().required("Handicap is required"),
   postalCode: yup.string().required("Postal code is required"),
 });
+
+export const setPhotoSchema = yup.object().shape({
+  photo: yup.string().required("Photo is required"),
+});

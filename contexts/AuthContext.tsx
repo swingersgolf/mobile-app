@@ -16,6 +16,7 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
+import * as FileSystem from "expo-file-system";
 
 interface AuthContextType {
   token: string | null;
@@ -46,7 +47,7 @@ interface AuthContextType {
     password: string,
   ) => Promise<void>;
   requestPushNotificationPermission: (authToken: string) => Promise<void>;
-  setProfilePicture: (profilePicture: string) => Promise<void>;
+  updateProfilePicture: (uri: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -348,14 +349,47 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const setProfilePicture = (uri: string) => {
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      picture: uri,
-    }));
-    // Optionally, send an update to the backend
+  const updateProfilePicture = async (uri: string) => {
+    try {
+      // Step 1: Get the signed URL for upload
+      const signedURLResponse = await axios.put(
+        `${apiUrl}/v1/profile-photo`,
+        {}, // Assuming the body is empty for fetching the signed URL
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-    return Promise.resolve();
+      const signedURL = signedURLResponse.data.url;
+
+      // Step 2: Read the file as a base64 string using FileSystem
+      const fileUri = uri;
+      const fileData = await FileSystem.readAsStringAsync(fileUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Step 3: Convert the base64 string to a Uint8Array
+      const binaryData = new Uint8Array(
+        atob(fileData)
+          .split("")
+          .map((char) => char.charCodeAt(0)),
+      );
+
+      // Step 4: Perform the PUT request to the signed URL with binary data
+      await axios.put(signedURL, binaryData, {
+        headers: {
+          "Content-Type": "image/jpeg",
+          "Content-Length": binaryData.length,
+        },
+      });
+
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Error setting profile picture:", error);
+      return Promise.reject(error);
+    }
   };
 
   useEffect(() => {
@@ -364,22 +398,43 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         try {
           await setStorageItemAsync("token", token);
           await fetchUser();
-          await fetchProfile();
-          await fetchPreferences();
         } catch {
           setToken(null);
           setUser(null);
-          setProfile(null);
-          setPreferences(null);
         }
       } else {
         await setStorageItemAsync("token", null);
         setUser(null);
+      }
+    };
+
+    const fetchInitialProfile = async () => {
+      if (token) {
+        try {
+          await fetchProfile();
+        } catch {
+          setProfile(null);
+        }
+      } else {
         setProfile(null);
+      }
+    };
+
+    const fetchInitialPreferences = async () => {
+      if (token) {
+        try {
+          await fetchPreferences();
+        } catch {
+          setPreferences(null);
+        }
+      } else {
         setPreferences(null);
       }
     };
+
     syncStorage();
+    fetchInitialProfile();
+    fetchInitialPreferences();
   }, [fetchPreferences, fetchProfile, fetchUser, setToken, token]);
 
   return (
@@ -404,7 +459,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         resetPassword,
         isLoading,
         requestPushNotificationPermission,
-        setProfilePicture,
+        updateProfilePicture,
       }}
     >
       {children}

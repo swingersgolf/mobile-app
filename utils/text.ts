@@ -32,8 +32,10 @@ export const labelFromStatus = (status: string) => {
   }
 };
 
-export const formatDistanceMetric = (distance: number): string => {
-  if (distance < 1) {
+export const formatDistanceMetric = (distance: number): string | null => {
+  if (distance === null) {
+    return null;
+  } else if (distance < 1) {
     // Convert to meters if less than 1 km
     return `${Math.round(distance * 1000)} M`;
   } else if (distance < 10) {

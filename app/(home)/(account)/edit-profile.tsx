@@ -109,7 +109,7 @@ const EditProfileScreen = () => {
                         onChange(val === "" ? null : val); // Set null if the input is cleared
                       }}
                       value={value?.toString()}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.handicap && (
                       <InFormAlert error={errors.handicap.message} />
@@ -146,7 +146,7 @@ const EditProfileScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.postalCode && (
                       <InFormAlert error={errors.postalCode.message} />
@@ -160,14 +160,14 @@ const EditProfileScreen = () => {
               <TextButton
                 text={"Save changes"}
                 onPress={handleSubmit(handleSaveChanges)}
-                textColor={colors.neutral.light}
-                backgroundColor={colors.primary.default}
+                textColor={colors.button.primary.text}
+                backgroundColor={colors.button.primary.background}
               />
               <TextButton
                 text={"Cancel"}
                 onPress={handleCancel}
-                textColor={colors.primary.default}
-                backgroundColor={colors.primary.default}
+                textColor={colors.button.secondary.text}
+                backgroundColor={colors.button.secondary.background}
                 outline
               />
             </View>

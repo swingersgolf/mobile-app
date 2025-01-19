@@ -1,8 +1,8 @@
 import { TouchableOpacity } from "react-native";
 import { Stack, router } from "expo-router";
-import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons"; // Import vector icons
+import Icon from "@/components/Icon";
 
 const AccountLayout = () => {
   return (
@@ -17,9 +17,7 @@ const AccountLayout = () => {
         headerStyle: {
           backgroundColor: colors.background.primary,
         },
-        headerTitle: () => (
-          <Icon id="icon" testID="icon" height={30} width={30} />
-        ),
+        headerTitle: () => <Icon height={30} width={30} />,
       }}
     >
       <Stack.Screen

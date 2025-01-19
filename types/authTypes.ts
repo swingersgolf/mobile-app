@@ -11,7 +11,7 @@ export interface Profile {
   postalCode?: string;
   longitude?: number;
   latitude?: number;
-  picture?: string;
+  photo?: string;
 }
 
 export interface Preference {

@@ -17,6 +17,9 @@ const CreateLayout = () => {
           headerStyle: {
             backgroundColor: colors.background.primary,
           },
+          headerTitleStyle: {
+            color: colors.neutral.dark,
+          },
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.replace("/(round)")}>
               <MaterialIcons

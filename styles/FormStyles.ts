@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Appearance, StyleSheet } from "react-native";
 import { colors } from "@/constants/Colors";
 
 const formStyles = StyleSheet.create({
@@ -53,7 +53,7 @@ const formStyles = StyleSheet.create({
     width: "100%",
   },
   placeholderStyle: {
-    color: colors.neutral.mediumDark,
+    color: colors.neutral.dark,
     fontSize: 14,
   },
   preferencesForm: {
@@ -84,7 +84,7 @@ const formStyles = StyleSheet.create({
     columnGap: 5,
   },
   preferenceLabel: {
-    color: colors.neutral.mediumDark,
+    color: colors.neutral.dark,
   },
   preferenceButton: {
     paddingHorizontal: 10,
@@ -101,7 +101,10 @@ const formStyles = StyleSheet.create({
     borderColor: colors.primary.default,
   },
   selectedButtonText: {
-    color: colors.neutral.light,
+    color:
+      Appearance.getColorScheme() === "dark"
+        ? colors.neutral.dark
+        : colors.neutral.light,
   },
   textButtonContainer: {
     display: "flex",

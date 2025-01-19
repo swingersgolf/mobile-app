@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   RefreshControl,
+  Appearance,
 } from "react-native";
 import { classifyPreference } from "@/utils/preference";
 import { RoundDetails } from "@/types/roundTypes";
@@ -162,18 +163,11 @@ const RoundScreen = () => {
                           : colors.neutral.medium;
 
                     return (
-                      <View
+                      <PreferenceIcon
+                        name={pref.name}
                         key={pref.id}
-                        style={[
-                          RoundStyles.attribute,
-                          { backgroundColor: color },
-                        ]}
-                      >
-                        <PreferenceIcon
-                          name={pref.name}
-                          color={colors.neutral.light}
-                        />
-                      </View>
+                        backgroundColor={color}
+                      />
                     );
                   })}
                 </View>
@@ -191,7 +185,11 @@ const RoundScreen = () => {
                           <MaterialIcons
                             name="person"
                             size={16}
-                            color={colors.neutral.light}
+                            color={
+                              Appearance.getColorScheme() === "dark"
+                                ? colors.neutral.dark
+                                : colors.neutral.light
+                            }
                           />
                         </View>
                       );

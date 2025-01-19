@@ -205,9 +205,13 @@ const SetPreferencesScreen = () => {
               <TextButton
                 text="Complete"
                 onPress={handleSubmit(handleSaveChanges)}
-                textColor={isValid ? colors.neutral.light : colors.neutral.dark}
+                textColor={
+                  isValid ? colors.button.primary.text : colors.neutral.dark
+                }
                 backgroundColor={
-                  isValid ? colors.primary.default : colors.neutral.medium
+                  isValid
+                    ? colors.button.primary.background
+                    : colors.neutral.medium
                 }
                 disabled={!isValid}
               />

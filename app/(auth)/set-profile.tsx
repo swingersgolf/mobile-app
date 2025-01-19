@@ -101,7 +101,7 @@ const SetProfileScreen = () => {
                         onChange(val === "" ? null : val); // Set null if the input is cleared
                       }}
                       value={value?.toString()}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.handicap && (
                       <InFormAlert error={errors.handicap.message} />
@@ -138,7 +138,7 @@ const SetProfileScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.postalCode && (
                       <InFormAlert error={errors.postalCode.message} />
@@ -152,9 +152,13 @@ const SetProfileScreen = () => {
               <TextButton
                 text="Continue"
                 onPress={handleSubmit(handleSaveChanges)}
-                textColor={isValid ? colors.neutral.light : colors.neutral.dark}
+                textColor={
+                  isValid ? colors.button.primary.text : colors.neutral.dark
+                }
                 backgroundColor={
-                  isValid ? colors.primary.default : colors.neutral.medium
+                  isValid
+                    ? colors.button.primary.background
+                    : colors.neutral.medium
                 }
                 disabled={!isValid}
               />

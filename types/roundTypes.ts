@@ -8,12 +8,14 @@ interface Golfer {
   id: string;
   name: string;
   status: "accepted" | "pending" | "rejected";
+  photo: string | null;
 }
 
 interface PublicAccount {
   date_of_birth: string | null;
   name: string;
   preferences: Attribute[];
+  photo: string | null;
 }
 
 interface RoundDetails {

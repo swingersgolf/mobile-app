@@ -15,7 +15,6 @@ import { Golfer, RoundDetails } from "@/types/roundTypes";
 import { colors } from "@/constants/Colors";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { parseRoundDate } from "@/utils/date";
-import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import TextButton from "@/components/TextButton";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -23,26 +22,34 @@ import { PreferenceIcon, TimeRangeIcon } from "@/utils/icon";
 import { classifyPreference } from "@/utils/preference";
 import { getTimeRange, getTimeRangeLabelFromId } from "@/utils/timeRange";
 import { formatDistanceMetric } from "@/utils/text";
+import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
 
 const RoundDetailsScreen: React.FC = () => {
   const { roundId } = useLocalSearchParams();
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token, user, preferences } = useAuth();
 
-  const { roundCache, setRoundCache } = useRoundCache();
+  const { setRoundCache } = useRoundCache();
 
   const [roundDetails, setRoundDetails] = useState<RoundDetails | null>(null);
   const [error, setError] = useState<string>("");
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
+  // Inside your component
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageError = () => {
+    setImageError(true); // Set to true when image fails to load
+  };
+
   const fetchRoundDetails = useCallback(async () => {
     setError("");
 
-    // Check if the details are already in cache
-    if (roundCache.has(roundId as string)) {
-      setRoundDetails(roundCache.get(roundId as string)!);
-      return;
-    }
+    // // Check if the details are already in cache
+    // if (roundCache.has(roundId as string)) {
+    //   setRoundDetails(roundCache.get(roundId as string)!);
+    //   return;
+    // }
 
     try {
       const response = await axios.get(`${apiUrl}/v1/round/${roundId}`, {
@@ -66,7 +73,7 @@ const RoundDetailsScreen: React.FC = () => {
         setError("An unexpected error occurred. Please try again.");
       }
     }
-  }, [apiUrl, roundId, token, roundCache, setRoundCache]);
+  }, [apiUrl, roundId, token, setRoundCache]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -318,8 +325,8 @@ const RoundDetailsScreen: React.FC = () => {
                   >
                     <PreferenceIcon
                       name={sortedPref.name}
-                      color={colors.neutral.light}
-                      status={sortedPref.status} // Pass the round's status directly
+                      status={sortedPref.status}
+                      backgroundColor={sortedPref.backgroundColor}
                     />
                   </View>
                 ))}
@@ -356,12 +363,17 @@ const RoundDetailsScreen: React.FC = () => {
                         <View style={RoundStyles.memberListItemContent}>
                           <Image
                             style={RoundStyles.memberProfilePicture}
-                            source={SampleProfilePicture}
+                            source={
+                              imageError || !golfer.photo
+                                ? PlaceholderProfilePicture
+                                : { uri: golfer.photo }
+                            }
+                            onError={handleImageError} // Error handler for image loading
                           />
                           <Text style={GlobalStyles.h3}>{golfer.name}</Text>
                         </View>
                         {golfer.id === roundDetails.host_id && (
-                          <Text>Host</Text>
+                          <Text style={GlobalStyles.body}>Host</Text>
                         )}
                       </TouchableOpacity>
                     ) : (
@@ -398,8 +410,8 @@ const RoundDetailsScreen: React.FC = () => {
                   }
                 : undefined
             }
-            textColor={colors.neutral.light}
-            backgroundColor={colors.primary.default}
+            textColor={colors.button.primary.text}
+            backgroundColor={colors.button.primary.background}
             disabled={countRequests({ status: "pending" }) === 0}
           />
         </View>
@@ -431,8 +443,8 @@ const RoundDetailsScreen: React.FC = () => {
                       ? deleteRequest
                       : requestToJoinRound
               }
-              textColor={colors.neutral.light}
-              backgroundColor={colors.primary.default}
+              textColor={colors.button.primary.text}
+              backgroundColor={colors.button.primary.background}
             />
           </View>
         )

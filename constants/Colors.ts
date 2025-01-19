@@ -1,27 +1,78 @@
-export const colors = {
+import { Appearance } from "react-native";
+
+export const lightColors = {
   primary: {
-    default: "#07663b", // Main/Logo Color
-    light: "#4CAF74", // Lighter Shade for success or highlights
-    dark: "#044929", // Darker Shade for headers, primary text
+    default: "#07663b",
+    light: "#4CAF74",
+    dark: "#044929",
   },
   neutral: {
-    light: "#F4F4F4", // Light Neutral for backgrounds, light text
-    medium: "#B2B2B2", // Medium Neutral for body text, borders
-    mediumDark: "#4F4F4F", // Darker than medium light, but lighter than dark
-    dark: "#2E2E2E", // Dark Neutral for primary text, dark backgrounds
+    light: "#F4F4F4",
+    medium: "#B2B2B2",
+    dark: "#2E2E2E",
   },
   secondary: {
-    yellow: "#FFCD05", // Yellow for accents, warnings
-    blue: "#7DBBFA", // Blue for information, highlights
+    yellow: "#FFCD05",
+    blue: "#7DBBFA",
   },
   background: {
-    primary: "#F9F9F9", // Primary Background Color for main sections
-    secondary: "#E0E0E0", // Secondary Background Color for cards, secondary sections
+    primary: "#F9F9F9",
+    secondary: "#E0E0E0",
   },
   alert: {
-    success: "#4CAF74", // Success Messages - Green (primary light)
-    error: "#FF5252", // Error Messages - Red
-    warning: "#FFCD05", // Warning Messages - Yellow (secondary yellow)
-    info: "#7DBBFA", // Information Messages - Blue (secondary blue)
+    success: "#4CAF74",
+    error: "#FF5252",
+    warning: "#FFCD05",
+    info: "#7DBBFA",
+  },
+  button: {
+    primary: {
+      background: "#07663b",
+      text: "#F4F4F4",
+    },
+    secondary: {
+      background: "#F4F4F4",
+      text: "#07663b",
+    },
   },
 };
+
+export const darkColors = {
+  primary: {
+    default: "#07663b",
+    light: "#4CAF74",
+    dark: "#044929",
+  },
+  neutral: {
+    light: "#2E2E2E",
+    medium: "#B2B2B2",
+    dark: "#F4F4F4",
+  },
+  secondary: {
+    yellow: "#FFCD05",
+    blue: "#7DBBFA",
+  },
+  background: {
+    primary: "#2A2A2A",
+    secondary: "#1E1E1E",
+  },
+  alert: {
+    success: "#4CAF74",
+    error: "#FF5252",
+    warning: "#FFCD05",
+    info: "#7DBBFA",
+  },
+  button: {
+    primary: {
+      background: "#F4F4F4",
+      text: "#2E2E2E",
+    },
+    secondary: {
+      background: "#F4F4F4",
+      text: "#F4F4F4",
+    },
+  },
+};
+
+export const colors =
+  Appearance.getColorScheme() === "dark" ? darkColors : lightColors;

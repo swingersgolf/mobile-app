@@ -7,14 +7,20 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.aidanfroggatt.mobileapp",
-      "newArchEnabled": true
+      "newArchEnabled": true,
+      "splash": {
+        "image": "./assets/images/splash.png",
+        "backgroundColor": "#F9F9F9",
+        "resizeMode": "cover",
+        "dark": {
+          "image": "./assets/images/splash-dark.png",
+          "backgroundColor": "#2E2E2E",
+          "resizeMode": "cover"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +28,17 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.aidanfroggatt.mobileapp",
-      "newArchEnabled": true
+      "newArchEnabled": true,
+      "splash": {
+        "image": "./assets/images/splash.png",
+        "backgroundColor": "#F9F9F9",
+        "resizeMode": "cover",
+        "dark": {
+          "image": "./assets/images/splash-dark.png",
+          "backgroundColor": "#2E2E2E",
+          "resizeMode": "cover"
+        }
+      }
     },
     "web": {
       "bundler": "metro",

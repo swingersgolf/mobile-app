@@ -123,7 +123,7 @@ const Notifications = () => {
             <View style={RoundStyles.unreadDot} />
           </View>
         )}
-        <Text style={{ fontWeight: "500", flexGrow: 1 }}>
+        <Text style={[{ fontWeight: "500", flexGrow: 1 }, GlobalStyles.body]}>
           {item.data.title}&nbsp;
           {item.data.body}&nbsp;
           <Text style={{ color: colors.neutral.medium }}>

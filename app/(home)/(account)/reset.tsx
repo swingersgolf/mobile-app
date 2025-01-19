@@ -63,7 +63,7 @@ const ResetPasswordScreen = () => {
     <View
       id="verify-email"
       testID="verify-email"
-      style={(accountStyles.container, accountStyles.accountFormContainer)}
+      style={[accountStyles.container, accountStyles.accountFormContainer]}
     >
       {loading ? (
         <View style={accountStyles.spinnerContainer}>
@@ -71,9 +71,9 @@ const ResetPasswordScreen = () => {
         </View>
       ) : (
         <>
-          <View>
+          <View style={accountStyles.accountFormHeader}>
             <Text style={GlobalStyles.h1}>Enter your credentials</Text>
-            <Text style={GlobalStyles.h2}>
+            <Text style={GlobalStyles.h3}>
               We have sent a 6-digit verification code to your email.
             </Text>
           </View>
@@ -115,7 +115,7 @@ const ResetPasswordScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.email && (
                       <InFormAlert error={errors.email.message} />
@@ -160,7 +160,7 @@ const ResetPasswordScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.password && (
                       <InFormAlert error={errors.password.message} />
@@ -206,7 +206,7 @@ const ResetPasswordScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.code && <InFormAlert error={errors.code.message} />}
                   </>
@@ -218,8 +218,8 @@ const ResetPasswordScreen = () => {
               <TextButton
                 text="Confirm"
                 onPress={handleSubmit(handleResetPassword)}
-                textColor={colors.neutral.light}
-                backgroundColor={colors.primary.default}
+                textColor={colors.button.primary.text}
+                backgroundColor={colors.button.primary.background}
               />
             </View>
           </View>

@@ -223,14 +223,14 @@ const EditPreferencesScreen = () => {
               <TextButton
                 text={"Save changes"}
                 onPress={handleSubmit(handleSaveChanges)}
-                textColor={colors.neutral.light}
-                backgroundColor={colors.primary.default}
+                textColor={colors.button.primary.text}
+                backgroundColor={colors.button.primary.background}
               />
               <TextButton
                 text={"Cancel"}
                 onPress={handleCancel}
-                textColor={colors.primary.default}
-                backgroundColor={colors.primary.default}
+                textColor={colors.button.secondary.text}
+                backgroundColor={colors.button.secondary.background}
                 outline
               />
             </View>

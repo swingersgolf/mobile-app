@@ -2,6 +2,12 @@ import { StyleSheet } from "react-native";
 import { colors } from "@/constants/Colors";
 
 const accountStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    rowGap: 20,
+  },
   scrollContainer: {
     backgroundColor: colors.background.secondary,
   },
@@ -115,6 +121,21 @@ const accountStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  accountFormHeader: {
+    display: "flex",
+    flexDirection: "column",
+    rowGap: 5,
+  },
+  roundCard: {
+    position: "relative",
+    backgroundColor: colors.neutral.light, // Light background color for the card
+    borderRadius: 10,
+    padding: 10,
+    width: 200, // Fixed width for each card
+  },
+  horizontalFlatlist: {
+    gap: 10,
   },
 });
 

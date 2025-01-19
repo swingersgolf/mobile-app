@@ -41,7 +41,7 @@ const VerifyEmailScreen = () => {
     try {
       await verifyEmail(email as string, data.code);
       await signIn(email as string, password as string);
-      router.push("/set-profile");
+      router.push("/set-photo");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
@@ -128,7 +128,7 @@ const VerifyEmailScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.code && <InFormAlert error={errors.code.message} />}
                   </>
@@ -140,14 +140,14 @@ const VerifyEmailScreen = () => {
               <TextButton
                 text="Verify"
                 onPress={handleSubmit(handleVerifyEmail)}
-                textColor={colors.neutral.light}
-                backgroundColor={colors.primary.default}
+                textColor={colors.button.primary.text}
+                backgroundColor={colors.button.primary.background}
               />
               <TextButton
                 text={"Resend code"}
                 onPress={handleResendVerificationCode}
-                textColor={colors.primary.default}
-                backgroundColor={colors.primary.default}
+                textColor={colors.button.secondary.text}
+                backgroundColor={colors.button.secondary.background}
                 outline
               />
             </View>

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 const MessagesChatScreen = () => {
   // const { messageId } = useLocalSearchParams();
@@ -133,14 +134,14 @@ const MessagesChatScreen = () => {
                 backgroundColor:
                   item.sender === user.name
                     ? colors.primary.light
-                    : colors.neutral.medium,
+                    : colors.neutral.light,
                 borderRadius: 10,
                 maxWidth: "75%",
                 alignSelf:
                   item.sender === user.name ? "flex-end" : "flex-start",
               }}
             >
-              <Text>{item.message}</Text>
+              <Text style={GlobalStyles.body}>{item.message}</Text>
             </View>
           </View>
         )}
@@ -154,6 +155,7 @@ const MessagesChatScreen = () => {
           flexDirection: "row",
           alignItems: "center",
           backgroundColor: colors.background.primary,
+          bottom: 10,
         }}
       >
         <View
@@ -172,7 +174,7 @@ const MessagesChatScreen = () => {
             onChangeText={setMessage}
             placeholder="Type a message..."
             placeholderTextColor={colors.neutral.medium}
-            style={{ width: "100%", height: "100%" }}
+            style={[{ width: "100%", height: "100%" }, GlobalStyles.body]}
           />
           <TouchableOpacity
             onPress={handleSendMessage}

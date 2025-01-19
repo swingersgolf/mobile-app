@@ -3,6 +3,7 @@ import { colors } from "@/constants/Colors";
 import { getTimeElapsed } from "@/utils/date";
 import ProfilePicturePlaceholder from "@/assets/images/profile-picture-placeholder.png";
 import { router } from "expo-router";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 const MessagesScreen = () => {
   const messages = [
@@ -175,11 +176,14 @@ const MessagesScreen = () => {
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  fontWeight: "500",
-                }}
+                style={[
+                  {
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    fontWeight: "500",
+                  },
+                  GlobalStyles.body,
+                ]}
               >
                 {item.sender}
               </Text>
@@ -187,11 +191,14 @@ const MessagesScreen = () => {
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
-                  style={{
-                    flexShrink: 1,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
+                  style={[
+                    {
+                      flexShrink: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    },
+                    GlobalStyles.body,
+                  ]}
                 >
                   {item.lastMessage}
                 </Text>

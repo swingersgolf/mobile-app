@@ -1,9 +1,9 @@
 import { router, Stack } from "expo-router";
-import BannerLogo from "@/assets/branding/BannerLogo.svg";
-import Icon from "@/assets/branding/Icon.svg";
 import { colors } from "@/constants/Colors";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
+import Icon from "@/components/Icon";
+import BannerLogo from "@/components/BannerLogo";
 
 const RoundLayout = () => {
   return (
@@ -11,9 +11,7 @@ const RoundLayout = () => {
       screenOptions={{
         headerShown: true,
         headerBackButtonDisplayMode: "minimal",
-        headerTitle: () => (
-          <Icon id="icon" testID="icon" height={30} width={30} />
-        ),
+        headerTitle: () => <Icon height={30} width={30} />,
         headerTintColor: colors.neutral.dark,
         contentStyle: {
           backgroundColor: colors.background.primary,
@@ -27,9 +25,7 @@ const RoundLayout = () => {
         name="index"
         options={{
           headerTitle: "",
-          headerLeft: () => (
-            <BannerLogo id="icon" testID="icon" height={30} width={180} />
-          ),
+          headerLeft: () => <BannerLogo height={30} width={180} />,
           headerRight: () => (
             <View
               style={{

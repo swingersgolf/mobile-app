@@ -165,6 +165,7 @@ export const RoundStyles = StyleSheet.create({
     padding: 10,
     width: "100%",
     backgroundColor: colors.neutral.light,
+    borderRadius: 10,
   },
   memberProfilePicture: {
     display: "flex",

@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     borderWidth: 5,
-    borderColor: colors.primary.default,
+    borderColor: colors.neutral.dark,
     borderTopColor: "transparent",
     borderBottomColor: "transparent",
   },

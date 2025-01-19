@@ -1,17 +1,17 @@
 import { useAuth } from "@/contexts/AuthContext";
 import axios, { isAxiosError } from "axios";
 import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { Key, useState } from "react";
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { RoundStyles } from "@/styles/roundStyles";
-import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import alertStyles from "@/styles/AlertStyles";
 import { Golfer } from "@/types/roundTypes";
 import TextButton from "@/components/TextButton";
 import { useRouter } from "expo-router";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
+import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
 
 const EditRoundScreen = () => {
   const { roundId, golfers } = useLocalSearchParams();
@@ -21,9 +21,14 @@ const EditRoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
   const [error, setError] = useState<string>("");
+  const [imageError, setImageError] = useState<boolean>(false);
 
   const router = useRouter();
   const { setRoundCache } = useRoundCache();
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
 
   const deleteRound = () => {
     Alert.alert(
@@ -136,7 +141,12 @@ const EditRoundScreen = () => {
                   <View style={RoundStyles.memberListItemContent}>
                     <Image
                       style={RoundStyles.memberProfilePicture}
-                      source={SampleProfilePicture} // Replace with actual golfer image if available
+                      source={
+                        imageError || !golfer.photo
+                          ? PlaceholderProfilePicture
+                          : { uri: golfer.photo }
+                      }
+                      onError={handleImageError} // Error handler for image loading
                     />
                     <Text style={GlobalStyles.h3}>{golfer.name}</Text>
                   </View>

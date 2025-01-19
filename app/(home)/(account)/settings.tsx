@@ -51,24 +51,24 @@ const AccountSettingsScreen = () => {
           text={"Contact support"}
           onPress={handleContactSupport}
           outline
-          textColor={colors.primary.default}
-          backgroundColor={colors.primary.default}
+          textColor={colors.button.secondary.text}
+          backgroundColor={colors.button.secondary.background}
         />
         {user && (
           <TextButton
             text={"Reset password"}
             onPress={handleResetPassword}
             outline
-            textColor={colors.primary.default}
-            backgroundColor={colors.primary.default}
+            textColor={colors.button.secondary.text}
+            backgroundColor={colors.button.secondary.background}
           />
         )}
         <TextButton
           text={"Sign out"}
           onPress={signOut}
           outline
-          textColor={colors.primary.default}
-          backgroundColor={colors.primary.default}
+          textColor={colors.button.secondary.text}
+          backgroundColor={colors.button.secondary.background}
         />
       </View>
     </View>

@@ -2,7 +2,6 @@ import { Text, View, ScrollView, Image, RefreshControl } from "react-native";
 import accountStyles from "@/styles/accountStyles";
 import { convertCamelCaseToLabel, labelFromStatus } from "@/utils/text";
 import Spinner from "@/components/Spinner";
-import SampleProfilePicture from "@/assets/images/sample_profile_picture.webp";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useCallback, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,9 +9,11 @@ import axios from "axios";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { PreferenceIcon } from "@/utils/icon";
 import { PublicAccount } from "@/types/roundTypes";
+import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
 
 const PublicAccountScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
+  const [imageError, setImageError] = useState(false); // State to track image error
   const [publicAccount, setPublicAccount] = useState<PublicAccount | null>(
     null,
   );
@@ -49,6 +50,10 @@ const PublicAccountScreen = () => {
     }, [fetchPublicAccount]),
   );
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   return (
     <ScrollView
       refreshControl={
@@ -71,13 +76,18 @@ const PublicAccountScreen = () => {
           >
             <View style={accountStyles.profilePicture}>
               <Image
-                source={SampleProfilePicture}
+                source={
+                  imageError || !publicAccount?.photo
+                    ? PlaceholderProfilePicture
+                    : { uri: publicAccount?.photo }
+                } // Use placeholder on error
                 style={{
                   width: "100%",
                   height: "100%",
                   borderRadius: 9999,
                 }}
                 resizeMode="cover"
+                onError={handleImageError} // Error handler for image loading
               />
             </View>
           </View>
@@ -88,7 +98,7 @@ const PublicAccountScreen = () => {
             <View style={accountStyles.infoSection}>
               {publicAccount &&
                 Object.entries(publicAccount)
-                  .filter(([key]) => key !== "preferences")
+                  .filter(([key]) => key !== "preferences" && key !== "photo")
                   .map(([key, value]) => (
                     <View key={`Account-${key}`} style={accountStyles.info}>
                       <Text style={GlobalStyles.body}>

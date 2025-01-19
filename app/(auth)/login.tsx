@@ -130,7 +130,7 @@ const LoginScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.email && (
                       <InFormAlert error={errors.email.message} />
@@ -175,7 +175,7 @@ const LoginScreen = () => {
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      placeholderTextColor={colors.neutral.mediumDark}
+                      placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.password && (
                       <InFormAlert error={errors.password.message} />
@@ -188,8 +188,8 @@ const LoginScreen = () => {
             <TextButton
               text="Sign in"
               onPress={handleSubmit(handleSignIn)}
-              textColor={colors.neutral.light}
-              backgroundColor={colors.primary.default}
+              textColor={colors.button.primary.text}
+              backgroundColor={colors.button.primary.background}
             />
             <Text style={GlobalStyles.body}>
               If you forgot your password you can reset by&nbsp;
@@ -210,7 +210,7 @@ const LoginScreen = () => {
               <TouchableOpacity key={index}>{provider.icon}</TouchableOpacity>
             ))}
           </View> */}
-          <Text style={(GlobalStyles.body, { textAlign: "center" })}>
+          <Text style={[GlobalStyles.body, { textAlign: "center" }]}>
             New to Swingers?&nbsp;
             <Text
               style={GlobalStyles.link}

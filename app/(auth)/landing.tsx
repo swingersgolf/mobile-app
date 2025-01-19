@@ -1,28 +1,28 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Appearance } from "react-native";
 import { useRouter } from "expo-router";
 import TextButton from "@/components/TextButton";
-import BannerLogoLight from "@/assets/branding/BannerLogoLight.svg";
 import { colors } from "@/constants/Colors";
+import BannerLogo from "@/components/BannerLogo";
 
 const LandingScreen = () => {
   const router = useRouter();
 
   return (
     <View style={styles.landing}>
-      <BannerLogoLight width={300} height={75} />
+      <BannerLogo width={300} height={75} />
       <View style={styles.buttonsContainer}>
         <TextButton
           text="Sign In"
           onPress={() => router.push("/login")}
-          backgroundColor={colors.background.primary}
-          textColor={colors.primary.default}
+          backgroundColor={colors.button.primary.background}
+          textColor={colors.button.primary.text}
         />
         <TextButton
           text="Create Account"
           onPress={() => router.push("/register")}
           outline
-          backgroundColor={colors.primary.default}
-          textColor={colors.neutral.light}
+          backgroundColor={colors.button.secondary.background}
+          textColor={colors.button.secondary.text}
         />
       </View>
     </View>
@@ -38,7 +38,10 @@ const styles = StyleSheet.create({
     position: "relative",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.primary.default,
+    backgroundColor:
+      Appearance.getColorScheme() === "dark"
+        ? colors.primary.default
+        : colors.background.primary,
   },
   buttonsContainer: {
     padding: 20,
