@@ -308,20 +308,24 @@ export const RoundStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    top: 5,
-    right: 10,
-    padding: 5,
+    top: 0,
+    right: 0,
   },
-  hostBadgeContainer: {
+  hostBadge: {
     backgroundColor: colors.primary.default,
     borderRadius: 5,
     paddingHorizontal: 5,
     paddingVertical: 2.5,
   },
-  memberBadgeContainer: {
+  memberBadge: {
     backgroundColor: colors.neutral.medium,
     borderRadius: 5,
     paddingHorizontal: 5,
     paddingVertical: 2.5,
+  },
+  distanceContainer: {
+    position: "absolute",
+    right: 0,
+    bottom: 0,
   },
 });

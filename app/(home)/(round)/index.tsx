@@ -145,25 +145,24 @@ const RoundScreen = () => {
                 })
               }
             >
-              <View style={RoundStyles.badgeContainer}>
-                {console.log("round", round)}
-                {/* If user is the host display a host badge, else if user is a member of the round display a member badge, else display nothing */}
-                {round.host_id === user?.id ? (
-                  <View style={RoundStyles.hostBadgeContainer}>
-                    <Text style={GlobalStyles.body}>Host</Text>
-                  </View>
-                ) : round.golfers.find((golfer) => golfer.id === user?.id) ? (
-                  <View style={RoundStyles.memberBadgeContainer}>
-                    <Text style={GlobalStyles.body}>
-                      {capitalizeWords(
-                        round.golfers.find((golfer) => golfer.id === user?.id)
-                          ?.status || "",
-                      )}
-                    </Text>
-                  </View>
-                ) : null}
-              </View>
               <View style={RoundStyles.infoContainer}>
+                <View style={RoundStyles.badgeContainer}>
+                  {/* If user is the host display a host badge, else if user is a member of the round display a member badge, else display nothing */}
+                  {round.host_id === user?.id ? (
+                    <View style={RoundStyles.hostBadge}>
+                      <Text style={GlobalStyles.body}>Host</Text>
+                    </View>
+                  ) : round.golfers.find((golfer) => golfer.id === user?.id) ? (
+                    <View style={RoundStyles.memberBadge}>
+                      <Text style={GlobalStyles.body}>
+                        {capitalizeWords(
+                          round.golfers.find((golfer) => golfer.id === user?.id)
+                            ?.status || "",
+                        )}
+                      </Text>
+                    </View>
+                  ) : null}
+                </View>
                 <View style={RoundStyles.whenConatiner}>
                   <TimeRangeIcon name={round.time_range} />
                   <Text style={GlobalStyles.h3}>
@@ -189,7 +188,7 @@ const RoundScreen = () => {
                     );
                   })}
                 </View>
-                <View style={{ position: "absolute", right: 0, bottom: 0 }}>
+                <View style={RoundStyles.distanceContainer}>
                   <Text style={GlobalStyles.h4}>
                     {formatDistanceMetric(round.distance)}
                   </Text>
