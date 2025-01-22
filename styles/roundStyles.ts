@@ -1,5 +1,5 @@
 import { colors } from "@/constants/Colors";
-import { StyleSheet } from "react-native";
+import { Appearance, StyleSheet } from "react-native";
 
 export const RoundStyles = StyleSheet.create({
   container: {
@@ -322,6 +322,12 @@ export const RoundStyles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 5,
     paddingVertical: 2.5,
+  },
+  memberBadgeText: {
+    color:
+      Appearance.getColorScheme() === "dark"
+        ? colors.neutral.dark
+        : colors.neutral.light,
   },
   distanceContainer: {
     position: "absolute",

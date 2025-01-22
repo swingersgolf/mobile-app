@@ -150,11 +150,17 @@ const RoundScreen = () => {
                   {/* If user is the host display a host badge, else if user is a member of the round display a member badge, else display nothing */}
                   {round.host_id === user?.id ? (
                     <View style={RoundStyles.hostBadge}>
-                      <Text style={GlobalStyles.body}>Host</Text>
+                      <Text
+                        style={[GlobalStyles.body, RoundStyles.memberBadgeText]}
+                      >
+                        Host
+                      </Text>
                     </View>
                   ) : round.golfers.find((golfer) => golfer.id === user?.id) ? (
                     <View style={RoundStyles.memberBadge}>
-                      <Text style={GlobalStyles.body}>
+                      <Text
+                        style={[GlobalStyles.body, RoundStyles.memberBadgeText]}
+                      >
                         {capitalizeWords(
                           round.golfers.find((golfer) => golfer.id === user?.id)
                             ?.status || "",
