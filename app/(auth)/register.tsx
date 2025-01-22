@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Keyboard,
-} from "react-native";
+import { Text, View, TextInput } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "@/schemas/registerSchema";
@@ -16,7 +10,7 @@ import { Linking } from "react-native";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { formatDateYYYY_MM_DD } from "@/utils/date";
 import authStyles from "@/styles/authStyles";
 import Alert, { InFormAlert } from "@/components/Alert";
@@ -25,7 +19,8 @@ import GlobalStyles from "@/styles/GlobalStyles";
 
 type RegisterFormValues = {
   email: string;
-  name: string;
+  firstname: string;
+  lastname: string;
   password: string;
   birthdate: string;
 };
@@ -34,7 +29,6 @@ const RegisterScreen = () => {
   const { createAccount } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
   const {
@@ -46,7 +40,8 @@ const RegisterScreen = () => {
   } = useForm<RegisterFormValues>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
-      name: "",
+      firstname: "",
+      lastname: "",
       email: "",
       password: "",
       birthdate: "",
@@ -57,7 +52,13 @@ const RegisterScreen = () => {
     setLoading(true);
     setError("");
     try {
-      await createAccount(data.name, data.email, data.password, data.birthdate);
+      await createAccount(
+        data.firstname,
+        data.lastname,
+        data.email,
+        data.password,
+        data.birthdate,
+      );
       router.replace({
         pathname: "/verify",
         params: { email: data.email, password: data.password },
@@ -76,21 +77,13 @@ const RegisterScreen = () => {
     }
   };
 
-  const showDatePicker = () => {
-    Keyboard.dismiss();
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date: Date) => {
-    setSelectedDate(date);
-    const formattedDate = formatDateYYYY_MM_DD(date);
-    setValue("birthdate", formattedDate);
-    trigger("birthdate"); // Re-validate the birthdate field
-    hideDatePicker();
+  const handleConfirm = (event: unknown, date?: Date) => {
+    if (date) {
+      setSelectedDate(date);
+      const formattedDate = formatDateYYYY_MM_DD(date);
+      setValue("birthdate", formattedDate);
+      trigger("birthdate"); // Re-validate the birthdate field
+    }
   };
 
   const handleLinkPress = (url: string) => Linking.openURL(url);
@@ -112,7 +105,7 @@ const RegisterScreen = () => {
             <View style={formStyles.inputWrapper}>
               <Controller
                 control={control}
-                name="name"
+                name="firstname"
                 render={({
                   field: { onChange, onBlur, value },
                 }: {
@@ -127,26 +120,72 @@ const RegisterScreen = () => {
                       <Text
                         style={[
                           formStyles.formInputTitle,
-                          errors.name && formStyles.formInputTitleError,
+                          errors.firstname && formStyles.formInputTitleError,
                         ]}
                       >
-                        Name
+                        First Name
                       </Text>
                     )}
                     <TextInput
-                      placeholder="Name"
-                      autoComplete="name"
-                      textContentType="name"
+                      placeholder="First Name"
+                      autoComplete="name-given"
+                      textContentType="givenName"
                       style={[
                         formStyles.formInput,
-                        errors.name && formStyles.invalidInput,
+                        errors.firstname && formStyles.invalidInput,
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value || ""}
                       placeholderTextColor={colors.neutral.dark}
                     />
-                    {errors.name && <InFormAlert error={errors.name.message} />}
+                    {errors.firstname && (
+                      <InFormAlert error={errors.firstname.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+            <View style={formStyles.inputWrapper}>
+              <Controller
+                control={control}
+                name="lastname"
+                render={({
+                  field: { onChange, onBlur, value },
+                }: {
+                  field: {
+                    onChange: (value: string) => void;
+                    onBlur: () => void;
+                    value: string;
+                  };
+                }) => (
+                  <>
+                    {value && (
+                      <Text
+                        style={[
+                          formStyles.formInputTitle,
+                          errors.lastname && formStyles.formInputTitleError,
+                        ]}
+                      >
+                        Last Name
+                      </Text>
+                    )}
+                    <TextInput
+                      placeholder="Last Name"
+                      autoComplete="name-family"
+                      textContentType="familyName"
+                      style={[
+                        formStyles.formInput,
+                        errors.lastname && formStyles.invalidInput,
+                      ]}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value || ""}
+                      placeholderTextColor={colors.neutral.dark}
+                    />
+                    {errors.lastname && (
+                      <InFormAlert error={errors.lastname.message} />
+                    )}
                   </>
                 )}
               />
@@ -208,40 +247,27 @@ const RegisterScreen = () => {
                   field: { value: string };
                 }) => (
                   <>
-                    {value && (
-                      <Text
-                        style={[
-                          formStyles.formInputTitle,
-                          errors.birthdate && formStyles.formInputTitleError,
-                        ]}
-                      >
-                        Date of birth
-                      </Text>
-                    )}
-                    <TouchableOpacity
-                      onPress={showDatePicker}
+                    <Text
+                      style={[
+                        formStyles.formInputTitle,
+                        errors.birthdate && formStyles.formInputTitleError,
+                      ]}
+                    >
+                      Date of Birth
+                    </Text>
+                    <View
                       style={[
                         formStyles.formInput,
                         errors.birthdate && formStyles.invalidInput,
+                        formStyles.dateTimeInput,
                       ]}
                     >
-                      <Text
-                        style={{
-                          color: colors.neutral.dark,
-                        }}
-                      >
-                        {selectedDate
-                          ? formatDateYYYY_MM_DD(selectedDate)
-                          : "Date of birth"}
-                      </Text>
-                    </TouchableOpacity>
-                    <DateTimePickerModal
-                      isVisible={isDatePickerVisible}
-                      mode="date"
-                      date={selectedDate || new Date()}
-                      onConfirm={(date) => handleConfirm(date)}
-                      onCancel={hideDatePicker}
-                    />
+                      <DateTimePicker
+                        value={selectedDate || new Date()}
+                        mode="date"
+                        onChange={handleConfirm}
+                      />
+                    </View>
                     {errors.birthdate && (
                       <InFormAlert error={errors.birthdate.message} />
                     )}
@@ -305,7 +331,9 @@ const RegisterScreen = () => {
               By clicking create account you are agreeing to follow our&nbsp;
               <Text
                 style={GlobalStyles.link}
-                onPress={() => handleLinkPress("https://swingersgolfapp.com/privacy")}
+                onPress={() =>
+                  handleLinkPress("https://swingersgolfapp.com/privacy")
+                }
               >
                 privacy & terms
               </Text>

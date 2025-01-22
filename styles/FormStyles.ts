@@ -34,6 +34,13 @@ const formStyles = StyleSheet.create({
     borderColor: colors.neutral.medium,
     color: colors.neutral.dark,
   },
+  dateTimeInput: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 0,
+    justifyContent: "space-between",
+  },
   invalidInput: {
     borderColor: colors.alert.error,
   },
@@ -112,6 +119,41 @@ const formStyles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     rowGap: 10,
+  },
+  modalFormContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalForm: {
+    backgroundColor: colors.background.primary,
+    padding: 20,
+    display: "flex",
+    flexDirection: "row",
+    rowGap: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  errorText: {
+    color: colors.alert.error,
+    fontSize: 12,
+    marginTop: 4,
+  },
+  pickerContainer: {
+    flexDirection: "column", // Stack children vertically
+    justifyContent: "flex-start", // Ensure they start from the top
+    alignItems: "stretch", // Stretch form fields across the container
+  },
+  picker: {
+    overflow: "hidden", // Optional: Hide the overflowing items
+    height: 100, // Set the height of the dropdown
+  },
+  pickerItem: {
+    color: colors.neutral.dark,
+    fontSize: 14,
+    height: 100, // Set the height of each item in the dropdown
   },
 });
 

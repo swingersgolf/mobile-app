@@ -136,7 +136,7 @@ const RoundDetailsScreen: React.FC = () => {
         (golfer) =>
           golfer.status === status && golfer.id !== roundDetails.host_id,
       )
-      .map((golfer) => ({ id: golfer.id, name: golfer.name }));
+      .map((golfer) => ({ id: golfer.id, name: golfer.firstname }));
   };
 
   const requestToJoinRound = async () => {
@@ -374,7 +374,9 @@ const RoundDetailsScreen: React.FC = () => {
                             }
                             onError={handleImageError} // Error handler for image loading
                           />
-                          <Text style={GlobalStyles.h3}>{golfer.name}</Text>
+                          <Text style={GlobalStyles.h3}>
+                            {golfer.firstname}&nbsp;{golfer.lastname}
+                          </Text>
                         </View>
                         {golfer.id === roundDetails.host_id && (
                           <Text style={GlobalStyles.body}>Host</Text>

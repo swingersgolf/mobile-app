@@ -6,7 +6,8 @@ interface Attribute {
 
 interface Golfer {
   id: string;
-  name: string;
+  firstname: string;
+  lastname: string;
   status: "accepted" | "pending" | "rejected";
   photo: string | null;
 }
@@ -42,4 +43,21 @@ interface Round {
   group_size: number;
 }
 
-export type { Round, RoundDetails, Attribute, Golfer, PublicAccount };
+type CreatePostValues = {
+  golfCourse: string;
+  date: string;
+  time_range: "early_bird" | "morning" | "afternoon" | "twilight";
+  slots: string;
+  preferences: {
+    [key: string]: string;
+  };
+};
+
+export type {
+  Round,
+  RoundDetails,
+  Attribute,
+  Golfer,
+  PublicAccount,
+  CreatePostValues,
+};

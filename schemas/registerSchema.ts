@@ -2,7 +2,8 @@ import * as yup from "yup";
 import { isOver18 } from "@/utils/date";
 
 export const registerSchema = yup.object().shape({
-  name: yup.string().required("Name is required"),
+  firstname: yup.string().required("Name is required"),
+  lastname: yup.string().required("Last name is required"),
   email: yup
     .string()
     .email("Please enter a valid email address")

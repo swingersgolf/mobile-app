@@ -1,12 +1,14 @@
 import { StyleSheet } from "react-native";
 
-const accountStyles = StyleSheet.create({
+const createStyles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollViewContent: {
     display: "flex",
     flexDirection: "column",
-    width: "100%",
     rowGap: 20,
-    flex: 1,
+    width: "100%",
     padding: 20,
   },
   spinnerContainer: {
@@ -17,4 +19,4 @@ const accountStyles = StyleSheet.create({
   },
 });
 
-export default accountStyles;
+export default createStyles;

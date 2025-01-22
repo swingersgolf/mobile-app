@@ -27,7 +27,8 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   createAccount: (
-    name: string,
+    firstname: string,
+    lastname: string,
     email: string,
     password: string,
     birthdate: string,
@@ -187,14 +188,16 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   }, [requestPushNotificationPermission, token]);
 
   const createAccount = async (
-    name: string,
+    firstname: string,
+    lastname: string,
     email: string,
     password: string,
     birthdate: string,
   ) => {
     try {
       await axios.post(`${apiUrl}/v1/register`, {
-        name,
+        firstname,
+        lastname,
         email,
         password,
         birthdate,

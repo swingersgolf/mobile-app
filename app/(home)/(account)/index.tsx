@@ -6,7 +6,7 @@ import {
   Image,
   RefreshControl,
   TouchableOpacity,
-  FlatList,
+  // FlatList,
 } from "react-native";
 import accountStyles from "@/styles/accountStyles";
 import { convertCamelCaseToLabel, labelFromStatus } from "@/utils/text";
@@ -66,110 +66,110 @@ const AccountScreen = () => {
     setImageError(true); // Set to true when image fails to load
   };
 
-  const myRounds = [
-    {
-      id: 1,
-      date: "2025-01-18",
-      time_range: "morning",
-      course: "Sunnyvale Golf Course",
-      preferences: [
-        { id: 1, name: "No smoking", status: "preferred" },
-        { id: 2, name: "No pets", status: "disliked" },
-      ],
-      golfers: [
-        {
-          id: "g1",
-          name: "John Doe",
-          status: "accepted",
-          photo: "https://example.com/photos/john.jpg",
-        },
-        {
-          id: "g2",
-          name: "Jane Smith",
-          status: "pending",
-          photo: null,
-        },
-      ],
-      golfer_count: 2,
-      group_size: 4,
-      user: {
-        id: "u1",
-        name: "Alice Johnson",
-        status: "accepted",
-        photo: "https://example.com/photos/alice.jpg",
-      },
-      host_id: "u1",
-      distance: 5.3,
-    },
-    {
-      id: 2,
-      date: "2025-01-20",
-      time_range: "afternoon",
-      course: "Pebble Beach Golf Links",
-      preferences: [
-        { id: 3, name: "Cart required", status: "indifferent" },
-        { id: 4, name: "Quiet play", status: "preferred" },
-      ],
-      golfers: [
-        {
-          id: "g3",
-          name: "Robert Lee",
-          status: "rejected",
-          photo: "https://example.com/photos/robert.jpg",
-        },
-        {
-          id: "g4",
-          name: "Emily Davis",
-          status: "accepted",
-          photo: "https://example.com/photos/emily.jpg",
-        },
-      ],
-      golfer_count: 3,
-      group_size: 4,
-      user: {
-        id: "u2",
-        name: "Chris Walker",
-        status: "accepted",
-        photo: null,
-      },
-      host_id: "u2",
-      distance: 18.7,
-    },
-    {
-      id: 3,
-      date: "2025-01-20",
-      time_range: "afternoon",
-      course: "Pebble Beach Golf Links",
-      preferences: [
-        { id: 3, name: "Cart required", status: "indifferent" },
-        { id: 4, name: "Quiet play", status: "preferred" },
-      ],
-      golfers: [
-        {
-          id: "g3",
-          name: "Robert Lee",
-          status: "rejected",
-          photo: "https://example.com/photos/robert.jpg",
-        },
-        {
-          id: "g4",
-          name: "Emily Davis",
-          status: "accepted",
-          photo: "https://example.com/photos/emily.jpg",
-        },
-      ],
-      golfer_count: 3,
-      group_size: 4,
-      user: {
-        id: "u2",
-        name: "Chris Walker",
-        status: "accepted",
-        photo: null,
-      },
-      host_id: "u2",
-      distance: 18.7,
-    },
-  ];
+  // const myRounds = [
+  //   {
+  //     id: 1,
+  //     date: "2025-01-18",
+  //     time_range: "morning",
+  //     course: "Sunnyvale Golf Course",
+  //     preferences: [
+  //       { id: 1, name: "No smoking", status: "preferred" },
+  //       { id: 2, name: "No pets", status: "disliked" },
+  //     ],
+  //     golfers: [
+  //       {
+  //         id: "g1",
+  //         name: "John Doe",
+  //         status: "accepted",
+  //         photo: "https://example.com/photos/john.jpg",
+  //       },
+  //       {
+  //         id: "g2",
+  //         name: "Jane Smith",
+  //         status: "pending",
+  //         photo: null,
+  //       },
+  //     ],
+  //     golfer_count: 2,
+  //     group_size: 4,
+  //     user: {
+  //       id: "u1",
+  //       name: "Alice Johnson",
+  //       status: "accepted",
+  //       photo: "https://example.com/photos/alice.jpg",
+  //     },
+  //     host_id: "u1",
+  //     distance: 5.3,
+  //   },
+  //   {
+  //     id: 2,
+  //     date: "2025-01-20",
+  //     time_range: "afternoon",
+  //     course: "Pebble Beach Golf Links",
+  //     preferences: [
+  //       { id: 3, name: "Cart required", status: "indifferent" },
+  //       { id: 4, name: "Quiet play", status: "preferred" },
+  //     ],
+  //     golfers: [
+  //       {
+  //         id: "g3",
+  //         name: "Robert Lee",
+  //         status: "rejected",
+  //         photo: "https://example.com/photos/robert.jpg",
+  //       },
+  //       {
+  //         id: "g4",
+  //         name: "Emily Davis",
+  //         status: "accepted",
+  //         photo: "https://example.com/photos/emily.jpg",
+  //       },
+  //     ],
+  //     golfer_count: 3,
+  //     group_size: 4,
+  //     user: {
+  //       id: "u2",
+  //       name: "Chris Walker",
+  //       status: "accepted",
+  //       photo: null,
+  //     },
+  //     host_id: "u2",
+  //     distance: 18.7,
+  //   },
+  //   {
+  //     id: 3,
+  //     date: "2025-01-20",
+  //     time_range: "afternoon",
+  //     course: "Pebble Beach Golf Links",
+  //     preferences: [
+  //       { id: 3, name: "Cart required", status: "indifferent" },
+  //       { id: 4, name: "Quiet play", status: "preferred" },
+  //     ],
+  //     golfers: [
+  //       {
+  //         id: "g3",
+  //         name: "Robert Lee",
+  //         status: "rejected",
+  //         photo: "https://example.com/photos/robert.jpg",
+  //       },
+  //       {
+  //         id: "g4",
+  //         name: "Emily Davis",
+  //         status: "accepted",
+  //         photo: "https://example.com/photos/emily.jpg",
+  //       },
+  //     ],
+  //     golfer_count: 3,
+  //     group_size: 4,
+  //     user: {
+  //       id: "u2",
+  //       name: "Chris Walker",
+  //       status: "accepted",
+  //       photo: null,
+  //     },
+  //     host_id: "u2",
+  //     distance: 18.7,
+  //   },
+  // ];
 
   return (
     <ScrollView
@@ -212,7 +212,7 @@ const AccountScreen = () => {
           </View>
 
           {/* My Rounds Info */}
-          {myRounds && myRounds.length > 0 && (
+          {/* {myRounds && myRounds.length > 0 && (
             <View style={accountStyles.infoContainer}>
               <Text style={GlobalStyles.h2}>My Rounds</Text>
               <FlatList
@@ -240,7 +240,7 @@ const AccountScreen = () => {
                 contentContainerStyle={accountStyles.horizontalFlatlist}
               />
             </View>
-          )}
+          )} */}
 
           {/* User info */}
           <View style={accountStyles.infoContainer}>
