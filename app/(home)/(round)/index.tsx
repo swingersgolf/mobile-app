@@ -19,11 +19,11 @@ import { router, useFocusEffect } from "expo-router";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import { PreferenceIcon, TimeRangeIcon } from "@/utils/icon";
-import { formatDistanceMetric } from "@/utils/text";
+import { capitalizeWords, formatDistanceMetric } from "@/utils/text";
 
 const RoundScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-  const { token, preferences } = useAuth();
+  const { token, preferences, user } = useAuth();
   const { roundCache, setRoundCache } = useRoundCache();
 
   const [error, setError] = useState("");
@@ -145,6 +145,24 @@ const RoundScreen = () => {
                 })
               }
             >
+              <View style={RoundStyles.badgeContainer}>
+                {console.log("round", round)}
+                {/* If user is the host display a host badge, else if user is a member of the round display a member badge, else display nothing */}
+                {round.host_id === user?.id ? (
+                  <View style={RoundStyles.hostBadgeContainer}>
+                    <Text style={GlobalStyles.body}>Host</Text>
+                  </View>
+                ) : round.golfers.find((golfer) => golfer.id === user?.id) ? (
+                  <View style={RoundStyles.memberBadgeContainer}>
+                    <Text style={GlobalStyles.body}>
+                      {capitalizeWords(
+                        round.golfers.find((golfer) => golfer.id === user?.id)
+                          ?.status || "",
+                      )}
+                    </Text>
+                  </View>
+                ) : null}
+              </View>
               <View style={RoundStyles.infoContainer}>
                 <View style={RoundStyles.whenConatiner}>
                   <TimeRangeIcon name={round.time_range} />

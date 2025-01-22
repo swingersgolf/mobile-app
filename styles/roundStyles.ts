@@ -302,4 +302,26 @@ export const RoundStyles = StyleSheet.create({
     alignItems: "flex-start",
     width: "100%",
   },
+  badgeContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: 5,
+    right: 10,
+    padding: 5,
+  },
+  hostBadgeContainer: {
+    backgroundColor: colors.primary.default,
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 2.5,
+  },
+  memberBadgeContainer: {
+    backgroundColor: colors.neutral.medium,
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 2.5,
+  },
 });
