@@ -23,9 +23,12 @@ import { classifyPreference } from "@/utils/preference";
 import { getTimeRange, getTimeRangeLabelFromId } from "@/utils/timeRange";
 import { formatDistanceMetric } from "@/utils/text";
 import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
+import { useRound } from "@/contexts/RoundContext";
 
 const RoundDetailsScreen: React.FC = () => {
   const { roundId } = useLocalSearchParams();
+  const { setIsMember, setMessageGroupId, isMember } = useRound();
+
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token, user, preferences } = useAuth();
 
@@ -63,6 +66,15 @@ const RoundDetailsScreen: React.FC = () => {
       setRoundCache((prevCache) =>
         new Map(prevCache).set(roundId as string, fetchedRoundDetails),
       ); // Update the cache
+
+      // Check if the user is a member of the round
+      const userIsMember = fetchedRoundDetails.golfers.some(
+        (golfer: Golfer) =>
+          golfer.id === user?.id && golfer.status === "accepted",
+      );
+
+      setIsMember(userIsMember);
+      setMessageGroupId(response.data.data.message_group_id);
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response) {
         const errorMessage =
@@ -73,7 +85,15 @@ const RoundDetailsScreen: React.FC = () => {
         setError("An unexpected error occurred. Please try again.");
       }
     }
-  }, [apiUrl, roundId, token, setRoundCache]);
+  }, [
+    apiUrl,
+    roundId,
+    token,
+    setRoundCache,
+    setIsMember,
+    setMessageGroupId,
+    user?.id,
+  ]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -201,13 +221,6 @@ const RoundDetailsScreen: React.FC = () => {
     if (!roundDetails) return false;
     return roundDetails.golfers.some(
       (golfer) => golfer.id === user?.id && golfer.status === "pending",
-    );
-  };
-
-  const isUserInRound = () => {
-    if (!roundDetails) return false;
-    return roundDetails.golfers.some(
-      (golfer) => golfer.id === user?.id && golfer.status === "accepted",
     );
   };
 
@@ -429,7 +442,7 @@ const RoundDetailsScreen: React.FC = () => {
                 countRequests({ status: "accepted" }) ===
                 roundDetails?.group_size
                   ? "Round full"
-                  : isUserInRound()
+                  : isMember
                     ? "Leave round"
                     : hasUserRequestedToJoin()
                       ? "Cancel request"
@@ -443,7 +456,7 @@ const RoundDetailsScreen: React.FC = () => {
                 countRequests({ status: "accepted" }) ===
                 roundDetails?.group_size
                   ? undefined
-                  : isUserInRound()
+                  : isMember
                     ? deleteRequest
                     : hasUserRequestedToJoin()
                       ? deleteRequest

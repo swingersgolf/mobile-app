@@ -1,104 +1,113 @@
-import { colors } from "@/constants/Colors";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLocalSearchParams } from "expo-router";
 import {
+  RefreshControl,
   FlatList,
-  KeyboardAvoidingView,
+  View,
   Text,
   TextInput,
-  View,
   TouchableOpacity,
+  ActivityIndicator,
+  KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
 import GlobalStyles from "@/styles/GlobalStyles";
+import { colors } from "@/constants/Colors";
+
+interface Message {
+  id: number;
+  message: string;
+  message_group_id: number;
+  user: {
+    id: string;
+    firstname: string;
+    lastname: string;
+  };
+  created_at: string;
+  updated_at: string;
+}
 
 const MessagesChatScreen = () => {
-  // const { messageId } = useLocalSearchParams();
-  // const { user } = useAuth();
-  const user = {
-    id: 1,
-    name: "John Doe",
+  const { user, token } = useAuth();
+  const { messageGroupId } = useLocalSearchParams();
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [, setError] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [messagesFetched, setMessagesFetched] = useState(false); // Track if messages have been fetched
+
+  // Create a function to fetch messages
+  const fetchMessages = useCallback(async () => {
+    if (!messageGroupId || !token) return;
+
+    try {
+      setLoading(true); // Start loading
+      const response = await axios.get(`${apiUrl}/v1/message`, {
+        params: { message_group_id: messageGroupId },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setMessages(response.data.data); // Set the messages array
+      setMessagesFetched(true); // Set messagesFetched to true after first load
+    } catch (err) {
+      console.error("Error fetching messages:", err);
+      setError("Failed to load messages.");
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  }, [messageGroupId, token, apiUrl]);
+
+  // Call fetchMessages when the screen comes into focus only if it hasn't been fetched yet
+  useFocusEffect(
+    useCallback(() => {
+      if (!messagesFetched) {
+        fetchMessages(); // Fetch only once on initial page load
+      }
+    }, [messagesFetched, fetchMessages]),
+  );
+
+  // Handle refresh functionality
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchMessages(); // Fetch messages again on pull-to-refresh
+    setRefreshing(false);
   };
 
-  const [message, setMessage] = useState(""); // State to store the typed message
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: "John Doe",
-      message: "Hey, how are you?",
-    },
-    {
-      id: 2,
-      sender: "Jane Doe",
-      message: "I'm good, thanks!",
-    },
-    {
-      id: 3,
-      sender: "John Doe",
-      message: "Do you want to meet up?",
-    },
-    {
-      id: 4,
-      sender: "Jane Doe",
-      message: "Sure, when?",
-    },
-    {
-      id: 5,
-      sender: "John Doe",
-      message: "How about tomorrow?",
-    },
-    {
-      id: 6,
-      sender: "Jane Doe",
-      message: "Sounds good!",
-    },
-    {
-      id: 7,
-      sender: "John Doe",
-      message: "See you then!",
-    },
-    {
-      id: 8,
-      sender: "Jane Doe",
-      message:
-        "Bye! yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-    },
-    {
-      id: 9,
-      sender: "John Doe",
-      message: "Bye!",
-    },
-    {
-      id: 10,
-      sender: "Jane Doe",
-      message: "Bye!",
-    },
-    {
-      id: 11,
-      sender: "John Doe",
-      message: "Bye!",
-    },
-    {
-      id: 12,
-      sender: "Jane Doe",
-      message: "Bye!",
-    },
-    {
-      id: 13,
-      sender: "John Doe",
-      message: "Bye!",
-    },
-  ]);
+  const handleSendMessage = async () => {
+    if (!message.trim() || !token || !messageGroupId) return;
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      const newMessage = {
-        id: messages.length + 1, // Increment the message id
-        sender: user.name,
-        message: message,
-      };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-      setMessage(""); // Clear the input field after sending the message
+    setSending(true);
+    try {
+      await axios.post(
+        `${apiUrl}/v1/message`,
+        {
+          message_group_id: messageGroupId,
+          message: message.trim(),
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setMessage("");
+    } catch (err) {
+      console.error("Error sending message:", err);
+      setError("Failed to send message.");
+    } finally {
+      setSending(false);
     }
   };
 
@@ -106,45 +115,44 @@ const MessagesChatScreen = () => {
     <View style={{ flex: 1, backgroundColor: colors.background.primary }}>
       <FlatList
         data={messages}
-        inverted
-        contentContainerStyle={{
-          padding: 10,
-          gap: 5,
-        }}
+        contentContainerStyle={{ padding: 10, gap: 5 }}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View
             style={{
-              alignSelf: item.sender === user.name ? "flex-end" : "flex-start",
+              alignSelf: item.user.id === user?.id ? "flex-end" : "flex-start",
             }}
           >
             <Text
               style={{
-                textAlign: item.sender === user.name ? "right" : "left",
+                textAlign: item.user.id === user?.id ? "right" : "left",
                 fontSize: 12,
                 color: colors.neutral.medium,
               }}
             >
-              {item.sender}
+              {item.user.firstname}&nbsp;{item.user.lastname}
             </Text>
 
             <View
               style={{
                 padding: 10,
                 backgroundColor:
-                  item.sender === user.name
+                  item.user.id === user?.id
                     ? colors.primary.light
                     : colors.neutral.light,
                 borderRadius: 10,
                 maxWidth: "75%",
                 alignSelf:
-                  item.sender === user.name ? "flex-end" : "flex-start",
+                  item.user.id === user?.id ? "flex-end" : "flex-start",
               }}
             >
               <Text style={GlobalStyles.body}>{item.message}</Text>
             </View>
           </View>
         )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -181,18 +189,22 @@ const MessagesChatScreen = () => {
             style={{
               position: "absolute",
               right: 5,
-              top: 20,
+              top: 19,
               transform: [{ translateY: "-50%" }],
             }}
-            disabled={!message.trim()}
+            disabled={sending || !message.trim()}
           >
-            <MaterialIcons
-              name="telegram"
-              size={30}
-              color={
-                message.trim() ? colors.primary.light : colors.neutral.medium
-              }
-            />
+            {sending ? (
+              <ActivityIndicator size="small" color={colors.primary.light} />
+            ) : (
+              <MaterialIcons
+                name="telegram"
+                size={30}
+                color={
+                  message.trim() ? colors.primary.light : colors.neutral.medium
+                }
+              />
+            )}
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
