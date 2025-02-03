@@ -17,7 +17,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { colors } from "@/constants/Colors";
-import { useReverb } from "@/app/hooks/useReverb";
+import { useReverb } from "@/hooks/useReverb";
 
 interface Message {
   id: number;
