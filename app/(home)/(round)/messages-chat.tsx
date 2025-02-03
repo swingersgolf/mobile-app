@@ -17,6 +17,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { colors } from "@/constants/Colors";
+import { useReverb } from "@/app/hooks/useReverb";
 
 interface Message {
   id: number;
@@ -44,7 +45,10 @@ const MessagesChatScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [messagesFetched, setMessagesFetched] = useState(false); // Track if messages have been fetched
 
-  // Create a function to fetch messages
+  const { socket, socketId } = useReverb({
+    messageGroupId: messageGroupId.toString(),
+  });
+
   const fetchMessages = useCallback(async () => {
     if (!messageGroupId || !token) return;
 
