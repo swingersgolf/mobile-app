@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 type MessageEvent = {
   event: string;
-  data?: any;
+  data?: unknown;
 };
 
 type UseReverbProps = {
@@ -65,7 +65,7 @@ export function useReverb({ messageGroupId }: UseReverbProps) {
 
         if (messageData.event === "pusher:connection_established") {
           console.log("MESSAGE DATA: ", messageData);
-          const newSocketId = JSON.parse(messageData.data).socket_id;
+          const newSocketId = JSON.parse(messageData.data as string).socket_id;
           setSocketId(newSocketId);
           console.log(`🔑 Received socket_id: ${newSocketId}`);
 

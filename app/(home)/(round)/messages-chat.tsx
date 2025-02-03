@@ -45,7 +45,7 @@ const MessagesChatScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [messagesFetched, setMessagesFetched] = useState(false); // Track if messages have been fetched
 
-  const { socket, socketId } = useReverb({
+  useReverb({
     messageGroupId: messageGroupId.toString(),
   });
 
