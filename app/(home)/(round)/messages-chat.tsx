@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
@@ -45,6 +45,8 @@ const MessagesChatScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [messagesFetched, setMessagesFetched] = useState(false); // Track if messages have been fetched
 
+  const flatListRef = useRef<FlatList>(null);
+
   const { messageData } = useReverb({
     messageGroupId: messageGroupId.toString(),
   });
@@ -68,6 +70,11 @@ const MessagesChatScreen = () => {
 
       // Append the new message
       setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+      // Scroll to bottom when a new message is added
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100); // Slight delay to ensure state updates first
     }
   }, [messageData]);
 
@@ -138,10 +145,14 @@ const MessagesChatScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background.primary }}>
+    <View style={{ flex: 1, backgroundColor: colors.background.secondary }}>
       <FlatList
+        ref={flatListRef}
         data={messages}
-        contentContainerStyle={{ padding: 10, gap: 5 }}
+        contentContainerStyle={{
+          padding: 10,
+          gap: 5,
+        }}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View
@@ -182,25 +193,31 @@ const MessagesChatScreen = () => {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.select({ ios: 100, android: 500 })}
+        keyboardVerticalOffset={Platform.select({ ios: 90, android: 500 })}
         style={{
-          width: "100%",
           padding: 10,
+          width: "100%",
+          display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          backgroundColor: colors.background.primary,
-          bottom: 10,
+          justifyContent: "center",
+          backgroundColor: colors.background.secondary,
         }}
       >
         <View
           style={{
-            padding: 10,
             borderWidth: 1,
             borderColor: colors.neutral.medium,
             borderRadius: 10,
             width: "100%",
             position: "relative",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignContent: "center",
+            alignItems: "center",
             height: 40,
+            marginBottom: 10,
           }}
         >
           <TextInput
@@ -208,15 +225,21 @@ const MessagesChatScreen = () => {
             onChangeText={setMessage}
             placeholder="Type a message..."
             placeholderTextColor={colors.neutral.medium}
-            style={[{ width: "100%", height: "100%" }, GlobalStyles.body]}
+            style={[
+              {
+                flex: 1,
+                height: "100%",
+                paddingLeft: 10,
+              },
+              GlobalStyles.body,
+            ]}
           />
           <TouchableOpacity
             onPress={handleSendMessage}
             style={{
-              position: "absolute",
-              right: 5,
-              top: 19,
-              transform: [{ translateY: "-50%" }],
+              width: "auto",
+              height: "auto",
+              marginRight: 5,
             }}
             disabled={sending || !message.trim()}
           >
