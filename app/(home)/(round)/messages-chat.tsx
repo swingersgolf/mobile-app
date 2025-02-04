@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,6 +17,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { colors } from "@/constants/Colors";
+import { useReverb } from "@/hooks/useReverb";
 
 interface Message {
   id: number;
@@ -44,7 +45,32 @@ const MessagesChatScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [messagesFetched, setMessagesFetched] = useState(false); // Track if messages have been fetched
 
-  // Create a function to fetch messages
+  const { messageData } = useReverb({
+    messageGroupId: messageGroupId.toString(),
+  });
+
+  console.log("MESSAGE DATA: ", messageData);
+
+  useEffect(() => {
+    if (messageData) {
+      const newMessage: Message = {
+        id: messageData.id,
+        message: messageData.message,
+        message_group_id: messageData.message_group_id,
+        user: {
+          id: messageData.user.id,
+          firstname: messageData.user.firstname,
+          lastname: messageData.user.lastname,
+        },
+        created_at: new Date().toISOString(), // Use actual timestamp if available
+        updated_at: new Date().toISOString(),
+      };
+
+      // Append the new message
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    }
+  }, [messageData]);
+
   const fetchMessages = useCallback(async () => {
     if (!messageGroupId || !token) return;
 
