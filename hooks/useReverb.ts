@@ -1,12 +1,12 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 
-type MessageEvent = {
+interface MessageEvent {
   event: string;
-  data?: unknown;
+  data: string;
 };
 
-type UseReverbProps = {
+interface UseReverbProps {
   messageGroupId: string;
 };
 
@@ -38,10 +38,23 @@ async function getAuthSignature(
   }
 }
 
+interface Message {
+  id: number;
+  message: string;
+  message_group_id: number;
+  user: {
+    id: string;
+    firstname: string;
+    lastname: string;
+  };
+  created_at: string;
+  updated_at: string;
+}
+
 export function useReverb({ messageGroupId }: UseReverbProps) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [socketId, setSocketId] = useState<string | null>(null);
-  const [messageData, setMessageData] = useState<MessageEvent | null>(null); // ✅ Added state for message data
+  const [messageData, setMessageData] = useState<Message | null>(null); // ✅ Added state for message data
 
   const wsUrl = `${process.env.EXPO_PUBLIC_REVERB_SCHEME}://${process.env.EXPO_PUBLIC_REVERB_HOST}:${process.env.EXPO_PUBLIC_REVERB_PORT}/app/${process.env.EXPO_PUBLIC_REVERB_APP_KEY}`;
   const { token } = useAuth();
@@ -66,7 +79,7 @@ export function useReverb({ messageGroupId }: UseReverbProps) {
 
         if (message.event === "pusher:connection_established") {
           console.log("MESSAGE DATA: ", message);
-          const newSocketId = JSON.parse(message.data as string).socket_id;
+          const newSocketId = JSON.parse(message.data).socket_id;
           setSocketId(newSocketId);
           console.log(`🔑 Received socket_id: ${newSocketId}`);
 
@@ -93,7 +106,7 @@ export function useReverb({ messageGroupId }: UseReverbProps) {
 
         if (message.event === "message.sent") {
           console.log("📨 New private message:", message.data);
-          setMessageData(message); // ✅ Store the received message in state
+          setMessageData(JSON.parse(message.data)); // ✅ Store the received message in state
         }
       } catch (error) {
         console.error("❌ Error parsing message:", error);
