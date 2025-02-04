@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 interface MessageEvent {
   event: string;
   data: string;
-};
+}
 
 interface UseReverbProps {
   messageGroupId: string;
-};
+}
 
 async function getAuthSignature(
   channelName: string,
@@ -52,8 +52,8 @@ interface Message {
 }
 
 export function useReverb({ messageGroupId }: UseReverbProps) {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [socketId, setSocketId] = useState<string | null>(null);
+  const [, setSocket] = useState<WebSocket | null>(null);
+  const [, setSocketId] = useState<string | null>(null);
   const [messageData, setMessageData] = useState<Message | null>(null); // ✅ Added state for message data
 
   const wsUrl = `${process.env.EXPO_PUBLIC_REVERB_SCHEME}://${process.env.EXPO_PUBLIC_REVERB_HOST}:${process.env.EXPO_PUBLIC_REVERB_PORT}/app/${process.env.EXPO_PUBLIC_REVERB_APP_KEY}`;

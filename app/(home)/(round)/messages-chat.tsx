@@ -65,7 +65,7 @@ const MessagesChatScreen = () => {
         created_at: new Date().toISOString(), // Use actual timestamp if available
         updated_at: new Date().toISOString(),
       };
-  
+
       // Append the new message
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     }
