@@ -45,9 +45,11 @@ const MessagesChatScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [messagesFetched, setMessagesFetched] = useState(false); // Track if messages have been fetched
 
-  useReverb({
+  const { messageData } = useReverb({
     messageGroupId: messageGroupId.toString(),
   });
+
+  console.log("MESSAGE DATA: ", messageData);
 
   const fetchMessages = useCallback(async () => {
     if (!messageGroupId || !token) return;
