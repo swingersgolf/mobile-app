@@ -10,7 +10,6 @@ import alertStyles from "@/styles/AlertStyles";
 import { Golfer } from "@/types/roundTypes";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
-import { capitalizeWords } from "@/utils/text";
 
 const RoundRequestsScreen = () => {
   const { roundId, requests } = useLocalSearchParams();
