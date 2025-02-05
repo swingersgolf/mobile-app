@@ -10,6 +10,7 @@ import alertStyles from "@/styles/AlertStyles";
 import { Golfer } from "@/types/roundTypes";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
+import { capitalizeWords } from "@/utils/text";
 
 const RoundRequestsScreen = () => {
   const { roundId, requests } = useLocalSearchParams();
@@ -95,6 +96,13 @@ const RoundRequestsScreen = () => {
     }
   };
 
+  const handleGolferPress = ({ memberId }: { memberId: string }) => {
+    router.push({
+      pathname: "/public-account",
+      params: { userId: memberId },
+    });
+  };
+
   return (
     <View style={[RoundStyles.container, RoundStyles.roundRequestContainer]}>
       <Text style={GlobalStyles.h1}>Round requests</Text>
@@ -102,18 +110,22 @@ const RoundRequestsScreen = () => {
       <View style={RoundStyles.memberList}>
         {parsedRequests.map(
           (request: Golfer, index: Key | null | undefined) => (
-            <View key={index} style={RoundStyles.memberListItem}>
+            <TouchableOpacity
+              key={index}
+              style={RoundStyles.memberListItem}
+              onPress={() => handleGolferPress({ memberId: request.id })}
+            >
               <View style={RoundStyles.memberListItemContent}>
                 <Image
                   style={RoundStyles.memberProfilePicture}
                   source={
-                    imageError || !golfer.photo
+                    imageError || !request.photo
                       ? PlaceholderProfilePicture
-                      : { uri: golfer.photo }
+                      : { uri: request.photo }
                   }
                   onError={handleImageError} // Error handler for image loading
                 />
-                <Text style={GlobalStyles.h3}>{request.name}</Text>
+                <Text style={GlobalStyles.body}>{request.firstname}</Text>
               </View>
               <View style={RoundStyles.buttonContainer}>
                 <TouchableOpacity onPress={() => acceptRequest(request.id)}>
@@ -123,7 +135,7 @@ const RoundRequestsScreen = () => {
                   <MaterialIcons name="cancel" size={24} color="red" />
                 </TouchableOpacity>
               </View>
-            </View>
+            </TouchableOpacity>
           ),
         )}
       </View>

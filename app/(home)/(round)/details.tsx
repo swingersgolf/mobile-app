@@ -156,7 +156,7 @@ const RoundDetailsScreen: React.FC = () => {
         (golfer) =>
           golfer.status === status && golfer.id !== roundDetails.host_id,
       )
-      .map((golfer) => ({ id: golfer.id, name: golfer.firstname }));
+      .map((golfer) => ({ id: golfer.id, firstname: golfer.firstname }));
   };
 
   const requestToJoinRound = async () => {
