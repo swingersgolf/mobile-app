@@ -12,6 +12,7 @@ import TextButton from "@/components/TextButton";
 import { useRouter } from "expo-router";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
+import { colors } from "@/constants/Colors";
 
 const EditRoundScreen = () => {
   const { roundId, golfers } = useLocalSearchParams();
@@ -73,7 +74,7 @@ const EditRoundScreen = () => {
   const removeGolfer = (golfer: Golfer) => {
     Alert.alert(
       "Confirm",
-      `Are you sure you want to remove ${golfer.name} from your round?`,
+      `Are you sure you want to remove ${golfer.firstname} from your round?`,
       [
         {
           text: "Cancel",
@@ -137,7 +138,16 @@ const EditRoundScreen = () => {
           <View style={RoundStyles.memberList}>
             {parsedGolfers.map(
               (golfer: Golfer, index: Key | null | undefined) => (
-                <View key={index} style={RoundStyles.memberListItem}>
+                <TouchableOpacity
+                  key={index}
+                  style={RoundStyles.memberListItem}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/public-account",
+                      params: { userId: golfer.id },
+                    })
+                  }
+                >
                   <View style={RoundStyles.memberListItemContent}>
                     <Image
                       style={RoundStyles.memberProfilePicture}
@@ -148,14 +158,20 @@ const EditRoundScreen = () => {
                       }
                       onError={handleImageError} // Error handler for image loading
                     />
-                    <Text style={GlobalStyles.h3}>{golfer.name}</Text>
+                    <Text style={GlobalStyles.h3}>{golfer.firstname}</Text>
                   </View>
                   <View style={RoundStyles.buttonContainer}>
-                    <TouchableOpacity onPress={() => removeGolfer(golfer)}>
-                      <MaterialIcons name="cancel" size={24} color="red" />
+                    <TouchableOpacity
+                      style={[
+                        RoundStyles.choiceButton,
+                        { backgroundColor: colors.alert.error },
+                      ]}
+                      onPress={() => removeGolfer(golfer)}
+                    >
+                      <Text style={{ color: colors.neutral.dark }}>Remove</Text>
                     </TouchableOpacity>
                   </View>
-                </View>
+                </TouchableOpacity>
               ),
             )}
           </View>

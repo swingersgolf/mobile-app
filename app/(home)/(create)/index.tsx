@@ -197,7 +197,6 @@ const CreateScreen = () => {
                 style={[
                   formStyles.formInput,
                   errors.date && formStyles.invalidInput,
-                  formStyles.dateTimeInput,
                 ]}
               >
                 <DateTimePicker
@@ -323,7 +322,7 @@ const CreateScreen = () => {
               >
                 {timeRanges.map((timeRange) => (
                   <View
-                    key={`time_range_${timeRange.id}`}
+                    key={`info_time_range_${timeRange.id}`}
                     style={{
                       display: "flex",
                       flexDirection: "row",
@@ -393,6 +392,7 @@ const CreateScreen = () => {
           <View style={formStyles.preferenceOptions}>
             {slots.map((slot) => (
               <Controller
+                key={`slots-${slot.id}`}
                 control={control}
                 name="slots"
                 render={({ field: { onChange, value } }) => (
@@ -431,7 +431,7 @@ const CreateScreen = () => {
     return (
       <View style={(formStyles.inputWrapper, formStyles.preferencesForm)}>
         <View
-          key={`preference_${preference.id}`}
+          key={`preference_${preference.label}`}
           style={[
             formStyles.preferenceRow,
             errors.preferences?.[preference.id]

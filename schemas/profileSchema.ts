@@ -1,7 +1,12 @@
 import * as yup from "yup";
 
 export const profileSchema = yup.object().shape({
-  handicap: yup.number().nullable().optional(),
+  handicap: yup
+    .number()
+    .nullable()
+    .optional()
+    .min(-54.0, "Handicap must be at least -54.0")
+    .max(54.0, "Handicap must be at most 54.0"),
   postalCode: yup.string().nullable().optional(),
 });
 

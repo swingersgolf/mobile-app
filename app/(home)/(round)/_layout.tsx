@@ -78,7 +78,10 @@ const RoundLayout = () => {
       <Stack.Screen name="requests" options={{ presentation: "modal" }} />
       <Stack.Screen name="notifications" />
       <Stack.Screen name="edit" options={{ presentation: "modal" }} />
-      <Stack.Screen name="public-account" />
+      <Stack.Screen
+        name="public-account"
+        options={{ presentation: "modal", headerBackVisible: true }}
+      />
       <Stack.Screen name="messages" />
       <Stack.Screen name="messages-chat" />
     </Stack>

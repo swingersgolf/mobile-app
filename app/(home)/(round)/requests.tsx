@@ -10,6 +10,7 @@ import alertStyles from "@/styles/AlertStyles";
 import { Golfer } from "@/types/roundTypes";
 import { useRoundCache } from "@/contexts/RoundCacheContext";
 import PlaceholderProfilePicture from "@/assets/images/profile-picture-placeholder.png";
+import { colors } from "@/constants/Colors";
 
 const RoundRequestsScreen = () => {
   const { roundId, requests } = useLocalSearchParams();
@@ -127,11 +128,23 @@ const RoundRequestsScreen = () => {
                 <Text style={GlobalStyles.body}>{request.firstname}</Text>
               </View>
               <View style={RoundStyles.buttonContainer}>
-                <TouchableOpacity onPress={() => acceptRequest(request.id)}>
-                  <MaterialIcons name="check-circle" size={24} color="green" />
+                <TouchableOpacity
+                  onPress={() => acceptRequest(request.id)}
+                  style={[
+                    RoundStyles.choiceButton,
+                    { backgroundColor: colors.alert.success },
+                  ]}
+                >
+                  <Text style={{ color: colors.neutral.dark }}>Accept</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => rejectRequest(request.id)}>
-                  <MaterialIcons name="cancel" size={24} color="red" />
+                <TouchableOpacity
+                  onPress={() => rejectRequest(request.id)}
+                  style={[
+                    RoundStyles.choiceButton,
+                    { backgroundColor: colors.alert.error },
+                  ]}
+                >
+                  <Text style={{ color: colors.neutral.dark }}>Reject</Text>
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>

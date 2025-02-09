@@ -334,4 +334,9 @@ export const RoundStyles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  choiceButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
 });

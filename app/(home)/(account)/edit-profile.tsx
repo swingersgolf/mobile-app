@@ -97,8 +97,7 @@ const EditProfileScreen = () => {
                       </Text>
                     )}
                     <TextInput
-                      placeholder="Enter handicap (e.g., 10.5)"
-                      keyboardType="decimal-pad"
+                      placeholder="Enter handicap (e.g., 21.6 or +2.3)"
                       autoComplete="off"
                       style={[
                         formStyles.formInput,
@@ -145,7 +144,7 @@ const EditProfileScreen = () => {
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
-                      value={value}
+                      value={value ?? undefined}
                       placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.postalCode && (

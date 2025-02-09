@@ -34,13 +34,6 @@ const formStyles = StyleSheet.create({
     borderColor: colors.neutral.medium,
     color: colors.neutral.dark,
   },
-  dateTimeInput: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 0,
-    justifyContent: "space-between",
-  },
   invalidInput: {
     borderColor: colors.alert.error,
   },
