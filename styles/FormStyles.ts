@@ -19,7 +19,7 @@ const formStyles = StyleSheet.create({
     left: 10,
     top: -10,
     backgroundColor: colors.background.primary,
-    zIndex: 100,
+    zIndex: 5,
     paddingHorizontal: 5,
   },
   formInputTitleError: {

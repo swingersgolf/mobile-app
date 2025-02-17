@@ -260,7 +260,7 @@ const RegisterScreen = () => {
                         formStyles.formInput,
                         errors.birthdate && formStyles.invalidInput,
                       ]}
-                    > 6
+                    >
                       <DateTimePicker
                         value={selectedDate || new Date()}
                         mode="date"

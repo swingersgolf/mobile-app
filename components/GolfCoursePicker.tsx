@@ -3,12 +3,12 @@ import { Picker } from "@react-native-picker/picker";
 import { useState, memo, useEffect } from "react";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import { View, TextInput, Text } from "react-native";
-import { CreatePostValues } from "@/types/roundTypes";
 import { InFormAlert } from "./Alert";
+import { useCreateRound } from "@/contexts/CreateRoundContext"; // Import the context
 
 interface GolfCoursePickerProps {
   golfCourses: { id: number; name: string }[];
-  control: Control<CreatePostValues, unknown>;
+  control: Control<{ golfCourse: number }>;
   errors: FieldErrors;
 }
 
@@ -17,6 +17,7 @@ const GolfCoursePicker = ({
   control,
   errors,
 }: GolfCoursePickerProps) => {
+  const { setFormData } = useCreateRound(); // Access the setFormData function
   const [searchQuery, setSearchQuery] = useState(""); // Start with no query
   const [filteredGolfCourses, setFilteredGolfCourses] = useState(
     golfCourses, // Start with the full list
@@ -80,12 +81,14 @@ const GolfCoursePicker = ({
                 ]}
                 selectedValue={value}
                 onValueChange={(itemValue) => {
-                  onChange(itemValue);
+                  onChange(itemValue); // Update golfCourse value in react-hook-form
+
                   const selectedCourse = golfCourses.find(
                     (course) => course.id === Number(itemValue),
                   );
                   if (selectedCourse) {
                     setSearchQuery(selectedCourse.name); // Update search query to match selected course
+                    setFormData({ golfCourse: itemValue }); // Update formData in context
                   }
                   setIsPickerFocused(false);
                   setIsTextInputFocused(false);

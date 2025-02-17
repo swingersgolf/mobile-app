@@ -290,9 +290,11 @@ const RoundDetailsScreen: React.FC = () => {
                   {getTimeRange(roundDetails.time_range)}
                 </Text>
               </View>
-              <Text style={GlobalStyles.h4}>
-                {formatDistanceMetric(roundDetails.distance)}
-              </Text>
+              {roundDetails.distance && (
+                <Text style={GlobalStyles.h4}>
+                  {formatDistanceMetric(roundDetails.distance)}
+                </Text>
+              )}
             </View>
             <View style={RoundStyles.attributeContainer}>
               {roundDetails?.preferences
@@ -441,26 +443,21 @@ const RoundDetailsScreen: React.FC = () => {
               text={
                 countRequests({ status: "accepted" }) ===
                 roundDetails?.group_size
-                  ? "Round full"
+                  ? hasUserRequestedToJoin()
+                    ? "Leave waitlist"
+                    : "Join waitlist"
                   : isMember
                     ? "Leave round"
                     : hasUserRequestedToJoin()
                       ? "Cancel request"
                       : "Request to join"
               }
-              disabled={
-                countRequests({ status: "accepted" }) ===
-                roundDetails?.group_size
-              }
               onPress={
-                countRequests({ status: "accepted" }) ===
-                roundDetails?.group_size
-                  ? undefined
-                  : isMember
+                isMember
+                  ? deleteRequest
+                  : hasUserRequestedToJoin()
                     ? deleteRequest
-                    : hasUserRequestedToJoin()
-                      ? deleteRequest
-                      : requestToJoinRound
+                    : requestToJoinRound
               }
               textColor={colors.button.primary.text}
               backgroundColor={colors.button.primary.background}

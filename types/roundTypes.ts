@@ -43,7 +43,7 @@ interface Round {
   group_size: number;
 }
 
-type CreatePostValues = {
+interface CreatePostValues {
   golfCourse: string;
   date: string;
   time_range: "early_bird" | "morning" | "afternoon" | "twilight";
@@ -51,7 +51,7 @@ type CreatePostValues = {
   preferences: {
     [key: string]: string;
   };
-};
+}
 
 export type {
   Round,

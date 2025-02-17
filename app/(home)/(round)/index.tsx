@@ -161,10 +161,18 @@ const RoundScreen = () => {
                       <Text
                         style={[GlobalStyles.body, RoundStyles.memberBadgeText]}
                       >
-                        {capitalizeWords(
-                          round.golfers.find((golfer) => golfer.id === user?.id)
-                            ?.status || "",
-                        )}
+                        {
+                          // Check if the number of accepted golfers equals the group size
+                          round.golfers.filter(
+                            (golfer) => golfer.status === "accepted",
+                          ).length === round.group_size
+                            ? "Waitlist"
+                            : capitalizeWords(
+                                round.golfers.find(
+                                  (golfer) => golfer.id === user?.id,
+                                )?.status || "",
+                              )
+                        }
                       </Text>
                     </View>
                   ) : null}

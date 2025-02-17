@@ -2,8 +2,10 @@ import { router, Stack } from "expo-router";
 import { colors } from "@/constants/Colors";
 import { Pressable, Keyboard, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useCreateRound } from "@/contexts/CreateRoundContext";
 
 const CreateLayout = () => {
+  const { resetForm } = useCreateRound();
   return (
     <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
       <Stack
@@ -21,7 +23,13 @@ const CreateLayout = () => {
             color: colors.neutral.dark,
           },
           headerLeft: () => (
-            <TouchableOpacity onPress={() => router.replace("/(round)")}>
+            <TouchableOpacity
+              onPress={() => {
+                resetForm();
+                if (router.canDismiss()) router.dismissAll();
+                router.replace("/(round)");
+              }}
+            >
               <MaterialIcons
                 name="close"
                 size={28}
@@ -35,7 +43,14 @@ const CreateLayout = () => {
           name="index"
           options={{
             headerTitle: "New Round",
-            presentation: "fullScreenModal",
+            presentation: "card",
+          }}
+        />
+        <Stack.Screen
+          name="preferences"
+          options={{
+            headerTitle: "New Round",
+            presentation: "card",
           }}
         />
       </Stack>

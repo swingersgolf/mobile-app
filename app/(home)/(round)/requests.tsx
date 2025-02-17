@@ -3,7 +3,6 @@ import axios, { isAxiosError } from "axios";
 import { useLocalSearchParams, router } from "expo-router";
 import { Key, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { RoundStyles } from "@/styles/roundStyles";
 import alertStyles from "@/styles/AlertStyles";

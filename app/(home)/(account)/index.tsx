@@ -289,7 +289,15 @@ const AccountScreen = () => {
                         {convertCamelCaseToLabel(key)}
                       </Text>
                       <Text style={GlobalStyles.body}>
-                        {value ? value : "Not set"}
+                        {key === "handicap"
+                          ? !isNaN(Number(value)) // Ensure it's a valid number
+                            ? Number(value) > 0
+                              ? `+${Number(value).toFixed(1)}` // Positive: Keep +
+                              : Math.abs(Number(value)).toFixed(1) // Negative: Strip -
+                            : "Not set"
+                          : value
+                            ? value
+                            : "Not set"}
                       </Text>
                     </View>
                   ))}

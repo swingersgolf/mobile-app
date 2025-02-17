@@ -1,15 +1,18 @@
+import { colors } from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
 const createStyles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background.secondary,
   },
   scrollViewContent: {
+    flexGrow: 1,
     display: "flex",
     flexDirection: "column",
     rowGap: 20,
-    width: "100%",
     padding: 20,
+    backgroundColor: colors.background.primary,
   },
   spinnerContainer: {
     flex: 1,
