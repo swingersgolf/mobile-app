@@ -24,6 +24,15 @@ const EditProfileScreen = () => {
     setLoading(true);
     setError("");
 
+    // Adjust handicap value based on formatting
+    if (typeof data.handicap === "string") {
+      if (data.handicap.startsWith("+")) {
+        data.handicap = parseFloat(data.handicap).toString(); // Convert to positive number
+      } else {
+        data.handicap = (-parseFloat(data.handicap)).toString(); // Convert to negative number
+      }
+    }
+
     // Create a new object with only the fields that have a value
     const filteredData = Object.fromEntries(
       Object.entries(data).filter(
@@ -63,7 +72,12 @@ const EditProfileScreen = () => {
   } = useForm({
     resolver: yupResolver(profileSchema),
     defaultValues: {
-      handicap: profile?.handicap,
+      handicap:
+        profile?.handicap != null
+          ? parseFloat(profile.handicap) > 0
+            ? `+${parseFloat(profile.handicap).toFixed(1)}`
+            : Math.abs(parseFloat(profile.handicap)).toFixed(1)
+          : null,
       postalCode: profile?.postalCode,
     },
   });

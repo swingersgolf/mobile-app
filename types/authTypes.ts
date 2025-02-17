@@ -7,7 +7,7 @@ export interface User {
 }
 
 export interface Profile {
-  handicap?: number;
+  handicap?: string;
   postalCode?: string;
   longitude?: number;
   latitude?: number;

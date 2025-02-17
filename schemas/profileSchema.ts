@@ -2,11 +2,23 @@ import * as yup from "yup";
 
 export const profileSchema = yup.object().shape({
   handicap: yup
-    .number()
+    .string()
     .nullable()
     .optional()
-    .min(-54.0, "Handicap must be at least -54.0")
-    .max(54.0, "Handicap must be at most 54.0"),
+    .test(
+      "is-valid-handicap",
+      "Handicap must between -54.0 and +54.0",
+      (value) => {
+        if (!value) return true; // Allow null or optional values
+        const num = parseFloat(value);
+        return (
+          !isNaN(num) &&
+          num >= -54.0 &&
+          num <= 54.0 &&
+          /^\+?-?\d{1,2}(\.\d{1})?$/.test(value) // Allows whole numbers and max one decimal place
+        );
+      },
+    ),
   postalCode: yup.string().nullable().optional(),
 });
 
