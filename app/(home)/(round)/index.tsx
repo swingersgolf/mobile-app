@@ -31,8 +31,9 @@ const RoundScreen = () => {
 
   const fetchRounds = useCallback(async () => {
     setError("");
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
     try {
-      const response = await axios.get(`${apiUrl}/v1/round`, {
+      const response = await axios.get(`${apiUrl}/v1/round?start=${today}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
