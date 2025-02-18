@@ -1,16 +1,10 @@
 import formStyles from "@/styles/FormStyles";
 import { Controller } from "react-hook-form";
 import { View, TouchableOpacity, Text } from "react-native";
-import { Control, FieldErrors } from "react-hook-form";
 import { useCreateRound } from "@/contexts/CreateRoundContext"; // Import the context
 
-interface SlotsPickerProps {
-  control: Control<{ slots: string }>;
-  errors: FieldErrors;
-}
-
-const SlotsPicker = ({ control, errors }: SlotsPickerProps) => {
-  const { setFormData } = useCreateRound(); // Access the setFormData function
+const SlotsPicker = () => {
+  const { setFormData, control, errors } = useCreateRound(); // Access the setFormData function
   const slots = [
     {
       label: "2",

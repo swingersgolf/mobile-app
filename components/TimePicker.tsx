@@ -6,18 +6,12 @@ import { TimeRangeIcon } from "@/utils/icon";
 import { getTimeRange } from "@/utils/timeRange";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { View, TouchableOpacity, Modal, Text } from "react-native";
-import { FieldErrors } from "react-hook-form";
 import { useCreateRound } from "@/contexts/CreateRoundContext"; // Import the context
 
-interface TimePickerProps {
-  control: Control<{ time_range: string }>;
-  errors: FieldErrors;
-}
-
-const TimePicker = ({ control, errors }: TimePickerProps) => {
-  const { setFormData } = useCreateRound(); // Access the setFormData function
+const TimePicker = () => {
+  const { setFormData, control, errors } = useCreateRound(); // Access the setFormData function
   const [isModalVisible, setIsModalVisible] = useState(false);
   const closeModal = () => setIsModalVisible(false);
 

@@ -17,15 +17,8 @@ import { router } from "expo-router";
 const CreateScreen = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { token } = useAuth();
-  const {
-    formData,
-    setFormData,
-    isDetailsFilled,
-    control,
-    errors,
-    setValue,
-    resetForm,
-  } = useCreateRound();
+  const { formData, setFormData, isDetailsFilled, resetForm } =
+    useCreateRound();
   const [error, setError] = useState("");
   const [golfCourses, setGolfCourses] = useState<
     { id: number; name: string }[]
@@ -58,14 +51,10 @@ const CreateScreen = () => {
 
   return (
     <View style={[createStyles.container, createStyles.scrollViewContent]}>
-      <GolfCoursePicker
-        golfCourses={golfCourses}
-        control={control}
-        errors={errors}
-      />
-      <DatePicker control={control} errors={errors} setValue={setValue} />
-      <TimePicker control={control} errors={errors} />
-      <SlotsPicker control={control} errors={errors} />
+      <GolfCoursePicker golfCourses={golfCourses} />
+      <DatePicker />
+      <TimePicker />
+      <SlotsPicker />
       <View>
         {error && <Alert error={error} />}
         <TextButton

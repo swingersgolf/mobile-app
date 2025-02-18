@@ -148,6 +148,17 @@ const formStyles = StyleSheet.create({
     fontSize: 14,
     height: 100, // Set the height of each item in the dropdown
   },
+  flatListItem: {
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+  },
+  flatList: {
+    borderColor: colors.neutral.medium,
+    borderWidth: 1,
+    borderRadius: 5,
+    maxHeight: 200,
+    marginTop: 5,
+  },
 });
 
 export default formStyles;

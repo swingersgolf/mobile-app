@@ -1,18 +1,12 @@
 import formStyles from "@/styles/FormStyles";
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { View, Text } from "react-native";
 import { InFormAlert } from "./Alert";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useCreateRound } from "@/contexts/CreateRoundContext"; // Import the context
 
-interface DatePickerProps {
-  control: Control<{ date: string }>;
-  errors: FieldErrors;
-  setValue: (name: string, value: string | Date, options?: object) => void;
-}
-
-const DatePicker = ({ control, errors, setValue }: DatePickerProps) => {
-  const { setFormData } = useCreateRound(); // Access the setFormData function
+const DatePicker = () => {
+  const { setFormData, setValue, errors, control } = useCreateRound(); // Access the setFormData function
 
   const handleConfirm = (event: unknown, date?: Date) => {
     if (date) {

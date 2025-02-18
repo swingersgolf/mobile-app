@@ -1,28 +1,28 @@
 import formStyles from "@/styles/FormStyles";
-import { Picker } from "@react-native-picker/picker";
-import { useState, memo, useEffect } from "react";
-import { Control, Controller, FieldErrors } from "react-hook-form";
-import { View, TextInput, Text } from "react-native";
+import { useState, useEffect } from "react";
+import { Controller } from "react-hook-form";
+import {
+  View,
+  TextInput,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Keyboard,
+} from "react-native";
 import { InFormAlert } from "./Alert";
 import { useCreateRound } from "@/contexts/CreateRoundContext"; // Import the context
+import GlobalStyles from "@/styles/GlobalStyles";
 
 interface GolfCoursePickerProps {
   golfCourses: { id: number; name: string }[];
-  control: Control<{ golfCourse: number }>;
-  errors: FieldErrors;
 }
 
-const GolfCoursePicker = ({
-  golfCourses,
-  control,
-  errors,
-}: GolfCoursePickerProps) => {
-  const { setFormData } = useCreateRound(); // Access the setFormData function
+const GolfCoursePicker = ({ golfCourses }: GolfCoursePickerProps) => {
+  const { setFormData, control, errors } = useCreateRound(); // Access the setFormData function
   const [searchQuery, setSearchQuery] = useState(""); // Start with no query
   const [filteredGolfCourses, setFilteredGolfCourses] = useState(
     golfCourses, // Start with the full list
   );
-  const [isPickerFocused, setIsPickerFocused] = useState(false);
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
 
   const handleSearch = (query: string) => {
@@ -45,10 +45,19 @@ const GolfCoursePicker = ({
     setSearchQuery(""); // Reset search query
   }, [golfCourses]);
 
-  const shouldPickerOpen = isPickerFocused || isTextInputFocused;
+  const handleSelectCourse = (courseId: number, courseName: string) => {
+    handleSearch(courseName);
+    setFormData({ golfCourse: courseId.toString() }); // Update formData in context
+    setIsTextInputFocused(false); // Close the dropdown
+    Keyboard.dismiss(); // Close the keyboard
+  };
+
+  const handleFocus = () => {
+    setIsTextInputFocused(true);
+  };
 
   return (
-    <View style={[formStyles.inputWrapper, formStyles.pickerContainer]}>
+    <View style={[formStyles.inputWrapper]}>
       <Controller
         control={control}
         name="golfCourse"
@@ -70,40 +79,26 @@ const GolfCoursePicker = ({
               placeholder="Search Golf Course"
               value={searchQuery}
               onChangeText={handleSearch}
-              onFocus={() => setIsTextInputFocused(true)}
+              onFocus={handleFocus}
             />
-            {shouldPickerOpen && (
-              <Picker
-                itemStyle={formStyles.pickerItem}
-                style={[
-                  formStyles.picker,
-                  errors.golfCourse && formStyles.invalidInput,
-                ]}
-                selectedValue={value}
-                onValueChange={(itemValue) => {
-                  onChange(itemValue); // Update golfCourse value in react-hook-form
 
-                  const selectedCourse = golfCourses.find(
-                    (course) => course.id === Number(itemValue),
-                  );
-                  if (selectedCourse) {
-                    setSearchQuery(selectedCourse.name); // Update search query to match selected course
-                    setFormData({ golfCourse: itemValue }); // Update formData in context
-                  }
-                  setIsPickerFocused(false);
-                  setIsTextInputFocused(false);
-                }}
-                onFocus={() => setIsPickerFocused(true)}
-                onBlur={() => setIsPickerFocused(false)}
-              >
-                {filteredGolfCourses.map((course) => (
-                  <Picker.Item
-                    key={`Course-${course.id}`}
-                    label={course.name}
-                    value={course.id}
-                  />
-                ))}
-              </Picker>
+            {isTextInputFocused && filteredGolfCourses.length > 0 && (
+              <FlatList
+                data={filteredGolfCourses}
+                keyExtractor={(item) => `Course-${item.id}`}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      onChange(item.id); // Update golfCourse value in react-hook-form
+                      handleSelectCourse(item.id, item.name); // Set the selected course name
+                    }}
+                    style={formStyles.flatListItem}
+                  >
+                    <Text style={GlobalStyles.body}>{item.name}</Text>
+                  </TouchableOpacity>
+                )}
+                style={formStyles.flatList}
+              />
             )}
 
             {errors.golfCourse && (
@@ -116,4 +111,4 @@ const GolfCoursePicker = ({
   );
 };
 
-export default memo(GolfCoursePicker);
+export default GolfCoursePicker;
