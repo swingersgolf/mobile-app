@@ -9,7 +9,7 @@ import Spinner from "@/components/Spinner";
 import Alert, { InFormAlert } from "@/components/Alert";
 import { router } from "expo-router";
 import formStyles from "@/styles/FormStyles";
-import { setProfileSchema } from "@/schemas/profileSchema";
+import { profileSchema } from "@/schemas/profileSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import { Profile } from "@/types/authTypes";
@@ -23,6 +23,15 @@ const SetProfileScreen = () => {
   const handleSaveChanges = async (data: Profile) => {
     setLoading(true);
     setError("");
+
+    // Adjust handicap value based on formatting
+    if (typeof data.handicap === "string") {
+      if (data.handicap.startsWith("+")) {
+        data.handicap = parseFloat(data.handicap).toString(); // Convert to positive number
+      } else {
+        data.handicap = (-parseFloat(data.handicap)).toString(); // Convert to negative number
+      }
+    }
 
     // Create a new object with only the fields that have a value
     const filteredData = Object.fromEntries(
@@ -53,9 +62,14 @@ const SetProfileScreen = () => {
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    resolver: yupResolver(setProfileSchema),
+    resolver: yupResolver(profileSchema),
     defaultValues: {
-      handicap: profile?.handicap,
+      handicap:
+        profile?.handicap != null
+          ? parseFloat(profile.handicap) > 0
+            ? `+${parseFloat(profile.handicap).toFixed(1)}`
+            : Math.abs(parseFloat(profile.handicap)).toFixed(1)
+          : null,
       postalCode: profile?.postalCode,
     },
   });
@@ -137,7 +151,7 @@ const SetProfileScreen = () => {
                       ]}
                       onBlur={onBlur}
                       onChangeText={onChange}
-                      value={value}
+                      value={value ?? undefined}
                       placeholderTextColor={colors.neutral.dark}
                     />
                     {errors.postalCode && (
