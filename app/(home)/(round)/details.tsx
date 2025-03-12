@@ -441,23 +441,28 @@ const RoundDetailsScreen: React.FC = () => {
           <View style={RoundStyles.actionButtonContainer}>
             <TextButton
               text={
-                countRequests({ status: "accepted" }) ===
+                countRequests({ status: "accepted" }) >=
                 roundDetails?.group_size
                   ? hasUserRequestedToJoin()
-                    ? "Leave waitlist"
-                    : "Join waitlist"
+                    ? "Leave waitlist" // If the user is on the waitlist, show "Leave waitlist"
+                    : "Join waitlist" // If the group is full and the user hasn't requested, show "Join waitlist"
                   : isMember
-                    ? "Leave round"
+                    ? "Leave round" // If the user is accepted into the round, show "Leave round"
                     : hasUserRequestedToJoin()
-                      ? "Cancel request"
-                      : "Request to join"
+                      ? "Cancel request" // If the user has already requested to join, show "Cancel request"
+                      : "Request to join" // If the user hasn't requested to join, show "Request to join"
               }
               onPress={
-                isMember
-                  ? deleteRequest
-                  : hasUserRequestedToJoin()
-                    ? deleteRequest
-                    : requestToJoinRound
+                countRequests({ status: "accepted" }) >=
+                roundDetails?.group_size
+                  ? hasUserRequestedToJoin()
+                    ? deleteRequest // If the user is on the waitlist, leave the waitlist (currently deleteRequest)
+                    : requestToJoinRound // If the group is full and the user hasn't requested to join, join the waitlist (currently requestToJoinRound)
+                  : isMember
+                    ? deleteRequest // If the user is accepted, leave the round
+                    : hasUserRequestedToJoin()
+                      ? deleteRequest // If the user has requested to join, cancel the request
+                      : requestToJoinRound // If the user hasn't requested to join, request to join the round
               }
               textColor={colors.button.primary.text}
               backgroundColor={colors.button.primary.background}

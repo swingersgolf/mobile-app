@@ -11,7 +11,7 @@ import {
   Appearance,
 } from "react-native";
 import { classifyPreference } from "@/utils/preference";
-import { RoundDetails } from "@/types/roundTypes";
+import { Round, RoundDetails } from "@/types/roundTypes";
 import { parseRoundDate } from "@/utils/date";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
@@ -74,6 +74,24 @@ const RoundScreen = () => {
       fetchRounds();
     }, [fetchRounds]),
   );
+
+  const countRequests = ({
+    round,
+    status,
+  }: {
+    round: RoundDetails;
+    status: "pending" | "accepted" | "rejected";
+  }) => {
+    if (!round) return 0;
+    return round.golfers.filter((golfer) => golfer.status === status).length;
+  };
+
+  const hasUserRequestedToJoin = ({ round }: { round: RoundDetails }) => {
+    if (!round) return false;
+    return round.golfers.some(
+      (golfer) => golfer.id === user?.id && golfer.status === "pending",
+    );
+  };
 
   if (error) {
     return (
@@ -163,16 +181,21 @@ const RoundScreen = () => {
                         style={[GlobalStyles.body, RoundStyles.memberBadgeText]}
                       >
                         {
-                          // Check if the number of accepted golfers equals the group size
-                          round.golfers.filter(
-                            (golfer) => golfer.status === "accepted",
-                          ).length === round.group_size
-                            ? "Waitlist"
-                            : capitalizeWords(
-                                round.golfers.find(
-                                  (golfer) => golfer.id === user?.id,
-                                )?.status || "",
-                              )
+                          // Prioritize 'accepted' first, then 'waitlist' if the group is full
+                          round.golfers.find((golfer) => golfer.id === user?.id)
+                            ?.status === "accepted"
+                            ? "Accepted"
+                            : countRequests({
+                                  round: round,
+                                  status: "accepted",
+                                }) === round.group_size &&
+                                hasUserRequestedToJoin({ round })
+                              ? "Waitlist"
+                              : capitalizeWords(
+                                  round.golfers.find(
+                                    (golfer) => golfer.id === user?.id,
+                                  )?.status || "",
+                                )
                         }
                       </Text>
                     </View>

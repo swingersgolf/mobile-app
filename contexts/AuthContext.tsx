@@ -17,6 +17,7 @@ import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
+import { router } from "expo-router";
 
 interface AuthContextType {
   token: string | null;
@@ -170,6 +171,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       console.error("Error logging in:", error);
       return Promise.reject(error);
     }
+    router.replace("landing");
   }, [apiUrl, setToken, token]);
 
   useEffect(() => {
