@@ -11,7 +11,7 @@ import {
   Appearance,
 } from "react-native";
 import { classifyPreference } from "@/utils/preference";
-import { Round, RoundDetails } from "@/types/roundTypes";
+import { RoundDetails } from "@/types/roundTypes";
 import { parseRoundDate } from "@/utils/date";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RoundStyles } from "@/styles/roundStyles";
